@@ -1,0 +1,102 @@
+year,make,model,epa_combined_cty_hwy_mpg,epa_cty_mpg,epa_hwy_mpg,driver_mpg,epa_range_miles
+2021,Tesla,Model 3 Standard Range Plus RWD,142,150,133,163.8,263
+2020,Tesla,Model 3 Standard Range Plus,141,148,132,,250
+2021,Tesla,Model 3 Long Range AWD,134,141,127,118.0,353
+2019,Tesla,Model 3 Standard Range Plus,133,140,124,133.4,240
+2023,Tesla,Model 3 RWD,132,138,126,101.0,272
+2022,Tesla,Model 3 RWD,132,138,126,,272
+2020,Tesla,Model 3 Standard Range,131,138,124,,220
+2019,Tesla,Model 3 Standard Range,131,138,124,,220
+2023,Tesla,Model 3 Long Range AWD,131,134,126,,358
+2022,Tesla,Model 3 Long Range AWD,131,134,126,128.5,358
+2020,Tesla,Model 3 Long Range,130,136,123,,330
+2019,Tesla,Model 3 Long Range,130,136,123,,310
+2018,Tesla,Model 3 Long Range,130,136,123,149.5,310
+2017,Tesla,Model 3 Long Range,126,131,120,,310
+2020,Tesla,Model 3 Mid Range,123,128,117,,264
+2019,Tesla,Model 3 Mid Range,123,128,117,,264
+2018,Tesla,Model 3 Mid Range,123,128,117,150.0,260
+2020,Tesla,Model 3 Long Range AWD,121,124,116,128.3,322
+2020,Tesla,Model 3 Long Range Performance AWD (18in),121,124,116,,322
+2018,Tesla,Model 3 Long Range AWD,116,120,112,127.3,310
+2018,Tesla,Model 3 Long Range AWD Performance,116,120,112,,310
+2019,Tesla,Model 3 Long Range AWD,116,120,112,112.6,310
+2019,Tesla,Model 3 Long Range AWD Performance,116,120,112,131.5,310
+2020,Tesla,Model 3 Long Range Performance AWD (19in),116,119,112,,304
+2020,Tesla,Model 3 Long Range Performance AWD (20in),113,118,107,124.0,299
+2023,Tesla,Model 3 Performance AWD,113,118,107,,315
+2022,Tesla,Model 3 Performance AWD,113,118,107,,315
+2021,Tesla,Model 3 Performance AWD,113,118,107,,315
+2023,Tesla,Model S,120,124,115,,405
+2022,Tesla,Model S,120,124,115,,405
+2021,Tesla,Model S Long Range,120,124,115,125,405
+2020,Tesla,Model S Long Range Plus,117,121,112,,402
+2022,Tesla,Model S Plaid (19 inch wheels),116,119,112,,396
+2020,Tesla,Model S Long Range,111,115,107,,373
+2019,Tesla,Model S Long Range,111,115,107,,370
+2021,Tesla,Model S Performance (19in Wheels),110,114,106,,387
+2020,Tesla,Model S Standard Range,109,113,105,,287
+2019,Tesla,Model S Standard Range,109,113,105,,285
+2020,Tesla,Model S Performance (19in Wheels),104,104,104,,348
+2019,Tesla,Model S Performance (19in Wheels),104,104,104,,345
+2017,Tesla,Model S AWD - 90D,104,102,107,,294
+2017,Tesla,Model S AWD - 60D,104,101,107,,218
+2019,Tesla,Model S 75D,103,102,105,,259
+2018,Tesla,Model S 75D,103,102,105,114,259
+2017,Tesla,Model S AWD - 75D,103,102,105,,259
+2019,Tesla,Model S 100D,102,101,102,,335
+2018,Tesla,Model S 100D,102,101,102,,335
+2017,Tesla,Model S AWD - 100D,102,101,102,,335
+2022,Tesla,Model S Plaid (21 inch wheels),101,102,99,,348
+2021,Tesla,Model S Plaid (21inch wheels),101,102,99,,348
+2017,Tesla,Model S (60 kW-hr battery pack),99,98,101,,210
+2017,Tesla,Model S (75 kW-hr battery pack),98,97,100,,249
+2018,Tesla,Model S 75kWh,98,97,100,,249
+2017,Tesla,Model S AWD - P100D,98,92,105,,315
+2019,Tesla,Model S P100D,98,92,105,,315
+2018,Tesla,Model S P100D,98,92,105,,315
+2020,Tesla,Model S Performance (21in Wheels),97,98,96,,326
+2019,Tesla,Model S Performance (21in Wheels),97,98,96,,325
+2021,Tesla,Model S Performance (21in Wheels),96,98,93,,334
+2017,Tesla,Model S AWD - P90D,95,92,100,,270
+2021,Tesla,Model X Long Range Plus,105,109,101,,371
+2020,Tesla,Model X Long Range Plus,105,108,101,,351
+2023,Tesla,Model X,102,107,97,,348
+2022,Tesla,Model X,102,107,97,,348
+2020,Tesla,Model X Standard Range,101,105,98,,258
+2023,Tesla,Model X Plaid (20 inch wheels),98,103,93,,333
+2022,Tesla,Model X Plaid (20 inch wheels),98,103,93,,333
+2021,Tesla,Model X Performance (20in Wheels),97,100,95,,341
+2020,Tesla,Model X Long Range,96,99,93,,328
+2019,Tesla,Model X Long Range,96,99,93,,325
+2019,Tesla,Model X 75D,93,91,95,,238
+2018,Tesla,Model X 75D,93,91,95,,238
+2017,Tesla,Model X AWD - 75D,93,91,95,,238
+2017,Tesla,Model X AWD - 60D,93,91,94,,200
+2017,Tesla,Model X AWD - 90D,92,90,94,,257
+2023,Tesla,Model X Plaid (22 inch wheels),91,94,88,,311
+2022,Tesla,Model X Plaid (22 inch wheels),91,94,88,,311
+2020,Tesla,Model X Performance (20in Wheels),90,90,89,,305
+2017,Tesla,Model X AWD - P90D,89,89,90,,250
+2019,Tesla,Model X 100D,87,86,89,,295
+2018,Tesla,Model X 100D,87,86,89,89.2,295
+2017,Tesla,Model X AWD - 100D,87,86,89,85.3,295
+2021,Tesla,Model X Performance (22in Wheels),86,89,83,,300
+2017,Tesla,Model X AWD - P100D,86,81,92,,289
+2019,Tesla,Model X P100D,85,83,89,,289
+2018,Tesla,Model X P100D,85,83,89,,289
+2020,Tesla,Model X Performance (22in Wheels),79,80,77,,272
+2019,Tesla,Model X Performance (22in Wheels),79,80,77,,270
+2022,Tesla,Model Y RWD,129,140,119,,244
+2021,Tesla,Model Y Standard Range RWD,129,140,119,,244
+2021,Tesla,Model Y Long Range AWD,125,131,117,98.3,326
+2023,Tesla,Model Y AWD,123,129,116,131.4,279
+2022,Tesla,Model Y AWD,123,129,116,,279
+2023,Tesla,Model Y Long Range AWD,122,127,117,134.0,330
+2022,Tesla,Model Y Long Range AWD,122,127,117,128.3,330
+2020,Tesla,Model Y Performance AWD,121,129,112,,315
+2020,Tesla,Model Y Long Range AWD,121,127,114,124.9,316
+2020,Tesla,Model Y Performance AWD (21in Wheels),111,116,106,,291
+2023,Tesla,Model Y Performance AWD,111,115,106,,303
+2022,Tesla,Model Y Performance AWD,111,115,106,,303
+2021,Tesla,Model Y Performance AWD,111,115,106,,303

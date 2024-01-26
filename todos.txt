@@ -1,0 +1,22 @@
+electric-airliner todos
+
+organization
+- copy branch tree into new repo (where?)
+- move large files into hdd
+- backup repo to hdd
+- delete branch
+
+what to do about +ve & -ve soc's
+-
+studies
+-
+
+screen recording
+	editing software?
+	annotations
+	upload
+
+add graphs
+resize / arrange graphs?
+
+better configs

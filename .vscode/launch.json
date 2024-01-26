@@ -1,0 +1,89 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "Electric Airliner - Study Runner - Airplane Paths",
+            "type": "python",
+            "request": "launch",
+            "program": "src/projects/electric_airliner/study_runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}:/home/keegan_green/Dropbox/Documents/Projects/"
+            },
+            "args": [
+                "--view", "airplane-paths"
+            ]
+        },
+        {
+            "name": "Electric Airliner - Study Runner - Airliner Side View",
+            "type": "python",
+            "request": "launch",
+            "program": "src/projects/electric_airliner/study_runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}:/home/keegan_green/Dropbox/Documents/Projects/"
+            },
+            "args": [
+                "--view", "airplane-side-view",
+                "--track-airplane-id", "Airliner"
+            ]
+        },
+        {
+            "name": "Electric Airliner - Study Runner - Airliner Tail View",
+            "type": "python",
+            "request": "launch",
+            "program": "src/projects/electric_airliner/study_runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}:/home/keegan_green/Dropbox/Documents/Projects/"
+            },
+            "args": [
+                "--view", "airplane-tail-view",
+                "--track-airplane-id", "Airliner"
+            ]
+        },
+        {
+            "name": "Electric Airliner - Study Runner - PIT UAV 1 Side View",
+            "type": "python",
+            "request": "launch",
+            "program": "src/projects/electric_airliner/study_runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}:/home/keegan_green/Dropbox/Documents/Projects/"
+            },
+            "args": [
+                "--view", "airplane-side-view",
+                "--track-airplane-id", "PIT-UAV-1"
+            ]
+        },
+        {
+            "name": "Electric Airliner - Study Runner - Airliner Multi View",
+            "type": "python",
+            "request": "launch",
+            "program": "src/projects/electric_airliner/multi_view_entrypoint.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}:/home/keegan_green/Dropbox/Documents/Projects/"
+            }
+        }
+    ]
+}
