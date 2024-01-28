@@ -38,6 +38,12 @@ def simple_wavefront_obj_to_vp(
             raise NotImplementedError
 
     vp_obj = vp.compound(faces, **vp_obj_kwargs)
+    # ^ Requires manually changing:
+	# obj._axis.value = obj._size._x*norm(obj._axis)
+    # to:
+    #     obj._axis.value = norm(obj._axis)*obj._size._x
+    # in `vpython.py`.
+
     if model_config.LENGTH_M is not None:
         vp_obj.size *= model_config.LENGTH_M / M_PER_KM / vp_obj.size.x
     return vp_obj
