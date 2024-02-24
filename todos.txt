@@ -1,15 +1,11 @@
 electric-airliner todos
 
-organization
-- copy branch tree into new repo (where?)
-- move large files into hdd
-- backup repo to hdd
-- delete branch
-
 what to do about +ve & -ve soc's
 -
 studies
 -
+realistic lh2 refueling
+- scale down refueling time based on uav's capacity
 
 screen recording
 	editing software?

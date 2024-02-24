@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import pytz
 
+J_PER_MJ = 1e6
 KWH_PER_MJ = 0.2777
 KWH_PER_MWH = 1000
 

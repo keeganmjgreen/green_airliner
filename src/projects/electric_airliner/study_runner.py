@@ -18,7 +18,7 @@ from src.projects.electric_airliner.flight_path_generation import (
     provision_uav_from_flight_path,
     viz_airplane_paths,
 )
-from src.utils.utils import KWH_PER_MJ
+from src.utils.utils import J_PER_MJ, KWH_PER_MJ, MINUTES_PER_HOUR
 
 from electric_airline.src.study_params import BaseA320, Lh2FueledA320, at200, lh2_fuel
 
@@ -30,7 +30,8 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
 
     scale_factor = 1
 
-    charging_power_limit_kw = 40000
+    LH2_REFUELING_RATE_J_PER_MIN = 7e12 / 50
+    charging_power_limit_kw = LH2_REFUELING_RATE_J_PER_MIN / J_PER_MJ * KWH_PER_MJ * MINUTES_PER_HOUR
 
     airliner = Airliner(
         ID=AIRLINER_ID,
@@ -79,26 +80,32 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
 
     uavs = {}
     uav_fps = {}
+    AT200_FUEL_CONSUMPTION_RATE_L_PER_H = 184
+    AT200_FUEL_CAPACITY_L = 1256
+    # ^ https://www.aerospace.co.nz/files/dmfile/PAL%202016%20P-750%20XSTOL%20Brochure%20final.pdf
+    AT200_CRUISE_SPEED_KMPH = 300
+    JET_A1_FUEL_ENERGY_DENSITY_MJ_PER_KG = 43.15
+    JET_A1_FUEL_DENSITY_KG_PER_L = 0.804
+    uav_refueling_capacity_MJ = at200.energy_capacity_MJ(fuel=lh2_fuel)
+    refueling_distance_km = (
+        AT200_CRUISE_SPEED_KMPH
+        / (LH2_REFUELING_RATE_J_PER_MIN * MINUTES_PER_HOUR)
+        * (uav_refueling_capacity_MJ * J_PER_MJ)
+    )
+    undocking_distance_from_airport_km = 50
+    inter_uav_clearance_km = 10
     uavs_per_airport = {
-        "PIT": {"to-airport": [110, 50], "from-airport": [50]},
-        "DEN": {"to-airport": [230, 170, 110, 50], "from-airport": [50, 110, 170]},
+        "PIT": {"to-airport": 2, "from-airport": 1},
+        "DEN": {"to-airport": 4, "from-airport": 3},
     }
     for uav_airport_code, x in uavs_per_airport.items():
         i = 0
         uavs[uav_airport_code] = {}
         uav_fps[uav_airport_code] = {}
-        for service_side, undocking_distances_from_airport in x.items():
+        for service_side, n_uavs in x.items():
             uavs[uav_airport_code][service_side] = {}
             uav_fps[uav_airport_code][service_side] = {}
-            n_uavs = len(undocking_distances_from_airport)
             for j in range(n_uavs):
-                AT200_FUEL_CONSUMPTION_RATE_L_PER_H = 184
-                AT200_FUEL_CAPACITY_L = 1256
-                # ^ https://www.aerospace.co.nz/files/dmfile/PAL%202016%20P-750%20XSTOL%20Brochure%20final.pdf
-                AT200_CRUISE_SPEED_KMPH = 300
-                JET_A1_FUEL_ENERGY_DENSITY_MJ_PER_KG = 43.15
-                JET_A1_FUEL_DENSITY_KG_PER_L = 0.804
-
                 uav = Uav(
                     ID=f"{uav_airport_code}-UAV-{i}",
                     DISCHARGE_RATE_KWH_PER_KM=(
@@ -118,7 +125,7 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
                     DEFAULT_SPEED_KMPH=...,
                     soc=1,
                     REFUELING_ENERGY_CAPACITY_KWH=(
-                        at200.energy_capacity_MJ(fuel=lh2_fuel) * KWH_PER_MJ
+                        uav_refueling_capacity_MJ * KWH_PER_MJ
                     ),
                     refueling_soc=1,
                     MODEL_CONFIG=ModelConfig(
@@ -160,11 +167,13 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
                         airliner_fp.CRUISE_ALTITUDE_KM
                         + AIRLINER_UAV_DOCKING_DISTANCE_KM
                     ),
-                    REFUELING_DISTANCE_KM=50,
+                    REFUELING_DISTANCE_KM=refueling_distance_km,
                     SERVICE_SIDE=service_side,
-                    UNDOCKING_DISTANCE_FROM_AIRPORT_KM=undocking_distances_from_airport[
-                        j
-                    ],
+                    UNDOCKING_DISTANCE_FROM_AIRPORT_KM=(
+                        undocking_distance_from_airport_km
+                        + (refueling_distance_km + inter_uav_clearance_km)
+                        * ((n_uavs - j - 1) if service_side == "to-airport" else j)
+                    ),
                     AIRLINER_CLEARANCE_SPEED_KMPH=200,
                     AIRLINER_CLEARANCE_DISTANCE_KM=10,
                     AIRLINER_CLEARANCE_ALTITUDE_KM=5,
@@ -203,7 +212,7 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
             TIME_STEP=dt.timedelta(seconds=6),
             DELAY_TIME_STEP=dt.timedelta(seconds=0.04),
             START_TIMESTAMP=start_timestamp,
-            SKIP_TIMEDELTA=dt.timedelta(minutes=260),
+            SKIP_TIMEDELTA=dt.timedelta(minutes=40),
             END_TIMESTAMP=None,
         ),
         ev_taxis_emulator_or_interface=airplanes_emulator,

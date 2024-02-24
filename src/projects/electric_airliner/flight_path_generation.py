@@ -167,9 +167,7 @@ def _gen_speed_change_waypoints(
         )
         for d in intermediate_distances_km
     ]
-    acceleration_kmphph = (end_speed_kmph**2 - start_speed_kmph**2) / (
-        2 * distance_km
-    )
+    acceleration_kmphph = (end_speed_kmph**2 - start_speed_kmph**2) / (2 * distance_km)
     intermediate_speeds_kmph = np.sqrt(
         start_speed_kmph**2
         + 2
@@ -235,7 +233,7 @@ def _gen_vertical_curve_waypoints(
         corner_point, leveled_point, leveling_distance_km
     )
     r = leveling_distance_km / np.tan(tangent_angle / 2)  # smoothing radius
-    tangent_angles = np.linspace(0, tangent_angle)
+    tangent_angles = np.linspace(0, tangent_angle, num=50)
     sign = {
         "curve-up": +1,
         "curve-down": -1,
@@ -300,18 +298,24 @@ def _gen_altitude_transition_waypoints(
 
     waypoints = []
 
+    flight_path_part = {
+        +1: "TAKEOFF" if wrt_runway and not inverted else "CLIMB",
+        -1: "LANDING" if wrt_runway and inverted else "DESCENT",
+    }[kind * invert]
+    leveling_distance_km = getattr(
+        flight_path, flight_path_part + "_LEVELING_DISTANCE_KM"
+    )
     waypoints += _gen_vertical_curve_waypoints(
         sense={+1: "curve-up", -1: "curve-down"}[kind],
         direction="to-tangent",
         leveled_altitude_km=start_altitude_km,
         leveled_point=(2 * start_point - eventual_point),
-        corner_point=start_point,
+        corner_point=_intermediate_point_between(
+            start_point, eventual_point, leveling_distance_km
+        ),
         tangent_angle=angle,
         flight_path=flight_path,
-        flight_path_part={
-            +1: "TAKEOFF" if wrt_runway and not inverted else "CLIMB",
-            -1: "LANDING" if wrt_runway and inverted else "DESCENT",
-        }[kind * invert],
+        flight_path_part=flight_path_part,
         speed_kmph=start_speed_kmph,
     )
 
@@ -321,7 +325,7 @@ def _gen_altitude_transition_waypoints(
         leveled_altitude_km=end_altitude_km,
         leveled_point=eventual_point,
         corner_point=_intermediate_point_between(
-            start_point, eventual_point, ground_distance_km
+            start_point, eventual_point, leveling_distance_km + ground_distance_km
         ),
         tangent_angle=angle,
         flight_path=flight_path,
@@ -433,39 +437,24 @@ def _generate_uav_waypoints(
     else:
         docking_distance_from_airport_km = uav_fp.REFUELING_DISTANCE_KM / 2
 
-    if uav_fp_half == "first-half":
-        CD_vertical_speed_kmph = uav_fp.RATE_OF_CLIMB_KMPH
-        GH_vertical_speed_kmph = uav_fp.RATE_OF_DESCENT_KMPH
-        BC_ground_distance_km = uav_fp.TAKEOFF_DISTANCE_KM
-    else:
-        CD_vertical_speed_kmph = uav_fp.RATE_OF_DESCENT_KMPH
-        GH_vertical_speed_kmph = uav_fp.RATE_OF_CLIMB_KMPH
-        BC_ground_distance_km = uav_fp.LANDING_DISTANCE_KM
-
-    GH_delta_altitude_km = uav_fp.CRUISE_ALTITUDE_KM - uav_fp.REFUELING_ALTITUDE_KM
-    GH_duration_h = GH_delta_altitude_km / GH_vertical_speed_kmph
-    GH_ground_speed_kmph = np.sqrt(
-        uav_fp.CRUISE_SPEED_KMPH**2 - GH_vertical_speed_kmph**2
-    )
-    GH_ground_distance_km = GH_ground_speed_kmph * GH_duration_h
     # meet and fly together at point H:
     H = _intermediate_point_between(B, A, docking_distance_from_airport_km)
 
-    d = (
-        docking_distance_from_airport_km
-        + GH_ground_distance_km
-        + {
-            "first-half": uav_fp.DESCENT_LEVELING_DISTANCE_KM
-            + uav_fp.LANDING_LEVELING_DISTANCE_KM,
-            "second-half": uav_fp.TAKEOFF_LEVELING_DISTANCE_KM
-            + uav_fp.CLIMB_LEVELING_DISTANCE_KM,
-        }[uav_fp_half]
+    altitude_transition_waypoints = _gen_altitude_transition_waypoints(
+        start_altitude_km=uav_fp.REFUELING_ALTITUDE_KM,
+        start_point=H,
+        end_altitude_km=uav_fp.CRUISE_ALTITUDE_KM,
+        eventual_point=A,
+        flight_path=uav_fp,
+        wrt_runway=False,
+        inverted=True,
+    )
+
+    d = Location.direct_distance_km_between(
+        Location(*altitude_transition_waypoints[0].LOCATION.xy_coords), airport_B
     )
     r = uav_fp.ARC_RADIUS_KM
 
-    G = _intermediate_point_between(
-        B, A, docking_distance_from_airport_km + GH_ground_distance_km
-    )
     F = _intermediate_point_between(B, A, d)
 
     # centerpoint of uav's arc (circular flight path) = O:
@@ -488,16 +477,6 @@ def _generate_uav_waypoints(
             phi_E -= 2 * np.pi
     phis = np.linspace(phi_E, phi_F, num=500)
     uav_arc_points = O + abs(r) * np.c_[np.cos(phis), np.sin(phis)]
-
-    C = _intermediate_point_between(B, E, BC_ground_distance_km)
-    CD_duration_h = uav_fp.CRUISE_ALTITUDE_KM / CD_vertical_speed_kmph
-    CD_ground_speed_kmph = np.sqrt(
-        uav_fp.CRUISE_SPEED_KMPH**2 - CD_vertical_speed_kmph**2
-    )
-    CD_ground_distance_km = CD_ground_speed_kmph * CD_duration_h
-    D = _intermediate_point_between(C, E, CD_ground_distance_km)
-
-    assert BC_ground_distance_km + CD_ground_distance_km <= d
 
     if plot:
         plt.plot(*np.c_[A, B], ".-")
@@ -524,14 +503,7 @@ def _generate_uav_waypoints(
             )
             for i, xy in enumerate(uav_arc_points)
         ],
-        *_gen_altitude_transition_waypoints(
-            start_altitude_km=uav_fp.CRUISE_ALTITUDE_KM,
-            start_point=G,
-            end_altitude_km=uav_fp.REFUELING_ALTITUDE_KM,
-            eventual_point=B,
-            flight_path=uav_fp,
-            wrt_runway=False,
-        ),
+        *altitude_transition_waypoints,
     ]
     uav_waypoints[-1].LOCATION.TAG = (
         f"{uav.ID}-on-airliner-docking-point"
@@ -579,9 +551,9 @@ def provision_uav_from_flight_path(
             flight_path=uav_fp,
             wrt_runway=False,
         )
-        altitude_transition_waypoints[
-            0
-        ].LOCATION.TAG = f"{uav.ID}-on-airliner-undocking-point"
+        altitude_transition_waypoints[0].LOCATION.TAG = (
+            f"{uav.ID}-on-airliner-undocking-point"
+        )
         uav.waypoints += altitude_transition_waypoints
 
         # UAV descends below level of airliner's tail and airliner itself:
@@ -638,16 +610,17 @@ def provision_uav_from_flight_path(
             altitude_km=uav_fp.CRUISE_ALTITUDE_KM,
         )
         uav.waypoints += _gen_altitude_transition_waypoints(
-            start_altitude_km=uav_fp.CRUISE_ALTITUDE_KM,
+            start_altitude_km=uav_fp.REFUELING_ALTITUDE_KM,
             start_point=_intermediate_point_between(
                 last_waypoints[0].LOCATION.xy_coords,
                 uav_airport_location.xy_coords,
                 uav_fp.REFUELING_DISTANCE_KM,
             ),
-            end_altitude_km=uav_fp.REFUELING_ALTITUDE_KM,
-            eventual_point=next_airliner_airport_location.xy_coords,
+            end_altitude_km=uav_fp.CRUISE_ALTITUDE_KM,
+            eventual_point=uav_airport_location.xy_coords,
             flight_path=uav_fp,
             wrt_runway=False,
+            inverted=True,
         )
         uav.waypoints[-1].LOCATION.TAG = f"{uav.ID}-on-airliner-docking-point"
 
