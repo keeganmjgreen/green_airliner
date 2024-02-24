@@ -94,12 +94,15 @@ class AirplanesVisualizerEnvironment(Environment):
                 )
 
         airplanes = self.ev_taxis_emulator_or_interface.current_state.evs_state.values()
-        self.airplane_vp_objs = {
-            airplane.ID: simple_wavefront_obj_to_vp(
+
+        self.airplane_vp_objs = {}
+        for airplane in airplanes:
+            print(f"Rendering {airplane.ID}...")
+            self.airplane_vp_objs[airplane.ID] = simple_wavefront_obj_to_vp(
                 airplane.MODEL_CONFIG, make_trail=True, retain=2000
             )
-            for airplane in airplanes
-        }
+        print("Done rendering airplanes.")
+
         for vp_obj in self.airplane_vp_objs.values():
             vp_obj.size *= self.MODELS_SCALE_FACTOR
 
