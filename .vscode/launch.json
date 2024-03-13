@@ -12,7 +12,7 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
-                "PYTHONPATH": "${workspaceFolder}"
+                "PYTHONPATH": "/home/keegan_green/Dropbox/Documents/Projects/electric_airline:/home/keegan_green/Dropbox/Documents/Projects/electric_airline_3d_sim"
             }
         },
         {

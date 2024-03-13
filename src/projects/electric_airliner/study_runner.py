@@ -95,7 +95,7 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
     undocking_distance_from_airport_km = 50
     inter_uav_clearance_km = 10
     uavs_per_airport = {
-        "PIT": {"to-airport": 2, "from-airport": 1},
+        "PIT": {"to-airport": 1, "from-airport": 1},
         "DEN": {"to-airport": 4, "from-airport": 3},
     }
     for uav_airport_code, x in uavs_per_airport.items():
