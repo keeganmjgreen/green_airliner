@@ -6,11 +6,11 @@ import numpy as np
 from src.emulators import EvTaxisEmulator as AirplanesEmulator
 from src.environments import EnvironmentConfig
 from src.modeling_objects import Airliner, EnvironmentState, Uav, ModelConfig
-from src.projects.electric_airliner.airplanes_visualizer_environment import (
+from src.three_d_sim.airplanes_visualizer_environment import (
     VIEW_TYPE,
     AirplanesVisualizerEnvironment,
 )
-from src.projects.electric_airliner.flight_path_generation import (
+from src.three_d_sim.flight_path_generation import (
     AirlinerFlightPath,
     UavFlightPath,
     delay_uavs,

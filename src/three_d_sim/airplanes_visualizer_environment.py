@@ -5,11 +5,11 @@ import numpy as np
 import vpython as vp
 
 from src.environments import BaseEnvironment, Environment
-from src.projects.electric_airliner.flight_path_generation import (
+from src.three_d_sim.flight_path_generation import (
     FlightPath,
     orthogonal_xy_vector,
 )
-from src.projects.electric_airliner.models.wavefront_obj_to_vp import (
+from src.three_d_sim.models.wavefront_obj_to_vp import (
     simple_wavefront_obj_to_vp,
 )
 from src.utils.utils import _getenv, timedelta_to_minutes

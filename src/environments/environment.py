@@ -12,7 +12,6 @@ from typing import Optional, Union
 
 from src.emulators import EvTaxisEmulator
 from src.modeling_objects import EnvironmentState
-from src.projects import PROJECT_TYPE
 from src.utils.utils import now
 
 
@@ -74,7 +73,6 @@ class BaseEnvironment(EnvironmentConfig):
 
     ENVIRONMENT_CONFIG: EnvironmentConfig
     ev_taxis_emulator_or_interface: EvTaxisEmulator
-    PROJECT: Union[PROJECT_TYPE, None] = None
 
     # The following attributes are instantiated by `__post_init__`, in part using the
     #     `ENVIRONMENT_CONFIG`, and their type hints overwrite those of the same attributes

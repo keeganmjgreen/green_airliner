@@ -24,7 +24,7 @@ from .planar_curve_points_generation import generate_planar_curve_points
 
 AIRPORT_CODE_TYPE = str
 
-AIRPORT_LOCATIONS_CSV_PATH = "src/projects/electric_airliner/airport_locations.csv"
+AIRPORT_LOCATIONS_CSV_PATH = "src/three_d_sim/airport_locations.csv"
 
 
 @dataclasses.dataclass(kw_only=True)

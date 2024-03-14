@@ -54,7 +54,7 @@ def stl_to_triangles(fileinfo): # specify file
     return compound(tris)
 
 if __name__ == '__main__':
-    file_dir = "src/projects/electric_airliner/models/"
+    file_dir = "src/three_d_sim/models/"
     # part = stl_to_triangles(file_dir + 'airliner/airbus-a320--1/Airbus_A320__Before_Scale_Up_ascii.STL')
     # part = stl_to_triangles(file_dir + 'airliner/airbus-a320-cfd-1.snapshot.7/samolot_ascii.stl')
     part = stl_to_triangles(file_dir + "convert_stl/Part1.stl")

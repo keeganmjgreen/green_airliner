@@ -12,7 +12,7 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
-                "PYTHONPATH": "/home/keegan_green/Dropbox/Documents/Projects/electric_airline"
+                "PYTHONPATH": "${workspaceFolder}"
             }
         },
         {
@@ -30,7 +30,7 @@
             "name": "Study Runner - Airplane Paths",
             "type": "python",
             "request": "launch",
-            "program": "src/projects/electric_airliner/study_runner.py",
+            "program": "src/three_d_sim/study_runner.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
@@ -44,7 +44,7 @@
             "name": "Study Runner - Airliner Side View",
             "type": "python",
             "request": "launch",
-            "program": "src/projects/electric_airliner/study_runner.py",
+            "program": "src/three_d_sim/study_runner.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
@@ -59,7 +59,7 @@
             "name": "Study Runner - Airliner Tail View",
             "type": "python",
             "request": "launch",
-            "program": "src/projects/electric_airliner/study_runner.py",
+            "program": "src/three_d_sim/study_runner.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
@@ -74,7 +74,7 @@
             "name": "Study Runner - PIT UAV 1 Side View",
             "type": "python",
             "request": "launch",
-            "program": "src/projects/electric_airliner/study_runner.py",
+            "program": "src/three_d_sim/study_runner.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
@@ -89,7 +89,7 @@
             "name": "Study Runner - Airliner Multi View",
             "type": "python",
             "request": "launch",
-            "program": "src/projects/electric_airliner/multi_view_entrypoint.py",
+            "program": "src/three_d_sim/multi_view_entrypoint.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {

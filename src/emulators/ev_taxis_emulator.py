@@ -8,7 +8,6 @@ from typing import List, Literal, Optional, Type
 import pandas as pd
 
 from src.modeling_objects import Airliner, EnvironmentState, Trip
-from src.projects import PROJECT_TYPE
 
 from .base_emulator import BaseEmulator
 
@@ -153,12 +152,6 @@ class EvTaxisEmulator(BaseEmulator):
         # The trips_demand_forecasts attribute of the EvTaxisEmulator.current_state comes from the
         #     Trips Forecaster (which is not yet implemented):
         assert self.START_STATE.trips_demand_forecasts is None
-
-    @classmethod
-    def from_db(
-        cls, start_timestamp: dt.datetime, project: PROJECT_TYPE
-    ) -> EvTaxisEmulator:
-        raise NotImplementedError  # TODO: Implement or not?
 
     def update_state(self, timestamp: dt.datetime) -> None:
         """Update the current EnvironmentState by first updating the current timestamp

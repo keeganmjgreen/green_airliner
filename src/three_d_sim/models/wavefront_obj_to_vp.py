@@ -6,7 +6,7 @@ import numpy as np
 from src.modeling_objects import ModelConfig
 from src.utils.utils import M_PER_KM
 
-MODELS_DIR = "src/projects/electric_airliner/models/"
+MODELS_DIR = "src/three_d_sim/models/"
 
 
 def simple_wavefront_obj_to_vp(

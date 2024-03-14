@@ -1,8 +1,8 @@
 from vpython import *
 from pywavefront import Wavefront
 
-# box1 = Wavefront('src/projects/electric_airliner/models/airliner/airbus-a320neo-2.snapshot.2/Airbus A320neo/Airbus A320neo_Group 2 CADD 221L-1-G1.obj', create_materials=True)
-box1 = Wavefront("src/projects/electric_airliner/models/airliner/airbus-a320--1/Airbus_A320__Before_Scale_Up_-meshlabjs.obj")
+# box1 = Wavefront('src/three_d_sim/models/airliner/airbus-a320neo-2.snapshot.2/Airbus A320neo/Airbus A320neo_Group 2 CADD 221L-1-G1.obj', create_materials=True)
+box1 = Wavefront("src/three_d_sim/models/airliner/airbus-a320--1/Airbus_A320__Before_Scale_Up_-meshlabjs.obj")
 
 scene = canvas()
 scene.ambient=color.gray(0.5)
