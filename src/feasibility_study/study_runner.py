@@ -57,6 +57,7 @@ def run_study(
                     if (
                         tmp_airliner.energy_quantity_MJ
                         < tmp_airliner.reserve_energy_thres_MJ
+                        and airliner.energy_quantity_MJ < airliner.energy_capacity_MJ
                     ):
                         airliner.refuel(
                             energy_quantity_MJ=uav.energy_capacity_MJ(

@@ -1,5 +1,7 @@
 import dataclasses
 
+import numpy as np
+
 
 @dataclasses.dataclass
 class Fuel:
@@ -72,6 +74,9 @@ class BaseAirliner:
 
     def refuel(self, energy_quantity_MJ: float) -> None:
         self.energy_quantity_MJ += energy_quantity_MJ
+        self.energy_quantity_MJ = np.clip(
+            a=self.energy_quantity_MJ, a_min=None, a_max=self.energy_capacity_MJ
+        )
 
 
 @dataclasses.dataclass
