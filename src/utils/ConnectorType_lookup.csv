@@ -1,6 +1,0 @@
-connector_type,min_charging_power_limit_kw,reference,note
-62196-2 (Three Phase),22,https://en.wikipedia.org/wiki/Type_2_connector,'"typical maximum of 32 A 7.2 kW using single-phase AC and 22 kW with three-phase AC in common practice"'
-Combo CCS,350,https://en.wikipedia.org/wiki/Combined_Charging_System,'"Type 1 was used primarily in North America and Japan, and Type 2 variants elsewhere" -> Assuming Type 2.'
-ChaDeMo,,,
-Combined ChaDeMo/ComboCCS,,,
-Combined ChaDeMo/C,,,

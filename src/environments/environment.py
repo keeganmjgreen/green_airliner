@@ -10,11 +10,8 @@ import time
 from copy import deepcopy
 from typing import Optional, Union
 
-from src.agents import BaseAgent
 from src.emulators import EvTaxisEmulator
-from src.deployment_interfaces.agent_interface import AgentInterface
-from src.deployment_interfaces.ev_taxis_interface import EvTaxisInterface
-from src.modeling_objects import AgentAction, EnvironmentState
+from src.modeling_objects import EnvironmentState
 from src.projects import PROJECT_TYPE
 from src.utils.utils import now
 
@@ -76,8 +73,7 @@ class BaseEnvironment(EnvironmentConfig):
     """An environment for EV taxis."""
 
     ENVIRONMENT_CONFIG: EnvironmentConfig
-    ev_taxis_emulator_or_interface: Union[EvTaxisEmulator, EvTaxisInterface]
-    AGENT_OR_INTERFACE: Union[BaseAgent, AgentInterface, None] = None
+    ev_taxis_emulator_or_interface: EvTaxisEmulator
     PROJECT: Union[PROJECT_TYPE, None] = None
 
     # The following attributes are instantiated by `__post_init__`, in part using the
@@ -94,13 +90,6 @@ class BaseEnvironment(EnvironmentConfig):
         self.DELAY_TIME_STEP = self.ENVIRONMENT_CONFIG.DELAY_TIME_STEP
 
         self.START_TIMESTAMP = self.ENVIRONMENT_CONFIG.START_TIMESTAMP
-        # If the environment's ``ev_taxis_emulator_or_interface`` is an ``EvTaxisInterface``, which
-        #     does not have a start timestamp, as opposed to an emulator, then the environment's
-        #     ``START_TIMESTAMP`` must not be None:
-        if isinstance(self.ev_taxis_emulator_or_interface, EvTaxisInterface):
-            assert self.START_TIMESTAMP is not None
-        # Otherwise, if the environment's ``START_TIMESTAMP`` is None, set it to the emulator's
-        #     ``START_TIMESTAMP``:
         if self.START_TIMESTAMP is None:
             self.START_TIMESTAMP = self.ev_taxis_emulator_or_interface.START_TIMESTAMP
 
@@ -122,9 +111,6 @@ class BaseEnvironment(EnvironmentConfig):
             timestamp=self.current_timestamp
         )
         return self.ev_taxis_emulator_or_interface.current_state
-
-    def _perform_action(self, action: AgentAction) -> None:
-        self.ev_taxis_emulator_or_interface.set_action(action)
 
     @property
     def reward(self) -> float:
@@ -158,11 +144,6 @@ class Environment(BaseEnvironment):
             f"current_timestamp of the {type(self).__name__}: {self.current_timestamp}. "
             f"Waiting for DELAY_TIME_STEP = {self.DELAY_TIME_STEP}..."
         )
-        state = self._get_state(timestamp=self.current_timestamp)
-        if self.AGENT_OR_INTERFACE is not None:
-            action = self.AGENT_OR_INTERFACE.action(
-                timestamp=self.current_timestamp, environment_state=state
-            )
-            self._perform_action(action)
+        self._get_state(timestamp=self.current_timestamp)
         if self.TIME_STEP is not None:
             self.current_timestamp += self.TIME_STEP

@@ -6,10 +6,8 @@ from copy import deepcopy
 from typing import List, Literal, Optional, Type
 
 import pandas as pd
-import numpy as np
 
-from src.deployment_interfaces.low_vol_db_provisioner import LowVolDbProvisioner
-from src.modeling_objects import Airliner, EnvironmentState, EvSpec, Trip
+from src.modeling_objects import Airliner, EnvironmentState, Trip
 from src.projects import PROJECT_TYPE
 
 from .base_emulator import BaseEmulator
@@ -101,8 +99,6 @@ class EvTaxisEmulator(BaseEmulator):
 
     START_STATE: EnvironmentState
     # TODO: Implement optional `.END_TIMESTAMP`.
-    EV_SPECS: Optional[List[EvSpec]] = None
-    """Used at least by ``LowVolDbProvisioner``."""
     TRIP_CLASS: Optional[Type[Trip]] = Trip
 
     APPROX_MAX_TIME_STEP: dt.timedelta = dataclasses.field(
@@ -158,12 +154,6 @@ class EvTaxisEmulator(BaseEmulator):
         #     Trips Forecaster (which is not yet implemented):
         assert self.START_STATE.trips_demand_forecasts is None
 
-    def provision_low_vol_db(self, project: PROJECT_TYPE) -> None:
-        db_provisioner = LowVolDbProvisioner(PROJECT=project)
-        db_provisioner.provision_low_vol_db(
-            state=self.START_STATE, ev_specs=self.EV_SPECS
-        )
-
     @classmethod
     def from_db(
         cls, start_timestamp: dt.datetime, project: PROJECT_TYPE
@@ -198,110 +188,6 @@ class EvTaxisEmulator(BaseEmulator):
 
         self._update_evs_locations_and_discharging_socs(prev_timestamp)
         self._update_evs_charging_socs(prev_timestamp)
-
-    def _update_evs_trip_assignments(self, prev_timestamp: dt.datetime) -> None:
-        """Update EVs' trip assignments."""
-
-        # TODO: Assigning in block after start event. <- What did this mean?
-
-        trips = self._get_prev_interval_trips(prev_timestamp)
-
-        trip_events = [
-            TripEvent(event_kind="trip_requested", trip=t) for t in trips
-        ] + [TripEvent(event_kind="trip_end", trip=t) for t in trips]
-        # Trip requested events and end events are when EV-trip assignments change.
-
-        # Remove trip requested events that are before prev_timestamp and trip end events that are
-        #     after or on current_timestamp; keep trip events in
-        #     (prev_timestamp, current_timestamp]:
-        #     Trip end events whose trips are not assigned to EVs (their end_timestamp is None) are
-        #     kept.
-        trip_events = [
-            te
-            for te in trip_events
-            if (
-                te.event_timestamp is not None
-                and prev_timestamp <= te.event_timestamp < self.current_timestamp
-                or te.event_kind == "trip_end"
-                and not te.trip.is_assigned_to_ev
-            )
-        ]
-
-        unprocessed_trip_events = deepcopy(trip_events)
-
-        while len(unprocessed_trip_events) > 0:
-            # Sort the trip events chronologically, in the order in which they will be processed:
-            #     While trip end events' timestamps are None (because the trips have yet to be
-            #     assigned), process them last.
-            unprocessed_trip_events.sort(
-                key=(
-                    lambda te: te.event_timestamp
-                    if te.event_timestamp is not None
-                    else self.current_timestamp
-                )  # TODO: FIXME
-            )
-
-            trip_event = unprocessed_trip_events[0]
-            trip = trip_event.trip
-
-            if trip_event.event_kind == "trip_requested":
-                # If a trip has been requested, assign the closest available EV to it:
-                closest_available_ev = trip.ORIGIN.get_closest_available_asset(
-                    assets=self.current_state.evs_state
-                )
-                closest_available_ev.assign_to_trip(trip=trip)
-                # Note: Assigns waypoints.
-
-                trip.start_timestamp = trip.REQUESTED_TIMESTAMP + (
-                    # Direct travel time from EV's location to trip's origin:
-                    closest_available_ev.waypoints[0].get_direct_travel_timedelta(
-                        origin=closest_available_ev.location
-                    )
-                )
-                trip.end_timestamp = trip.start_timestamp + (
-                    # Direct travel time from trip's origin to trip's destination:
-                    closest_available_ev.waypoints[1].get_direct_travel_timedelta(
-                        origin=trip.ORIGIN
-                    )
-                )
-                # ^ Trip start and end timestamps must be known by the ``EvTaxisEmulator`` at the
-                #     trip requested timestamp to know when to remove the two respective waypoints.
-
-                # Save the trip's end timestamp and assigned EV's ID to the trip dataset:
-                self._trips_dataset.loc[
-                    trip.ID, ["start_timestamp", "end_timestamp", "assigned_ev_id"]
-                ] = (
-                    trip.start_timestamp,
-                    trip.end_timestamp,
-                    closest_available_ev.ID,
-                )
-
-            elif (
-                trip_event.event_kind == "trip_end"
-                and trip.end_timestamp < self.current_timestamp
-            ):
-                # If a trip has ended, unassign its EV:
-                self.current_state.evs_state[trip.assigned_ev_id].assign_to_trip(
-                    trip=None
-                )  # Does not remove waypoints.
-                self._trips_dataset.loc[trip.ID, "assigned_ev_id"] = None
-
-                # If not using distance_km from the `TRIPS_DEMAND_DATASET`, determine the trip's
-                #     distance from origin to destination and save it to the (mutable) trip dataset:
-                if not self._using_historical_distance:
-                    self._trips_dataset.loc[
-                        trip.ID, "distance_km"
-                    ] = trip.distance_km = trip.determine_distance_km()
-
-                # If not using revenue from the `TRIPS_DEMAND_DATASET`, determine the trip's revenue
-                #     if possible and save it to the (mutable) trip dataset:
-                if not self._using_historical_revenue:
-                    self._trips_dataset.loc[
-                        trip.ID, "revenue"
-                    ] = trip.determine_revenue()
-
-            # Remove the trip event that has now been processed:
-            unprocessed_trip_events = unprocessed_trip_events[1:]
 
     def _update_evs_locations_and_discharging_socs(
         self, prev_timestamp: dt.datetime
@@ -382,56 +268,6 @@ class EvTaxisEmulator(BaseEmulator):
                 uav.charge_for_duration(
                     -charging_power_kw, duration, refueling_soc=True
                 )
-
-    def _get_prev_interval_trips(self, prev_timestamp: dt.datetime) -> List[Trip]:
-        """Get trips overlapping (to any extent) with the interval
-        [prev_timestamp, current_timestamp).
-        """
-
-        df = self._trips_dataset
-        df = df[
-            (df["end_timestamp"].isna() | (prev_timestamp <= df["end_timestamp"]))
-            & (df["requested_timestamp"] < self.current_timestamp)
-        ]
-        trips = [
-            self.TRIP_CLASS.from_dict(row.to_dict())
-            for _, row in df.reset_index().iterrows()
-        ]
-        return trips
-
-    def _update_ongoing_trips_state(self) -> None:
-        """Update the EnvironmentState.ongoing_trips_state by setting it to the ongoing requested
-        trips in their current state.
-
-        Ongoing requested trips are those trips that have been requested as of the current_timestamp
-        but have not yet been completed by an assigned EV taxi.
-        This is all trips whose [requested_timestamp, end_timestamp] interval overlap with or may
-        overlap (end_timestamp not yet known) with the current_timestamp.
-        """
-
-        df = self._trips_dataset
-        df = df[
-            (df["requested_timestamp"] <= self.current_timestamp)
-            & (
-                df["end_timestamp"].isna()
-                | (self.current_timestamp <= df["end_timestamp"])
-            )
-        ]
-        self.current_state.ongoing_trips_state = {
-            row["id"]: self.TRIP_CLASS.from_dict(row.to_dict())
-            for _, row in df.reset_index().iterrows()
-        }
-
-    def _update_trips_demand_forecasts(self) -> None:
-        self.current_state.trips_demand_forecasts = None  # Not yet implemented.
-
-    def set_action(self, action: AgentAction) -> None:
-        for ev_id, ev_action in action.ev_actions.items():
-            self.current_state.evs_state[ev_id].set_charging_site_waypoint(
-                charging_site=self.current_state.charging_sites_state.get(
-                    ev_action.waypoint_charging_site_id
-                )
-            )
 
     @property
     def total_revenue(self) -> float:

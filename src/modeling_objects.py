@@ -15,13 +15,6 @@ Classes:
 - Assets:
   - ``Asset``.
   - ``EvTaxi`` -- subclass of ``Asset``.
-  - Charging site, charge point, and connector -- subclasses of ``Asset``:
-    - ``Connector``.
-    - ``ChargePoint`` -- also subclass of ``Location``.
-    - ``ChargingSite`` -- also subclass of ``Location``.
-- ``EnvironmentState``.
-  - ``EvAction`` -- used in ``AgentAction``.
-- ``AgentAction``.
 """
 
 from __future__ import annotations
@@ -36,7 +29,6 @@ import geopandas as gpd
 import numpy as np
 import shapely
 
-from src.deployment_interfaces import optimizer_dispatch as od
 from src.utils.utils import (
     CHARGING_STATUS_CANONICAL_TYPE,
     KWH_PER_MWH,
@@ -489,46 +481,12 @@ class EvTaxi(IdentifiedObject, EvSpec, Asset):
         return travel_durations
 
     @property
-    def has_availability(self):
-        """Whether the EV is not assigned to a trip and not at or en route to a charge point."""
-        return (
-            self._trip is None
-            and not self.is_plugged_in
-            and not self.is_en_route_to_charging_site
-        )
-
-    @property
     def is_plugged_in(self) -> bool:
         return self.connector is not None
 
     @property
     def is_charging(self) -> bool:
         return self.is_plugged_in  # TODO: Distinguish between plugged-in and charging.
-
-    def assign_to_trip(self, trip: Union[Trip, None]) -> None:
-        if trip is not None:
-            # The EV is being assigned to a trip:
-            if self._trip is not None:
-                raise Exception("EV is already assigned to a trip.")
-            self.waypoints.append(
-                Waypoint(
-                    LOCATION=trip.ORIGIN,
-                    DIRECT_APPROACH_SPEED_KMPH=self.DEFAULT_SPEED_KMPH,
-                )
-            )
-            self.waypoints.append(
-                Waypoint(
-                    LOCATION=trip.DESTINATION,
-                    DIRECT_APPROACH_SPEED_KMPH=self.DEFAULT_SPEED_KMPH,
-                )
-            )
-            trip.assigned_ev_id = self.ID
-        else:
-            if self._trip is None:
-                raise Exception("EV is already unassigned.")
-            # The EV is being unassigned:
-            self._trip.assigned_ev_id = None
-        self._trip = trip
 
     def move_to_location(self, new_location: Location) -> None:
         direct_distance_km = Location.direct_distance_km_between(
@@ -540,51 +498,6 @@ class EvTaxi(IdentifiedObject, EvSpec, Asset):
 
         self.location = new_location
 
-        if isinstance(self.location, ChargingSite):
-            # Assign the EV to a connector: the first available one at the first available charge
-            #     point at the charging site:
-            first_available_cp = get_first_available_asset(
-                assets=self.location.charge_points
-            )
-            first_available_cp_connector = get_first_available_asset(
-                assets=first_available_cp.connectors
-            )
-            # Start charging:
-            self.connector = first_available_cp_connector
-            self.connector.has_availability = False
-
-    def set_charging_site_waypoint(
-        self, charging_site: Union[ChargingSite, None]
-    ) -> None:
-        if charging_site is not None:
-            if self.is_en_route_to_charging_site:
-                # Replace the current charging site waypoint:
-                self.waypoints[0] = Waypoint(
-                    LOCATION=charging_site,
-                    DIRECT_APPROACH_SPEED_KMPH=self.DEFAULT_SPEED_KMPH,
-                )
-            elif not self.is_plugged_in:
-                # Set the charging site waypoint:
-                self.waypoints.insert(
-                    0,
-                    Waypoint(
-                        LOCATION=charging_site,
-                        DIRECT_APPROACH_SPEED_KMPH=self.DEFAULT_SPEED_KMPH,
-                    ),
-                )
-        elif self.is_en_route_to_charging_site:
-            # Clear the charging site waypoint:
-            self.waypoints = self.waypoints[1:]
-        elif self.is_plugged_in:
-            # Stop charging:
-            self.connector.has_availability = True
-            self.connector = None
-
-    @property
-    def is_en_route_to_charging_site(self) -> bool:
-        return len(self.waypoints) > 0 and isinstance(
-            self.waypoints[0].LOCATION, ChargingSite
-        )
 
     def charge_with_energy(
         self, delta_energy_kwh: float, refueling_soc: bool = False
@@ -617,24 +530,6 @@ class EvTaxi(IdentifiedObject, EvSpec, Asset):
             refueling_soc=refueling_soc,
         )
 
-    def to_json(self) -> Dict[str, Any]:
-        """Used by ``EvTaxisEmulatorEnvironment``."""
-        return {
-            "id": self.ID,
-            "location": self.location.to_json(),
-            "soc_pc": self.soc * 100,
-            "charging_status": (
-                CHARGING_STATUS_CANONICAL_TYPE["PLUGGED_IN.CHARGING"]
-                if self.is_charging
-                else CHARGING_STATUS_CANONICAL_TYPE["PLUGGED_IN.NOT_CHARGING"]
-                if self.is_plugged_in
-                else CHARGING_STATUS_CANONICAL_TYPE["NOT_PLUGGED_IN"]
-            ),
-            "connector_id": self.connector.ID
-            if self.connector is not None
-            else None,  # NOTE: Not available from Smartcar.
-        }
-
     @property
     def energy_level_kWh(self) -> float:
         return self.soc * self.ENERGY_CAPACITY_KWH
@@ -666,76 +561,7 @@ class Uav(Airplane):
         )
 
 
-# --------------------------------------------------------------------------------------------------
-# Charging site, charge point, and connector
-
-
-@dataclasses.dataclass(kw_only=True)
-class Connector(IdentifiedObject, Asset):
-    """A charging connector of a charge point."""
-
-    ID: CONNECTOR_ID_TYPE
-    CHARGING_POWER_LIMIT_KW: float
-    # CONNECTOR_TYPE
-    PARENT_CHARGE_POINT_ID: CHARGE_POINT_ID_TYPE
-    PARENT_CHARGE_POINT_LOCATION: Location
-    PARENT_CHARGING_SITE_ID: CHARGING_SITE_ID_TYPE
-    has_availability: bool = True
-    # TODO: ^ Remove default? (Same goes for `ChargePoint` and `ChargingSite`.)
-
-
-@dataclasses.dataclass(kw_only=True)
-class ChargePoint(IdentifiedObject, Asset, Location):
-    ID: CHARGE_POINT_ID_TYPE
-    connectors: Dict[CONNECTOR_ID_TYPE, Connector]
-    PARENT_CHARGING_SITE_ID: CHARGING_SITE_ID_TYPE
-    CHARGING_EFFICIENCY: float = 1.0  # NOTE: Unused.
-    is_open: bool = True
-
-    @property
-    def has_availability(self):
-        return (
-            any(c.has_availability for c in self.connectors.values()) and self.is_open
-        )
-
-    def to_json(self) -> Dict[str, Any]:
-        """Used by ``EvTaxisEmulatorEnvironment``."""
-        return {
-            "id": self.ID,
-            "connectors": [
-                {
-                    "id": connector.ID,
-                    "is_plugged_in": not connector.has_availability,
-                }
-                for connector in self.connectors.values()
-            ],
-            "is_open": self.is_open,
-        }
-
-
-@dataclasses.dataclass(kw_only=True)
-class ChargingSite(IdentifiedObject, Asset, Location):
-    ID: CHARGING_SITE_ID_TYPE
-    charge_points: Dict[CHARGE_POINT_ID_TYPE, ChargePoint]
-    ADDRESS: Optional[str] = None
-    is_open: bool = True
-
-    @property
-    def has_availability(self):
-        return (
-            any(cp.has_availability for cp in self.charge_points.values())
-            and self.is_open
-        )
-
-    @property
-    def location(self):
-        return Location(LAT=self.LAT, LON=self.LON)
-
-
 # ==================================================================================================
-
-
-TRIPS_DEMAND_FORECASTS_TYPE = Dict[dt.datetime, List[TripsDemandForecast]]
 
 
 @dataclasses.dataclass
@@ -757,54 +583,3 @@ class EnvironmentState:
     """
 
     evs_state: Dict[EV_ID_TYPE, EvTaxi]
-
-
-@dataclasses.dataclass
-class EvAction:
-    waypoint_charging_site_id: Union[CHARGING_SITE_ID_TYPE, None]
-    # ^ Not a `Waypoint`; the charging site's location will be set as the EV's (only) waypoint.
-
-
-@dataclasses.dataclass
-class AgentAction:
-    ev_actions: Dict[EV_ID_TYPE, EvAction]
-
-    def to_asset_actions(self) -> List[od.AssetAction]:
-        """
-        Used by the deployed EV Taxis Optimizer component.
-        """
-        return [
-            od.AssetAction(
-                assetType="vehicle",
-                assetId=ev_id,
-                priority=None,
-                recommendedCommands=[
-                    od.ChargingSiteRecommendation(
-                        chargingSiteId=ev_action.waypoint_charging_site_id
-                    )
-                ],
-            )
-            for ev_id, ev_action in self.ev_actions.items()
-        ]
-
-    @classmethod
-    def from_asset_actions(cls, asset_actions: List[od.AssetAction]) -> AgentAction:
-        """
-        Used by the deployed EV Taxis Emulator component.
-        """
-        ev_actions = {}
-        for asset_action in asset_actions:
-            assert asset_action.contains_recommended_command_type(
-                od.ChargingSiteRecommendation
-            )
-            if asset_action.contains_recommended_command_type(
-                od.ChargingSiteRecommendation
-            ):
-                assert asset_action.assetType == "vehicle"
-                recommended_command = asset_action.get_1x_recommended_command_type(
-                    od.ChargingSiteRecommendation
-                )
-                ev_actions[asset_action.assetId] = EvAction(
-                    waypoint_charging_site_id=recommended_command.chargingSiteId
-                )
-        return cls(ev_actions)
