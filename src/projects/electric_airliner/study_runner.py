@@ -20,7 +20,7 @@ from src.projects.electric_airliner.flight_path_generation import (
 )
 from src.utils.utils import J_PER_MJ, KWH_PER_MJ, MINUTES_PER_HOUR
 
-from electric_airline.src.study_params import BaseA320, Lh2FueledA320, at200, lh2_fuel
+from src.feasibility_study.study_params import BaseA320, Lh2FueledA320, at200, lh2_fuel
 
 AIRLINER_ID = "Airliner"
 

@@ -1,24 +1,19 @@
-name: electric_airline_3d_sim
+name: electric_airline
 dependencies:
   - python
   - pip
   - pip:
       - geopandas
-      - flask
       - ipykernel
       - kaleido
       - matplotlib
       - nbformat
       - pandas
       - psycopg2-binary  # Instead of `psycopg2` with, e.g., Linux `build-essential` package.
-      - pytest
-      - pytest-cov
       - plotly
-      - requests
       - shapely
       - sqlalchemy
-      - openpyxl
-      - waitress
       - numpy-stl
       - pywavefront
       - vpython
+      - sphinx

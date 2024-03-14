@@ -12,32 +12,43 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
-                "PYTHONPATH": "/home/keegan_green/Dropbox/Documents/Projects/electric_airline:/home/keegan_green/Dropbox/Documents/Projects/electric_airline_3d_sim"
+                "PYTHONPATH": "/home/keegan_green/Dropbox/Documents/Projects/electric_airline"
             }
         },
         {
-            "name": "Electric Airliner - Study Runner - Airplane Paths",
+            "name": "Feasibility Study",
+            "type": "python",
+            "request": "launch",
+            "program": "src/feasibility_study/feasibility_study.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "Study Runner - Airplane Paths",
             "type": "python",
             "request": "launch",
             "program": "src/projects/electric_airliner/study_runner.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
-                "PYTHONPATH": "${workspaceFolder}:/home/keegan_green/Dropbox/Documents/Projects/"
+                "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
                 "--view", "airplane-paths"
             ]
         },
         {
-            "name": "Electric Airliner - Study Runner - Airliner Side View",
+            "name": "Study Runner - Airliner Side View",
             "type": "python",
             "request": "launch",
             "program": "src/projects/electric_airliner/study_runner.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
-                "PYTHONPATH": "${workspaceFolder}:/home/keegan_green/Dropbox/Documents/Projects/"
+                "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
                 "--view", "airplane-side-view",
@@ -45,14 +56,14 @@
             ]
         },
         {
-            "name": "Electric Airliner - Study Runner - Airliner Tail View",
+            "name": "Study Runner - Airliner Tail View",
             "type": "python",
             "request": "launch",
             "program": "src/projects/electric_airliner/study_runner.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
-                "PYTHONPATH": "${workspaceFolder}:/home/keegan_green/Dropbox/Documents/Projects/"
+                "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
                 "--view", "airplane-tail-view",
@@ -60,14 +71,14 @@
             ]
         },
         {
-            "name": "Electric Airliner - Study Runner - PIT UAV 1 Side View",
+            "name": "Study Runner - PIT UAV 1 Side View",
             "type": "python",
             "request": "launch",
             "program": "src/projects/electric_airliner/study_runner.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
-                "PYTHONPATH": "${workspaceFolder}:/home/keegan_green/Dropbox/Documents/Projects/"
+                "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
                 "--view", "airplane-side-view",
@@ -75,15 +86,15 @@
             ]
         },
         {
-            "name": "Electric Airliner - Study Runner - Airliner Multi View",
+            "name": "Study Runner - Airliner Multi View",
             "type": "python",
             "request": "launch",
             "program": "src/projects/electric_airliner/multi_view_entrypoint.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
-                "PYTHONPATH": "${workspaceFolder}:/home/keegan_green/Dropbox/Documents/Projects/"
+                "PYTHONPATH": "${workspaceFolder}"
             }
-        }
+        },
     ]
 }
