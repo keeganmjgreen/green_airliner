@@ -1,9 +1,10 @@
-# Installation prerequisites:
-sudo apt install latexmk
-sudo apt install --fix-missing texlive-latex-extra
+# # Installation prerequisites:
+# sudo apt install latexmk
+# sudo apt install --fix-missing texlive-latex-extra
 
 # Usage:
-conda activate electric-airline
-cd ../electric_airline/docs/
+#     source ~/Dropbox/Documents/Projects/electric_airline/docs/sphinx-instructions.sh
+conda activate electric_airline
+cd ~/Dropbox/Documents/Projects/electric_airline/docs/
 make html
 make latexpdf
