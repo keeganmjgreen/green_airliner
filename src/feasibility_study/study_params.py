@@ -15,8 +15,8 @@ jet_a1_fuel = Fuel(
 
 
 lh2_fuel = Fuel(
-    energy_density_lhv_MJpL=8.491,
-    density_kgpL=70.85e-3,
+    energy_density_lhv_MJpL=8.491,  # From https://en.wikipedia.org/wiki/Energy_density
+    density_kgpL=70.85e-3,  # From https://en.wikipedia.org/wiki/Liquid_hydrogen
 )
 
 # https://en.wikipedia.org/wiki/Lithium-ion_battery

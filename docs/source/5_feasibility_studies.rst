@@ -39,13 +39,18 @@ It should be noted that only one third of aviation's warming of earth is caused 
 Liquid Hydrogen (LH₂)
 ---------------------
 
-Gaseous hydrogen (H₂) burns clean, can be used at room temperature in a fuel cell, and can be produced from electricity (ideally clean electricity) via electrolysis. Water (or water vapor) is the only waste product of extracting energy from hydrogen, making it a notable candidate for a clean alternative fuel. But if water vapor is emitted as a result, it will only partially solve aviation's warming of earth. The limitations of gaseous hydrogen storage owing in large part to its abismal energy density, however, represent a more practically important consideration. Where jet A1 has an energy density of 34.7 MJ/L, gaseous hydrogen has an energy density of 0.0128 MJ/L. In addition, as H₂ is a smaller molecule than any hydrocarbon, it may pose a risk of leaks in hydrogen infrastructure from distribution, to refueling, to storage onboard airliners. Gaseous hydrogen may be compressed up to TODO to increase its energy density, but this may also cause increased difficulties in hydrogen infrastructure in the form of leaks, bursts, etc. Furthermore, this would only result in an energy density of TODO, making it still a poor contender to jet A1.
+Gaseous hydrogen (H₂) burns clean, can be used at room temperature in a fuel cell, and can be produced from electricity (ideally clean electricity) via electrolysis. Water (or water vapor) is the only waste product of extracting energy from hydrogen, making it a notable candidate for a clean alternative fuel. But if water vapor is emitted as a result, it will only partially solve aviation's warming of earth. The limitations of gaseous hydrogen storage owing in large part to its abismal energy density, however, represent a more practically important consideration. Where jet A1 has an energy density of 34.7 MJ/L, gaseous hydrogen has an energy density of 0.0128 MJ/L. In addition, as H₂ is a smaller molecule than any hydrocarbon, it may pose a risk of leaks in hydrogen infrastructure from distribution, to refueling, to storage onboard airliners. Gaseous hydrogen may be compressed to pressures such as ~350 and up to ~700 atmospheres, these pressures being used in hydrogen-powered road vehicles, thereby increasing its energy density. This would result in energy densities of 4.41 and up to 8.82 MJ/L, respectively, making it still a poor contender to jet A1.
 
 .. Energy density of gaseous hydrogen: 142.0 MJ/kg * 0.001 kg/g * 0.08988 g/L (at STP) = 0.0128 MJ/L
 ..     142.0 MJ/kg from https://transportgeography.org/contents/chapter4/transportation-and-energy/combustibles-energy-content/
 ..     0.08988 g/L from https://en.wikipedia.org/wiki/Hydrogen
+.. Gaseous hydrogen pressures from https://en.wikipedia.org/wiki/Hydrogen_storage
+.. Pressurized hydrogen energy densities: 0.0128 MJ/L * [350, 700] bar / (1.01325 bar/atm) = [4.41, 8.82] MJ/L
+.. https://en.wikipedia.org/wiki/Hydrogen_storage#/media/File:Storage_Density_of_Hydrogen.jpg
 
-Liquid hydrogen (LH₂) TODO
+Liquid hydrogen (LH₂) is stored at around –250°C and between 1 and ~4 atmospheres, resulting in a density of around 0.067 kg/L.
+
+Cryo-compressed hydrogen (hydrogen in a transcritical state) is stored at temperatures ranging from –240 and –200°C, and at pressures ranging from ~500 to ~1000 atmospheres, resulting in a density from around 0.074 to 0.102 kg/L.
 
 Lithium-Ion and Lithium-Polymer Batteries
 -----------------------------------------
@@ -57,22 +62,29 @@ Comparisons Between Different Energy Storage Media
 
 The following table compares the energy densities and densities of fuels and other energy storage media::
 
-    Fuel    Energy Density (MJ/L)     Density (kg/L)    Specific Energy (MJ/kg)
-    ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
-    Jet A1                 34.7*     0.804 (at 15°C)                       43.2
-    LH₂                     8.491    0.07085                              119.8
-    Li-ion             0.90–2.49     0.360–0.954        
-                      Mean: 1.70     Mean: 0.657                           2.57
-    LiPo               0.90–2.63     0.36 –0.95         
-                      Mean: 1.77     Mean: 0.66                             2.7
+    Fuel              Energy Density (MJ/L)    Density (kg/L)     Specific Energy (MJ/kg)
+    ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+    Jet A1                          34.7*      0.804 (at 15°C)                       43.2
+    ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+    GH₂ at STP                       0.0128    0.00008988                           142.0
+    GH₂ at 345 atm                   4.41      0.03105                                  "
+    GH₂ at 691 atm                   8.82      0.06209                                  "
+    Cryo-compressed H₂              12.496     0.088                                    "
+    LH₂**                            8.491     0.07085                              119.8
+    ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+    Li-ion                      0.90–2.49      0.360–0.954        
+                               Mean: 1.70      Mean: 0.657                           2.57
+    LiPo                        0.90–2.63      0.36 –0.95         
+                               Mean: 1.77      Mean: 0.66                             2.7
 
     * Lower Heating Value (LHV)
+    ** As can be seen by the energy density of GH₂ at 691 atm being slightly higher than that of LH₂, while the converse is true for the density, figures are approximate.
 
 Jet A1 fuel is practical, besides the unfortunate fact that it is extremely inexpensive per liter, because it has both a good energy density (34.7 MJ/L) and specific energy (43.2 MJ/L). LH₂ has a much higher specific energy (119.8 MJ/kg) but a much lower energy density (8.491 MJ/L). Both Li-ion and LiPo have poor energy densities and specific energies; note that their mean values have been taken to be conservative, although using one value or another for the Li-ion and LiPo energy storage media matters little as their energy densities and specific energy do not compare to jet A1 and LH₂.
 
 The A320ceo can carry up to 27,200 L, or 21,900 kg, of jet A1 fuel. For the purposes of studies, it is assumed that the fuel capacity of the A320ceo will not be modified (though the energy storage media, with which it is filled, will be). The AT200 can carry up to 5,000 L or 1,500 kg of cargo---depending on whether the volume or the mass of the cargo is the limiting factor. It is also assumed for the purposes of the studies that no significant additional volume or weight will need to be carried by either the airliner or the UAV to support different fuels (which does not necessarily hold true for fuels such as LH₂).
 
-The following table compares the volume, mass, and energy of fuels that the A320ceo airliner and AT200 UAV are capable of carrying based solely on their fuel/cargo capacity volumes---not yet considering their fuel/cargo capacity masses). Note that, for the AT200 UAV, fuel is referring to that with which it will refuel the airliner, which is treated as cargo. Asterisks indicate where the fuel/cargo capacity volume is correctly the limiting factor, which is always the case for the A320ceo (or, correspondingly, the fuel density always being too low), and for the AT200 with the exception of LH₂ due to its exceptionally low density. The Li-ion and LiPo fuels are less dense than jet A1, and LH₂ far less dense. Whereas the A320ceo has enough space for 21,900 kg of jet A1, only 1,930 kg of LH₂ can occupy the same space; whereas the AT200 has enough space for 4,000 kg of jet A1 (ignoring the 1,500-kg cargo capacity volume of the AT200), only 350 kg of LH₂ can occupy the same space. The fuel/cargo volume capacity is reached before the fuel/cargo mass capacity.
+The following table compares the volume, mass, and energy of fuels that the A320ceo airliner and AT200 UAV are capable of carrying based solely on their fuel/cargo capacity volumes---not yet considering their fuel/cargo capacity masses. Note that, for the AT200 UAV, fuel is referring to that with which it will refuel the airliner, which is treated as cargo. Asterisks indicate where the fuel/cargo capacity volume is correctly the limiting factor, which is always the case for the A320ceo (or, correspondingly, the fuel density always being too low), and for the AT200 with the exception of LH₂ due to its exceptionally low density. The Li-ion and LiPo fuels are less dense than jet A1, and LH₂ far less dense. Whereas the A320ceo has enough space for 21,900 kg of jet A1, only 1,930 kg of LH₂ can occupy the same space; whereas the AT200 has enough space for 4,000 kg of jet A1 (ignoring the 1,500-kg cargo capacity volume of the AT200), only 350 kg of LH₂ can occupy the same space. The fuel/cargo volume capacity is reached before the fuel/cargo mass capacity.
 
 ::
 
