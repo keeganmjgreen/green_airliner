@@ -36,6 +36,8 @@ Jet A1 is the main fuel used by commercial airlines around the world, owing to i
 
 It should be noted that only one third of aviation's warming of earth is caused by CO₂; most of the remainder is caused by contrails. Contrails are composed of water vapor introduced into the atmosphere as a waste product of burning jet fuel. Water vapor is also a GHG but with a greater warming effect than CO₂. However, water vapor leaves the atmosphere at a rate such that its half-life is about two weeks, whereas the corresponding half-life of CO₂ is about a century. Nonetheless, most of aviation's warming of earth is caused by water vapor. This will also be accounted for when considering alternative fuels.
 
+Jet fuel may be stored in simple tanks that are form-fitting to the internal shape and structure of airliner wings, thus making efficient use of the space available.
+
 Liquid Hydrogen (LH₂)
 ---------------------
 
@@ -48,6 +50,10 @@ Gaseous hydrogen (H₂) burns clean, can be used at room temperature in a fuel c
 Liquid hydrogen (LH₂) is stored at around –250°C and between 1 and ~4 atmospheres, resulting in a density of around 0.067 kg/L.
 
 Cryo-compressed hydrogen (hydrogen in a transcritical state) is stored at temperatures ranging from –240 and –200°C, and at pressures ranging from ~500 to ~1000 atmospheres, resulting in a density from around 0.074 to 0.102 kg/L.
+
+There are established ways of storing compressed hydrogen, liquid hydrogen, and cryo-compressed hydrogen. Compressed hydrogen is stored in tanks of suitable material to withstand the pressure and prevent leaks, such as Type I (steel) or Type IV (carbon composite) hydrogen tanks, as currently used in hydrogen cars and when trucking hydrogen to hydrogen car refueling stations. The tanks are cylindrical with two semispherical ends, to withstand the high pressures. Such tanks arranged in an airplane wing would result in much wasted space between them, TODO. Liquid hydrogen must be stored in tanks that are insulated and/or cooled to maintain a temperature near absolute zero. Cryo-compressed hydrogen demands the storage needs of both compressed and liquid hydrogen.
+
+Technology similar to that used when refueling hydrogen cars may be used.
 
 Lithium-Ion and Lithium-Polymer Batteries
 -----------------------------------------
