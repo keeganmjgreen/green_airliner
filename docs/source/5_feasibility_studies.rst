@@ -59,6 +59,12 @@ There are established ways of storing compressed hydrogen, liquid hydrogen, and 
 
 Technology similar to that used when refueling hydrogen cars may be used.
 
+Unfortunately, LH₂ is very likely not an option (economically speaking, in the long-term) if for no other reason than the price of the helium that would be needed for purging as part of the LH₂ refueling process to protect against explosions. An explosion risk *may* be acceptable if an airliner were refueled only on the ground, free of personnel, and far away from an airport terminal, such that the only risk is posed to the airliner itself. However, this is not acceptable while the airliner is mid-air and full of passengers. If LH₂-fueled airliners saw widespread adoption, this may cause the price of helium to prohibitively skyrocket and helium to become more rare.
+
+.. "...for reasons of safe handling and compliance with explosion protection, a purging process is necessary [43]—so no foreign gases remain in the hoses. Helium is required for this purging process [30], as at cryogenic temperatures of 20 K, all substances except helium (boiling point of 4.2 K [35]) would freeze and block the pipe [44,45]. Helium has the further advantage of being an inert gas that does not form chemical reactions and dissolves only slightly [31]. On the downside, Helium is an expensive, non-renewable inert gas [46] that should ideally not be used in regular operation. A massive increase in helium consumption could raise the price to such an extent that using LH2 as a fuel would become uneconomical."
+
+Because of the economically inviable helium requirement and other storage complexities of liquid hydrogen (including cryo-compressed hydrogen), gaseous hydrogen compressed to 700 bar (or higher if possible) may be used.
+
 Lithium-Ion and Lithium-Polymer Batteries
 -----------------------------------------
 
