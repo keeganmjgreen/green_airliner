@@ -29,6 +29,10 @@ The airliner can deviate somewhat from its regular JFK--LAX flight path and fly 
 
 Geographically, a detour over DEN in particular may not be considered negligible, however the total detour only adds 26 km, or 2 minutes, to the total flight time.
 
+The direct (JFK–LAX) and JFK–PIT–DEN–LAX flight paths (straight-line flight paths) are illustrated as follows:
+
+.. image:: airport_locations_mapbox.png
+
 Jet A1 Fuel---The Baseline
 --------------------------
 
