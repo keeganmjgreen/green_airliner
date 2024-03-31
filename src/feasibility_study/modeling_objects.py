@@ -55,8 +55,8 @@ class BaseAirliner:
     # Sub-sub-class instance (e.g., `JetFueledA320()`) attributes:
     reserve_energy_thres_MJ: float
     # The following attributes are designed to be mutated.
-    time_into_flight_h: float = 0
     energy_quantity_MJ: float = dataclasses.field(init=False)
+    time_into_flight_h = 0
 
     @classmethod
     @property
@@ -71,6 +71,15 @@ class BaseAirliner:
         self.energy_quantity_MJ -= (
             self.energy_consumption_rate_MJph / self.propulsion.efficiency
         ) * time_delta_h
+
+    def calculate_range_km(self, energy_quantity_MJ: float) -> float:
+        range_h = (
+            (energy_quantity_MJ - self.reserve_energy_thres_MJ)
+            / self.energy_consumption_rate_MJph
+            * self.propulsion.efficiency
+        )
+        range_km = range_h * self.cruise_speed_kmph
+        return range_km
 
     def refuel(self, energy_quantity_MJ: float) -> None:
         self.energy_quantity_MJ += energy_quantity_MJ

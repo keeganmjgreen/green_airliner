@@ -1,14 +1,70 @@
-from typing import List
+from typing import Dict, Literal, Optional, Union
 
-from src.projects.electric_airliner.flight_path_generation import AirportLocation
+import pandas as pd
 
-def optimize_flyover_airports(
-    airport_a: AirportLocation, airport_b: AirportLocation
-) -> List[AirportLocation]:
-    ...
-    # draw line from a to b
-    # if soc drops below thres, find nearest airport to AB
-    #     what if too late or too soon?
-    # alternative:
-    #     1. find ~~location~~ distance where soc drops below thres
-    #     2. find closest airport to original flight path within radius of said distance
+from src.feasibility_study.study_params import (
+    BaseAirliner,
+    JetFueledA320,
+    Lh2FueledA320,
+    LionFueledA320,
+    Uav,
+    at200,
+)
+from src.feasibility_study.study_runner import run_study
+from src.modeling_objects import Location
+from src.three_d_sim.flight_path_generation import (
+    get_all_airport_locations,
+)  # TODO move
+
+ALL_AIRPORT_LOCATIONS = get_all_airport_locations()
+
+
+def generate_optimized_flight_plan(
+    airliner: BaseAirliner, uav: Uav, origin_airport: str, destination_airport: str
+):
+    def _run_study(
+        n_refuels_by_waypoint: Optional[Dict[str, Union[int, Literal["auto"]]]] = {}
+    ) -> pd.DataFrame:
+        waypoints = [
+            origin_airport,
+            *n_refuels_by_waypoint.keys(),
+            destination_airport,
+        ]  # TODO remove
+        study_label = " - ".join(waypoints)
+        results_df = run_study(
+            study_label,
+            airliner,
+            uav,
+            origin_airport,
+            destination_airport,
+            n_refuels_by_waypoint,
+        )
+        return results_df
+
+    results_df = _run_study(n_refuels_by_waypoint={})
+    for i in range(1, len(results_df)):
+        prev_airport = results_df.loc[i - 1]["waypoint"]
+        next_airport = results_df.loc[i]["waypoint"]
+        if results_df.loc[i]["energy_MJ"] < airliner.reserve_energy_thres_MJ:
+            range_km = airliner.calculate_range_km(results_df.loc[i - 1]["energy_MJ"])
+            potential_flyover_airports = [
+                potential_flyover_airport
+                for potential_flyover_airport in ALL_AIRPORT_LOCATIONS
+                if Location.direct_distance_km_between(
+                    ALL_AIRPORT_LOCATIONS[prev_airport],
+                    potential_flyover_airport,
+                )
+                <= range_km
+            ]
+            ...  # TODO find airport closest to line [waypoint-1, waypoint]
+
+
+if __name__ == "__main__":
+    airliner = Lh2FueledA320(reserve_energy_thres_MJ=100e3)
+    airliner.energy_quantity_MJ = airliner.energy_capacity_MJ
+    generate_optimized_flight_plan(
+        airliner=airliner,
+        uav=at200,
+        origin_airport="JFK",
+        destination_airport="LAX",
+    )

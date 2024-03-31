@@ -32,7 +32,9 @@ class AirportLocation(Location):
     CODE: AIRPORT_CODE_TYPE
 
 
-def get_all_airport_locations() -> Dict[AIRPORT_CODE_TYPE, AirportLocation]:
+def get_all_airport_locations(
+    normalize_coords: bool = False,
+) -> Dict[AIRPORT_CODE_TYPE, AirportLocation]:
     DEFAULT_ALTITUDE = 0.0
 
     airport_location_df = pd.read_csv(AIRPORT_LOCATIONS_CSV_PATH)
@@ -45,19 +47,20 @@ def get_all_airport_locations() -> Dict[AIRPORT_CODE_TYPE, AirportLocation]:
         )
         for row in airport_location_df.to_dict("records")
     }
-    min_y_km, max_y_km = [
-        m(loc.Y_KM for loc in all_airport_locations.values()) for m in [min, max]
-    ]
-    min_x_km, max_x_km = [
-        m(loc.X_KM for loc in all_airport_locations.values()) for m in [min, max]
-    ]
-    for loc in all_airport_locations.values():
-        loc.Y_KM = loc.Y_KM - (min_y_km + max_y_km) / 2
-        loc.X_KM = loc.X_KM - (min_x_km + max_x_km) / 2
+    if normalize_coords:
+        min_y_km, max_y_km = [
+            m(loc.Y_KM for loc in all_airport_locations.values()) for m in [min, max]
+        ]
+        min_x_km, max_x_km = [
+            m(loc.X_KM for loc in all_airport_locations.values()) for m in [min, max]
+        ]
+        for loc in all_airport_locations.values():
+            loc.Y_KM = loc.Y_KM - (min_y_km + max_y_km) / 2
+            loc.X_KM = loc.X_KM - (min_x_km + max_x_km) / 2
     return all_airport_locations
 
 
-all_airport_locations = get_all_airport_locations()
+ALL_AIRPORT_LOCATIONS = get_all_airport_locations(normalize_coords=True)
 
 
 @dataclasses.dataclass
@@ -84,7 +87,7 @@ class FlightPath:
 
     @property
     def AIRPORT_LOCATIONS(self) -> List[AirportLocation]:
-        return [all_airport_locations[ac] for ac in self.AIRPORT_CODES]
+        return [ALL_AIRPORT_LOCATIONS[ac] for ac in self.AIRPORT_CODES]
 
     @property
     def RATE_OF_CLIMB_KMPH(self) -> float:
