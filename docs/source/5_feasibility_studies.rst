@@ -42,6 +42,30 @@ It should be noted that only one third of aviation's warming of earth is caused 
 
 Jet fuel may be stored in simple tanks that are form-fitting to the internal shape and structure of airliner wings, thus making efficient use of the space available.
 
+Aviation/Jet Biofuel
+--------------------
+
+Biofuels are derived from biomass such as plants, animals, or waste. They are hydrocarbon-based fuels, as are fossil fuels, except rather than releasing carbon that was originally stored as fossil fuels, they release carbon that was absorbed in their production. This makes biofuels theoretically carbon-neutral; however, the reduction in emissions compared to conventional fuels depends on the type of biomass from which biofuel is made. Examples of biofuels are wood, ethanol, methane from animal waste, and drop-in aviation biofuel. When wood is burned, it releases carbon that the trees from which it was sourced absorbed in their growth, theoretically resulting in a net-zero carbon footprint. Ethanol (pure alcohol) is often refined from crops such as corn, which similarly take in carbon from the atmosphere and release it again when burned.
+
+Drop-In Aviation Biofuel
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Drop-in aviation biofuel is appropriate biofuel that is refined to meet the standards of jet fuel (such as jet A1) which is typically fossil-fuel-based, such that it may be theoretically "dropped into" the fuel tank/engine of a jet-fueled aircraft without requiring any modifications or impacting performance.
+
+A benefit of drop-in biofuels is that they may allow older and existing aircraft to continue to be used without having to design retrofits compatible with different types of fuel or having to manufacture new aircraft from scratch for such a purpose at great cost to the environment.
+
+Aviation biofuel would reduce CO₂ emissions by 20% to 98%, depending on the type of biomass from which it is made.
+
+Blends of conventional jet fuel and up to 50% biofuel have been allowed on commercial flights since 2011, but only 0.2% of jet fuel burned worldwide is aviation biofuel as of 2023, according to 600 million liters of production in that year.
+
+.. Other Biofuels?
+.. ^^^^^^^^^^^^^^
+
+Electrofuels
+------------
+
+Electrofuels are hydrocarbon fuels that are synthesized from carbon and H₂. The carbon is sourced from capturing CO₂ or CO, and the H₂ is generated via the electrolysis of water using clean electricity such as wind, solar, or nuclear. Because the carbon released into the atmosphere when burning an electrofuel was first absorbed for manufacturing the electrofuel, it is theoretically carbon-neutral. In other words, rather than CO₂ being released into the atmosphere from some industrial process simply for being a useless waste product, this pollution is postponed by capturing the carbon and using it to generate a fuel using clean energy. The fuel is then burned later in an application where carbon capture is much less practical, such as in an airliner engine. The carbon is given a “second life” before being emitted. While arguments can be made regarding the carbon-intensive industrial process and carbon being emitted in either case, electrofuels would significantly decrease, though never eliminate, emissions. The barrier to using electrofuels is cost.
+
 Liquid Hydrogen (LH₂)
 ---------------------
 
