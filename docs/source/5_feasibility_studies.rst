@@ -100,7 +100,15 @@ Because of the economically inviable helium requirement and other storage comple
 Lithium-Ion and Lithium-Polymer Batteries
 -----------------------------------------
 
-TODO
+Lithium-ion and lithium-polymer batteries are convenient for airliners modified to have electric motors as their powerplants (although the batteries' required discharge capacities and voltages are not discussed here; only their energy capacities are considered).
+
+The batteries' cost, lifespan, and replacement cost are not discussed here.
+
+The two battery chemistries have similar energy densities / specific energies.
+
+It is assumed that the ratio between mass or volume of battery reactants to other battery components is similar regardless of the number or size of batteries or battery cells. Furthermore, it is assumed that this mass and volume may be packed fully into the fuel mass and volume capacity (whichever is reached first) of the airliner.
+
+As an example of a commercial airplane using lithium batteries, the Alice airplane developed by *Eviation* is considered a novel innovation in aviation at the time of writing and is electrically powered. However, Alice is implemented far from the scale of a narrowbody commercial airliner; it carries only nine passengers, has a 407-km/h cruise speed and 463-km range—both of which have been reduced during development. The size, cruise speed, and range are all fractions of what are expected of an airliner, especially a jet-fueled one. Alice uses two electric motors powered by a 3.72-tonne, 820-kWh lithium-ion battery. For reference, large electric buses have half as much battery capacity as this.
 
 Comparisons Between Different Energy Storage Media
 --------------------------------------------------
