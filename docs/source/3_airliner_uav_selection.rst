@@ -22,7 +22,7 @@ Specifications of the Airbus A320ceo are as follows::
 The A320ceo burns over 3000 L of jet A1 fuel for every hour in cruise, of 11% of its capacity. Another perspective on how large the quantity of energy consumed by airliners such as the A320ceo is the fact that it expends 29.2 MW at cruise, which is comparable to the power capacities (notably greater than typical generation levels) of:
 
 - More than two of the world's largest commercially deployed wind turbine as of 2024 (13 MW, offshore).
-- The Monte Plata solar farm in the Dominican Republic, the largest PV plant in the Carribean (30 MW).
+- The Monte Plata solar farm in the Dominican Republic, the largest PV plant in the Caribbean (30 MW).
 
 Converting the fuel consumption rate to power in MW also makes clear the challenge of mid-air refueling if this takes the form of delivering electrical power (such as to recharge onboard batteries) as opposed to a fuel of high energy density. The largest electrical charging connector under development as of 2024 is the Megawatt Charging System (MCS) which delivers up to 3.75 MW. This simply does not compare to the 30 MW consumption rate; eight MCS connectors in parallel would be required.
 
