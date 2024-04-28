@@ -206,3 +206,5 @@ Whereas a jet-A1-fueled A320ceo need not take off with its maximum capacity of f
 An LH₂-fueled A320ceo would need to be refueled by TODO UAVs to have the same range as a jet-A1-fueled A320ceo. However, the deviations from the regular flight path to be refueled over airports en route would increase the distance traveled, thereby reducing the effective range.
 
 Assuming that the A320ceo starts with maximum fuel, the following graph illustrates its energy level over time from JFK to LAX, parameterized by different energy storage media and whether or not the A320ceo is refueled the minimum required amount to stay above a 100-GJ reserve level where possible. If refueled, the A320ceo is refueled over PIT and DEN as many times as necessary for it to stay above the reserve level by the time it reaches its next airport.
+
+.. TODO graph
