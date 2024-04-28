@@ -3,78 +3,10 @@ from __future__ import annotations
 import dataclasses
 import datetime as dt
 from copy import deepcopy
-from typing import List, Literal, Optional, Type
 
-import pandas as pd
-
-from src.modeling_objects import Airliner, EnvironmentState, Trip
+from src.modeling_objects import Airliner, EnvironmentState
 
 from .base_emulator import BaseEmulator
-
-
-class BaseTripsDataset:
-    REQUIRED_COLS: List[str]
-
-    def __init__(self, df: pd.DataFrame):
-        self.df = df
-        assert not any(self.df["id"].duplicated())
-        for col in self.REQUIRED_COLS:
-            assert col in self.df.columns
-
-
-class TripsHistoricalDataset(BaseTripsDataset):
-    REQUIRED_COLS = [
-        "id",
-        "origin_lat",
-        "origin_lon",
-        "destination_lat",
-        "destination_lon",
-        "start_timestamp",
-        "end_timestamp",
-    ]
-
-
-class TripsDemandDataset(BaseTripsDataset):
-    """
-    ``REQUIRED_COLS`` lists dataset columns that are required by the `EvTaxisEmulator`.
-    See the docstring of `EvTaxisEmulator` for optional columns which, if present, will be used by
-    the `EvTaxisEmulator`.
-    """
-
-    REQUIRED_COLS = [
-        "id",
-        "requested_timestamp",
-        "origin_lat",
-        "origin_lon",
-        "destination_lat",
-        "destination_lon",
-    ]
-
-    @staticmethod
-    def infer_from_TripsHistoricalDataset(
-        trips_historical_dataset: TripsHistoricalDataset,
-        start_minus_requested_timestamp: Optional[dt.timedelta] = dt.timedelta(0),
-    ) -> TripsDemandDataset:
-        df = trips_historical_dataset.df.copy()
-        if "requested_timestamp" not in df.columns:
-            df["requested_timestamp"] = (
-                df["start_timestamp"] - start_minus_requested_timestamp
-            )
-        df = df.drop(columns=["start_timestamp", "end_timestamp"])
-        return TripsDemandDataset(df)
-
-
-@dataclasses.dataclass
-class TripEvent:
-    event_kind: Literal["trip_requested", "trip_end"]
-    trip: Trip
-    event_timestamp: dt.datetime = dataclasses.field(init=False)
-
-    def __post_init__(self):
-        self.event_timestamp = {
-            "trip_requested": self.trip.REQUESTED_TIMESTAMP,
-            "trip_end": self.trip.end_timestamp,
-        }[self.event_kind]
 
 
 @dataclasses.dataclass
@@ -98,7 +30,6 @@ class EvTaxisEmulator(BaseEmulator):
 
     START_STATE: EnvironmentState
     # TODO: Implement optional `.END_TIMESTAMP`.
-    TRIP_CLASS: Optional[Type[Trip]] = Trip
 
     APPROX_MAX_TIME_STEP: dt.timedelta = dataclasses.field(
         init=False, default=dt.timedelta(minutes=10)
@@ -106,9 +37,6 @@ class EvTaxisEmulator(BaseEmulator):
     """See docstring of method ``update_state``."""
 
     current_state: EnvironmentState = dataclasses.field(init=False)
-    _trips_dataset: pd.DataFrame = dataclasses.field(init=False)
-    _using_historical_distance: bool = dataclasses.field(init=False)
-    _using_historical_revenue: bool = dataclasses.field(init=False)
 
     def __post_init__(self):
         # If the `START_TIMESTAMP` is None or not specified, set it to the earliest requested
@@ -119,39 +47,6 @@ class EvTaxisEmulator(BaseEmulator):
             )
 
         super().__post_init__()
-
-    def _init__trips_dataset(self) -> None:
-        self._trips_dataset = deepcopy(self.TRIPS_DEMAND_DATASET.df)
-        self._trips_dataset = self._trips_dataset.set_index("id")
-        self._trips_dataset = self._trips_dataset.sort_values(by="requested_timestamp")
-
-        # If `START_TIMESTAMP` is specified, remove trips requested before it, if any:
-        if self.START_TIMESTAMP is not None:
-            self._trips_dataset = self._trips_dataset[
-                self._trips_dataset["requested_timestamp"] >= self.START_TIMESTAMP
-            ]
-
-        self._trips_dataset["start_timestamp"] = None
-        self._trips_dataset["end_timestamp"] = None
-        self._trips_dataset["assigned_ev_id"] = None
-
-        self._using_historical_distance = "distance_km" in self._trips_dataset.columns
-        if not self._using_historical_distance:
-            # TODO: Add log message.
-            self._trips_dataset["distance_km"] = None
-
-        self._using_historical_revenue = "revenue" in self._trips_dataset.columns
-        if not self._using_historical_revenue:
-            # TODO: Add log message.
-            self._trips_dataset["revenue"] = None
-
-        # The ongoing_trips_state attribute of the EvTaxisEmulator.current_state comes in part from
-        #     the TRIPS_DEMAND_DATASET (unlike its other evs_state and charge_points_state
-        #     attributes):
-        assert self.START_STATE.ongoing_trips_state is None
-        # The trips_demand_forecasts attribute of the EvTaxisEmulator.current_state comes from the
-        #     Trips Forecaster (which is not yet implemented):
-        assert self.START_STATE.trips_demand_forecasts is None
 
     def update_state(self, timestamp: dt.datetime) -> None:
         """Update the current EnvironmentState by first updating the current timestamp
@@ -261,8 +156,3 @@ class EvTaxisEmulator(BaseEmulator):
                 uav.charge_for_duration(
                     -charging_power_kw, duration, refueling_soc=True
                 )
-
-    @property
-    def total_revenue(self) -> float:
-        revenue_ser = self._trips_dataset["revenue"]
-        return revenue_ser[revenue_ser.notna()].sum()
