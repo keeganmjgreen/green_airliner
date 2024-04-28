@@ -1,3 +1,6 @@
+import pickle
+from pathlib import Path
+
 import numpy as np
 import vpython as vp
 
@@ -10,30 +13,36 @@ MODELS_DIR = "src/three_d_sim/models/"
 def simple_wavefront_obj_to_vp(
     model_config: ModelConfig, **vp_obj_kwargs
 ) -> vp.compound:
-    with open(MODELS_DIR + model_config.MODEL_SUBPATH, "r") as f:
-        lines = f.readlines()
-
-    vertices = []
-    faces = []
-    for line in lines:
-        if line[0] == "#" or line == "\n":
-            continue
-        elements = line[:-1].split(" ")
-        if elements[0] in ["vn", "v"]:
-            vec = np.array([float(e) for e in elements[1:]])
-            vec = vec.dot(model_config.ROTATION_MATRIX)
-            if elements[0] == "vn":
-                vn = vp.vec(*vec)
-            elif elements[0] == "v":
-                vertices.append(vp.vertex(pos=vp.vec(*vec), normal=vn, shininess=0.3))
-        elif elements[0] == "f":
-            faces.append(
-                vp.triangle(
-                    vs=[vertices[int(e.split("//")[0]) - 1] for e in elements[1:]]
+    cache_path = Path("tmp/cache/", f"{Path(model_config.MODEL_SUBPATH).stem}.vp-obj.pkl")
+    if cache_path.exists():
+        with open(cache_path, "rb") as f:
+            faces = pickle.load(f)
+    else:
+        with open(MODELS_DIR + model_config.MODEL_SUBPATH, "r") as f:
+            lines = f.readlines()
+        vertices = []
+        faces = []
+        for line in lines:
+            if line[0] == "#" or line == "\n":
+                continue
+            elements = line[:-1].split(" ")
+            if elements[0] in ["vn", "v"]:
+                vec = np.array([float(e) for e in elements[1:]])
+                vec = vec.dot(model_config.ROTATION_MATRIX)
+                if elements[0] == "vn":
+                    vn = vp.vec(*vec)
+                elif elements[0] == "v":
+                    vertices.append(vp.vertex(pos=vp.vec(*vec), normal=vn, shininess=0.3))
+            elif elements[0] == "f":
+                faces.append(
+                    vp.triangle(
+                        vs=[vertices[int(e.split("//")[0]) - 1] for e in elements[1:]]
+                    )
                 )
-            )
-        else:
-            raise NotImplementedError
+            else:
+                raise NotImplementedError
+        with open(cache_path, "wb") as f:
+            pickle.dump(faces, f)
 
     vp_obj = vp.compound(faces, **vp_obj_kwargs)
     # ^ Requires manually changing:
