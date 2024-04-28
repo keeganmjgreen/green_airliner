@@ -1,4 +1,6 @@
 import dataclasses
+import pickle
+from pathlib import Path
 from typing import Literal
 
 import numpy as np
@@ -98,9 +100,17 @@ class AirplanesVisualizerEnvironment(Environment):
         self.airplane_vp_objs = {}
         for airplane in airplanes:
             print(f"Rendering {airplane.ID}...")
-            self.airplane_vp_objs[airplane.ID] = simple_wavefront_obj_to_vp(
-                airplane.MODEL_CONFIG, make_trail=True, retain=2000
-            )
+            cache_path = Path("tmp/cache/", f"{Path(airplane.MODEL_CONFIG.MODEL_SUBPATH).stem}.vp-obj.pkl")
+            if cache_path.exists():
+                with open(cache_path, "rb") as f:
+                    vp_obj = pickle.load(f)
+            else:
+                vp_obj = simple_wavefront_obj_to_vp(
+                    airplane.MODEL_CONFIG, make_trail=True, retain=2000
+                )
+                with open(cache_path, "wb") as f:
+                    pickle.dump(vp_obj, f)
+            self.airplane_vp_objs[airplane.ID] = vp_obj
         print("Done rendering airplanes.")
 
         for vp_obj in self.airplane_vp_objs.values():
