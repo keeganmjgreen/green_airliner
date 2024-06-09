@@ -362,7 +362,6 @@ class EvTaxi(IdentifiedObject, EvSpec, Asset):
 
         self.location = new_location
 
-
     def charge_with_energy(
         self, delta_energy_kwh: float, refueling_soc: bool = False
     ) -> None:
@@ -379,6 +378,7 @@ class EvTaxi(IdentifiedObject, EvSpec, Asset):
 
         if not refueling_soc:
             self.soc += delta_energy_kwh / self.ENERGY_CAPACITY_KWH
+            self.soc = np.clip(a=self.soc, a_min=None, a_max=self.SOC_BOUNDS[1])
         else:
             self.refueling_soc += delta_energy_kwh / self.ENERGY_CAPACITY_KWH
 

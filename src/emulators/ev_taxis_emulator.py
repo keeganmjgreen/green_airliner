@@ -151,8 +151,8 @@ class EvTaxisEmulator(BaseEmulator):
                 )
                 duration = self.current_timestamp - prev_timestamp
 
-                # TODO clip
-                airliner.charge_for_duration(charging_power_kw, duration)
-                uav.charge_for_duration(
-                    -charging_power_kw, duration, refueling_soc=True
-                )
+                if airliner.soc < airliner.SOC_BOUNDS[1]:
+                    airliner.charge_for_duration(charging_power_kw, duration)
+                    uav.charge_for_duration(
+                        -charging_power_kw, duration, refueling_soc=True
+                    )
