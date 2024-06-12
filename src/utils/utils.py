@@ -1,11 +1,12 @@
 import datetime as dt
 import os
 import uuid
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, List, Tuple, Union
 
 import numpy as np
 import pandas as pd
 import pytz
+import scipy as sp
 
 J_PER_MJ = 1e6
 KWH_PER_MJ = 0.2777
@@ -110,3 +111,16 @@ uuid_from_seed = lambda seed: uuid.UUID(int=abs(hash(seed)))
 """Create a UUID that is one-to-one with the given ``seed``, which may be any hashable object, such
 as an ``int`` or ``str``.
 """
+
+
+def get_interpolator_by_elapsed_time(points: List[Tuple[float, float]]):
+    def interpolator(elapsed_time: dt.timedelta):
+        _interpolator = sp.interpolate.interp1d(
+            *np.array(points).T,
+            bounds_error=False,
+            fill_value=(points[0][1], points[-1][1]),
+        )
+        y = _interpolator(timedelta_to_minutes(elapsed_time))
+        return y
+
+    return interpolator

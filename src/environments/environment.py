@@ -12,7 +12,7 @@ from typing import Optional, Union
 
 from src.emulators import EvTaxisEmulator
 from src.modeling_objects import EnvironmentState
-from src.utils.utils import now
+from src.utils.utils import get_interpolator_by_elapsed_time, now
 
 
 @dataclasses.dataclass(init=False)
@@ -144,4 +144,12 @@ class Environment(BaseEnvironment):
         )
         self._get_state(timestamp=self.current_timestamp)
         if self.TIME_STEP is not None:
-            self.current_timestamp += self.TIME_STEP
+            time_step_interpolator = get_interpolator_by_elapsed_time(self.TIME_STEP)
+            time_step = dt.timedelta(
+                seconds=float(
+                    time_step_interpolator(
+                        self.current_timestamp - self.START_TIMESTAMP
+                    )
+                )
+            )
+            self.current_timestamp += time_step

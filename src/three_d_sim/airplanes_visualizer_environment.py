@@ -3,6 +3,7 @@ from typing import Literal
 
 import numpy as np
 import vpython as vp
+import scipy as sp
 
 from src.environments import BaseEnvironment, Environment
 from src.three_d_sim.flight_path_generation import (
@@ -12,7 +13,11 @@ from src.three_d_sim.flight_path_generation import (
 from src.three_d_sim.models.wavefront_obj_to_vp import (
     simple_wavefront_obj_to_vp,
 )
-from src.utils.utils import _getenv, timedelta_to_minutes
+from src.utils.utils import (
+    _getenv,
+    get_interpolator_by_elapsed_time,
+    timedelta_to_minutes,
+)
 
 VIEW_TYPE = Literal["airplane-side-view", "airplane-tail-view"]
 
@@ -49,6 +54,8 @@ class AirplanesVisualizerEnvironment(Environment):
 
     def __post_init__(self):
         super().__post_init__()
+
+        self.ZOOM = self.ENVIRONMENT_CONFIG.ZOOM
 
         vp.scene.title = {
             "airplane-tail-view": f"{self.TRACK_AIRPLANE_ID} Tail View",
@@ -108,7 +115,6 @@ class AirplanesVisualizerEnvironment(Environment):
 
         vp.scene.camera.follow(self.airplane_vp_objs[self.TRACK_AIRPLANE_ID])
         vp.scene.up = vp.vector(0, 0, 1)
-        vp.scene.range = 0.2 * self.MODELS_SCALE_FACTOR
 
         self._set_up_graphs()
 
@@ -137,6 +143,12 @@ class AirplanesVisualizerEnvironment(Environment):
             vp.rate(1 / self.DELAY_TIME_STEP.total_seconds())
 
     def _update_airplanes_viz(self) -> None:
+        zoom_factor_interpolator = get_interpolator_by_elapsed_time(self.ZOOM)
+        zoom_factor = zoom_factor_interpolator(
+            self.current_timestamp - self.START_TIMESTAMP
+        )
+        vp.scene.range = self.MODELS_SCALE_FACTOR / zoom_factor
+
         evs_state = self.ev_taxis_emulator_or_interface.current_state.evs_state
         for ev in evs_state.values():
             self.airplane_vp_objs[ev.ID].pos = vp.vector(

@@ -1,5 +1,6 @@
 import argparse
 import datetime as dt
+import subprocess
 
 import numpy as np
 
@@ -209,11 +210,57 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
 
     environment = AirplanesVisualizerEnvironment(
         ENVIRONMENT_CONFIG=EnvironmentConfig(
-            TIME_STEP=dt.timedelta(seconds=6),
+            TIME_STEP=[
+                (0, 1),
+                (5, 1),
+                (10, 30),
+                (40, 30),
+                (50, 1),
+                (62, 3),
+                (74, 1),
+                (84, 50),
+                (250, 50),
+                (260, 1),
+                (264, 2),
+                (285, 2),
+                (320, 30),
+                (405, 30),
+                (410, 1),
+            ],
             DELAY_TIME_STEP=dt.timedelta(seconds=0.04),
             START_TIMESTAMP=start_timestamp,
-            SKIP_TIMEDELTA=dt.timedelta(minutes=40),
+            SKIP_TIMEDELTA=dt.timedelta(minutes=0),
             END_TIMESTAMP=None,
+            ZOOM=[
+                (0, 5),
+                (3, 0.05),
+                (51.3, 0.05),
+                (51.9, 5),
+                (52, 5),
+                (52.6, 0.8),
+                (57, 0.1),
+                (60, 0.07),
+                (63, 0.1),
+                (71.6, 0.8),
+                (72.2, 5),
+                (72.8, 0.1),
+                (75, 0.02),
+                (95, 0.001),
+                (250, 0.0005),
+                (260, 0.02),
+                (262.8, 0.05),
+                (263.4, 5),
+                (264, 0.3),
+                (280, 0.07),
+                (285, 0.3),
+                (295, 0.5),
+                (298, 0.02),
+                (320, 0.001),
+                (405, 0.001),
+                (410, 0.05),
+                (414, 0.5),
+                (415, 5),
+            ],
         ),
         ev_taxis_emulator_or_interface=airplanes_emulator,
         AIRLINER_FLIGHT_PATH=airliner_fp,
@@ -238,6 +285,7 @@ def parse_cli_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = parse_cli_args()
+    subprocess.Popen(["google-chrome", "--guest", "--start-maximized"])
     run_scenario(
         view=args.view,
         n_view_columns=int(args.n_view_columns),
