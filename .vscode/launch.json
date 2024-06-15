@@ -52,7 +52,39 @@
             },
             "args": [
                 "--view", "airplane-side-view",
-                "--track-airplane-id", "Airliner"
+                "--track-airplane-id", "Airliner",
+            ]
+        },
+        {
+            "name": "Study Runner - Airliner Side View, record-airplanes-viz",
+            "type": "python",
+            "request": "launch",
+            "program": "src/three_d_sim/study_runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "--view", "airplane-side-view",
+                "--track-airplane-id", "Airliner",
+                "--preset", "record-airplanes-viz"
+            ]
+        },
+        {
+            "name": "Study Runner - Airliner Side View, record-graphs",
+            "type": "python",
+            "request": "launch",
+            "program": "src/three_d_sim/study_runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "--view", "airplane-side-view",
+                "--track-airplane-id", "Airliner",
+                "--preset", "record-graphs"
             ]
         },
         {

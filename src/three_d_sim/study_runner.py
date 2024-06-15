@@ -11,6 +11,7 @@ from src.modeling_objects import Airliner, EnvironmentState, Uav, ModelConfig
 from src.three_d_sim.airplanes_visualizer_environment import (
     VIEW_TYPE,
     AirplanesVisualizerEnvironment,
+    ScreenRecorder,
 )
 from src.three_d_sim.flight_path_generation import (
     AirlinerFlightPath,
@@ -209,7 +210,33 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
         ),
     )
 
-    screen_recording_fname = None # "/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video.avi"
+    scene_size = (1800, 900)
+    captions = True
+    if args.preset == "record-airplanes-viz":
+        screen_recorders = [
+            ScreenRecorder(
+                origin=(8, 128),
+                size=scene_size,
+                fname="/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video.avi",
+            )
+        ]
+    elif args.preset == "record-graphs":
+        scene_size = (180, 90)
+        captions = False
+        screen_recorders = [
+            ScreenRecorder(
+                origin=(8, 218),
+                size=(640, 426),
+                fname="/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-airliner-soc-graph.avi",
+            ),
+            ScreenRecorder(
+                origin=(8, 218 + 426),
+                size=(640, 426),
+                fname="/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-airliner-speed-graph.avi",
+            ),
+        ]
+    else:
+        screen_recorders = []
 
     environment = AirplanesVisualizerEnvironment(
         ENVIRONMENT_CONFIG=EnvironmentConfig(
@@ -269,28 +296,25 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
             (414, 0.5),
             (415, 5),
         ],
-        SCENE_HEIGHT=900,
-        SCENE_WIDTH=1800,
+        SCENE_SIZE=scene_size,
         N_VIEW_COLUMNS=n_view_columns,
         MODELS_SCALE_FACTOR=scale_factor,
-        SCREEN_RECORDING_FNAME=screen_recording_fname,
-        SCREEN_RECORDING_ORIGIN=(8, 128),
+        CAPTIONS=captions,
+        SCREEN_RECORDERS=screen_recorders,
     )
     environment.run()
-    if screen_recording_fname is not None:
-        environment.screen_recorder.release()
-        cv2.destroyAllWindows()
-        # subprocess.Popen(["vlc", screen_recording_fname])
-        quit()
+    for screen_recorder in screen_recorders:
+        screen_recorder.release()
+    cv2.destroyAllWindows()
+    quit()
 
 
 def parse_cli_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--view", dest="view")
-    parser.add_argument("--n-view-columns", dest="n_view_columns", default=1)
-    parser.add_argument(
-        "--track-airplane-id", dest="track_airplane_id", default=AIRLINER_ID
-    )
+    parser.add_argument("--view")
+    parser.add_argument("--n-view-columns", default=1)
+    parser.add_argument("--track-airplane-id", default=AIRLINER_ID)
+    parser.add_argument("--preset", default=None)
     args = parser.parse_args()
     return args
 
