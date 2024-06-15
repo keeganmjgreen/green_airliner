@@ -1,9 +1,11 @@
 import dataclasses
-from typing import Literal
+from pathlib import Path
+from typing import List, Literal, Tuple, Union
 
+import cv2
 import numpy as np
+import pyautogui
 import vpython as vp
-import scipy as sp
 
 from src.environments import BaseEnvironment, Environment
 from src.three_d_sim.flight_path_generation import (
@@ -49,13 +51,17 @@ class AirplanesVisualizerEnvironment(Environment):
     AIRLINER_FLIGHT_PATH: FlightPath
     TRACK_AIRPLANE_ID: str
     VIEW: VIEW_TYPE
+    ZOOM: List[Tuple[float, float]]
     N_VIEW_COLUMNS: int = 1
     MODELS_SCALE_FACTOR: float = 1.0
+    SCREEN_RECORDING_FNAME: Union[Path, None] = None
+    SCREEN_RECORDING_REGION: Union[Tuple[int, int, int, int], None] = None
 
     def __post_init__(self):
         super().__post_init__()
 
-        self.ZOOM = self.ENVIRONMENT_CONFIG.ZOOM
+        if self.SCREEN_RECORDING_FNAME is not None:
+            self._set_up_screen_recorder()
 
         vp.scene.title = {
             "airplane-tail-view": f"{self.TRACK_AIRPLANE_ID} Tail View",
@@ -124,6 +130,17 @@ class AirplanesVisualizerEnvironment(Environment):
         self.airliner_speed_graph = vp.graph(title="Airliner Speed", xtitle="Time [min]", ytitle="Speed [kmph]", ymin=0, ymax=1e3)
         self.airliner_speed_gcurve = vp.gcurve()
 
+    def _set_up_screen_recorder(self) -> None:
+        self.screen_recorder = cv2.VideoWriter(
+            filename=self.SCREEN_RECORDING_FNAME,
+            fourcc=cv2.VideoWriter_fourcc(*"XVID"),
+            fps=int(1 / self.DELAY_TIME_STEP.total_seconds()),
+            frameSize=(
+                self.SCREEN_RECORDING_REGION[2],
+                self.SCREEN_RECORDING_REGION[3],
+            ),
+        )
+
     def run(self) -> None:
         """
         Note: Overwrites ``Environment.run``.
@@ -131,8 +148,14 @@ class AirplanesVisualizerEnvironment(Environment):
 
         BaseEnvironment.run(self)
 
+        winname = "Press `q` to exit"
+        cv2.namedWindow(winname)
+        cv2.moveWindow(winname, x=0, y=pyautogui.size().height)
+
         while True:
             self._run_iteration()
+            if cv2.waitKey(1) == ord("q"):
+                break
 
     def _run_iteration(self) -> None:
         super()._run_iteration()
@@ -140,6 +163,8 @@ class AirplanesVisualizerEnvironment(Environment):
         if self.current_timestamp >= self.START_TIMESTAMP + self.SKIP_TIMEDELTA:
             self._update_airplanes_viz()
             self._update_graphs()
+            if self.SCREEN_RECORDING_FNAME is not None:
+                self._take_screenshot()
             vp.rate(1 / self.DELAY_TIME_STEP.total_seconds())
 
     def _update_airplanes_viz(self) -> None:
@@ -177,3 +202,9 @@ class AirplanesVisualizerEnvironment(Environment):
             minutes_elapsed,
             airliner_waypoints[0].DIRECT_APPROACH_SPEED_KMPH if len(airliner_waypoints) > 0 else 0
         )
+
+    def _take_screenshot(self) -> None:
+        img = pyautogui.screenshot(region=self.SCREEN_RECORDING_REGION)
+        frame = np.array(img)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        self.screen_recorder.write(frame)

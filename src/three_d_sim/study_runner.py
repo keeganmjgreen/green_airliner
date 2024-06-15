@@ -2,6 +2,7 @@ import argparse
 import datetime as dt
 import subprocess
 
+import cv2
 import numpy as np
 
 from src.emulators import EvTaxisEmulator as AirplanesEmulator
@@ -208,6 +209,9 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
         ),
     )
 
+    screen_recording_fname = "/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video.avi"
+    screen_recording_region = (8, 128, 1808 - 8, 1028 - 128)
+
     environment = AirplanesVisualizerEnvironment(
         ENVIRONMENT_CONFIG=EnvironmentConfig(
             TIME_STEP=[
@@ -231,45 +235,52 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
             START_TIMESTAMP=start_timestamp,
             SKIP_TIMEDELTA=dt.timedelta(minutes=0),
             END_TIMESTAMP=None,
-            ZOOM=[
-                (0, 5),
-                (3, 0.05),
-                (51.3, 0.05),
-                (51.9, 5),
-                (52, 5),
-                (52.6, 0.8),
-                (57, 0.1),
-                (60, 0.07),
-                (63, 0.1),
-                (71.6, 0.8),
-                (72.2, 5),
-                (72.8, 0.1),
-                (75, 0.02),
-                (95, 0.001),
-                (250, 0.0005),
-                (260, 0.02),
-                (262.8, 0.05),
-                (263.4, 5),
-                (264, 0.3),
-                (280, 0.07),
-                (285, 0.3),
-                (295, 0.5),
-                (298, 0.02),
-                (320, 0.001),
-                (405, 0.001),
-                (410, 0.05),
-                (414, 0.5),
-                (415, 5),
-            ],
         ),
         ev_taxis_emulator_or_interface=airplanes_emulator,
         AIRLINER_FLIGHT_PATH=airliner_fp,
         TRACK_AIRPLANE_ID=track_airplane_id,
         VIEW=view,
+        ZOOM=[
+            (0, 5),
+            (3, 0.05),
+            (51.3, 0.05),
+            (51.9, 5),
+            (52, 5),
+            (52.6, 0.8),
+            (57, 0.1),
+            (60, 0.07),
+            (63, 0.1),
+            (71.6, 0.8),
+            (72.2, 5),
+            (72.8, 0.1),
+            (75, 0.02),
+            (95, 0.001),
+            (250, 0.0005),
+            (260, 0.02),
+            (262.8, 0.05),
+            (263.4, 5),
+            (264, 0.3),
+            (280, 0.07),
+            (285, 0.3),
+            (295, 0.5),
+            (298, 0.02),
+            (320, 0.001),
+            (405, 0.001),
+            (410, 0.05),
+            (414, 0.5),
+            (415, 5),
+        ],
         N_VIEW_COLUMNS=n_view_columns,
         MODELS_SCALE_FACTOR=scale_factor,
+        SCREEN_RECORDING_FNAME=screen_recording_fname,
+        SCREEN_RECORDING_REGION=screen_recording_region,
     )
     environment.run()
+    if screen_recording_fname is not None:
+        environment.screen_recorder.release()
+        cv2.destroyAllWindows()
+        # subprocess.Popen(["vlc", screen_recording_fname])
+        quit()
 
 
 def parse_cli_args() -> argparse.Namespace:
