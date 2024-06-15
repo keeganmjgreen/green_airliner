@@ -209,8 +209,7 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
         ),
     )
 
-    screen_recording_fname = "/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video.avi"
-    screen_recording_region = (8, 128, 1808 - 8, 1028 - 128)
+    screen_recording_fname = None # "/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video.avi"
 
     environment = AirplanesVisualizerEnvironment(
         ENVIRONMENT_CONFIG=EnvironmentConfig(
@@ -270,10 +269,12 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
             (414, 0.5),
             (415, 5),
         ],
+        SCENE_HEIGHT=900,
+        SCENE_WIDTH=1800,
         N_VIEW_COLUMNS=n_view_columns,
         MODELS_SCALE_FACTOR=scale_factor,
         SCREEN_RECORDING_FNAME=screen_recording_fname,
-        SCREEN_RECORDING_REGION=screen_recording_region,
+        SCREEN_RECORDING_ORIGIN=(8, 128),
     )
     environment.run()
     if screen_recording_fname is not None:

@@ -23,10 +23,6 @@ from src.utils.utils import (
 
 VIEW_TYPE = Literal["airplane-side-view", "airplane-tail-view"]
 
-N_VIEW_COLUMNS = 2
-SCENE_WIDTH = 1800
-SCENE_HEIGHT = 900
-
 theme = _getenv("THEME", default_val="day")
 if theme == "day":
     SKY_RGB_COLOR = [187, 222, 251]
@@ -52,10 +48,12 @@ class AirplanesVisualizerEnvironment(Environment):
     TRACK_AIRPLANE_ID: str
     VIEW: VIEW_TYPE
     ZOOM: List[Tuple[float, float]]
+    SCENE_WIDTH: int = 1800
+    SCENE_HEIGHT: int = 900
     N_VIEW_COLUMNS: int = 1
     MODELS_SCALE_FACTOR: float = 1.0
     SCREEN_RECORDING_FNAME: Union[Path, None] = None
-    SCREEN_RECORDING_REGION: Union[Tuple[int, int, int, int], None] = None
+    SCREEN_RECORDING_ORIGIN: Union[Tuple[int, int], None] = None
 
     def __post_init__(self):
         super().__post_init__()
@@ -68,8 +66,8 @@ class AirplanesVisualizerEnvironment(Environment):
             "airplane-side-view": f"{self.TRACK_AIRPLANE_ID} Side View",
         }[self.VIEW]
         vp.scene.width, vp.scene.height = (
-            SCENE_WIDTH / self.N_VIEW_COLUMNS,
-            SCENE_HEIGHT,
+            self.SCENE_WIDTH / self.N_VIEW_COLUMNS,
+            self.SCENE_HEIGHT,
         )
         vp.scene.background = _rgb_to_vp_color(SKY_RGB_COLOR)
 
@@ -135,10 +133,7 @@ class AirplanesVisualizerEnvironment(Environment):
             filename=self.SCREEN_RECORDING_FNAME,
             fourcc=cv2.VideoWriter_fourcc(*"XVID"),
             fps=int(1 / self.DELAY_TIME_STEP.total_seconds()),
-            frameSize=(
-                self.SCREEN_RECORDING_REGION[2],
-                self.SCREEN_RECORDING_REGION[3],
-            ),
+            frameSize=(self.SCENE_WIDTH, self.SCENE_HEIGHT),
         )
 
     def run(self) -> None:
@@ -204,7 +199,9 @@ class AirplanesVisualizerEnvironment(Environment):
         )
 
     def _take_screenshot(self) -> None:
-        img = pyautogui.screenshot(region=self.SCREEN_RECORDING_REGION)
+        img = pyautogui.screenshot(
+            region=(*self.SCREEN_RECORDING_REGION, self.SCENE_WIDTH, self.SCENE_HEIGHT)
+        )
         frame = np.array(img)
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         self.screen_recorder.write(frame)
