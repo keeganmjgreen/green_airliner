@@ -5,6 +5,8 @@ conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airl
 """
 
 import dataclasses
+from pathlib import Path
+from typing import Tuple
 
 import cv2
 from manim import *
@@ -16,8 +18,37 @@ text_mobject.DEFAULT_LINE_SPACING_SCALE = 0.8
 
 config.max_files_cached = 4000
 
-N_15FPS_FRAMES = 3000
+N_15FPS_FRAMES = 10
 FRAME_RATE = 15
+W = 1920
+H = 1080
+PX_PER_UNIT = 135
+
+
+@dataclasses.dataclass
+class VideoFeed:
+    fpath: Path
+    scale: float
+    pos: np.array
+
+    def __post_init__(self):
+        self.cap = cv2.VideoCapture(self.fpath)
+
+    def add_to(self, scene: Scene):
+        flag, frame = self.cap.read()
+        if flag:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            self.image_mobject = ImageMobject(frame).scale(self.scale).move_to([*self.pos, 0])
+            scene.add(self.image_mobject)
+        else:
+            self.image_mobject = None
+
+    def remove_from(self, scene: Scene):
+        if self.image_mobject is not None:
+            scene.remove(self.image_mobject)
+
+    def release(self):
+        self.cap.release()
 
 
 @dataclasses.dataclass
@@ -29,14 +60,14 @@ class Caption:
     write_rate: float = 0.02
     wait_s: float = 1.0
 
-    def show(self, scene: Scene) -> None:
+    def show(self, scene: Scene, scale: float, pos: Tuple[float, float], grid_size: float) -> None:
         texts = self.text.split(" | ")
         kwargs = dict(font="FreeSans", font_size=self.size)
         if len(texts) > 0:
             text = Paragraph(*texts, **kwargs)
         else:
             text = Text(texts[0], **kwargs)
-        text.to_edge(UP).shift([self.x, -self.y, 0])
+        text.scale(scale).move_to([pos[0] + self.x * grid_size, pos[1] + self.y * grid_size, 0])
         if self.write_rate > 0:
             run_time = self.write_rate * len(self.text)
             scene.play(Write(text, run_time=run_time))
@@ -51,60 +82,115 @@ class Caption:
 class Video(Scene):
     captions = {
         2: [
-            Caption("JFK International Airport", y=5.5),
+            Caption("JFK International Airport", 0, -1.5),
             Caption(
                 "Airbus A320 airliner modified to burn | hydrogen fuel, starting at 27200-L capacity",
-                y=4.5,
+                0, -1
             ),
         ],
-        32: [Caption("Takeoff", y=5)],
+        32: [Caption("Takeoff", -1)],
         470: [
-            Caption("AT200 cargo UAV from | Pittsburgh International Airport", x=-2.5, y=2),
-            Caption("Airliner slows down to match UAV's speed", x=2.5, y=4),
+            Caption("AT200 cargo UAV from | Pittsburgh International Airport", -2, 0.75),
+            Caption("Airliner slows down to match UAV's speed", 1.5, -0.5),
         ],
-        553: [Caption("UAV docks with airliner for mid-air refueling", y=2.5)],
+        553: [Caption("UAV docks with airliner for mid-air refueling", 0, 0.5)],
         880: [
-            Caption("UAV lands at Pittsburgh | International Airport", x=1.5, y=5),
-            Caption("A second UAV takes off for further refueling", x=-2, y=5.5),
+            Caption("UAV lands at Pittsburgh | International Airport", 1, -1),
+            Caption("A second UAV takes off for further refueling", -1, -1.25),
         ],
-        1227: [Caption("The second UAV returns to | Pittsburgh International Airport", x=1.5, y=2)],
-        1280: [Caption("The airliner returns to cruise speed", y=2.5)],
-        1330: [Caption("JFK", x=3.5, y=3), Caption("PIT", x=1.25, y=3)],
-        1511: [Caption("Another UAV, from Denver | International Airport", x=-3, y=2.25)],
-        1760: [Caption("A second UAV from DEN", y=4)],
-        1830: [Caption("A third UAV", y=4)],
-        1900: [Caption("A fourth", y=4)],
+        1227: [Caption("The second UAV returns to | Pittsburgh International Airport", 1, 0.75)],
+        1280: [Caption("The airliner returns to cruise speed", 0, 0.5)],
+        1330: [Caption("JFK", 2, 0.25), Caption("PIT", 0.75, 0.25)],
+        1511: [Caption("Another UAV, from Denver | International Airport", -1.75, 0.5)],
+        1760: [Caption("A second UAV from DEN", 0, -0.5)],
+        1830: [Caption("A third UAV", 0, -0.5)],
+        1900: [Caption("A fourth", 0, -0.5)],
         2230: [
-            Caption("The UAVs land at DEN", x=1.5, y=5.5),
-            Caption("Another three UAVs taking | off in succession", x=-2, y=5),
+            Caption("The UAVs land at DEN", 1, -1.25),
+            Caption("Another three UAVs taking | off in succession", -1.25, -1.25),
         ],
-        2555: [Caption("The airliner is now en route to LAX", y=2.5)],
-        2755: [Caption("LAX International | Airport", x=-4, y=5.5)],
-        2995: [Caption("The airliner has completed its 4000-km, hydrogen- | powered flight from JFK to LAX after 7h", y=5.5, size=100)],
+        2555: [Caption("The airliner is now en route to LAX", 0, 0.5)],
+        2755: [Caption("LAX International | Airport", -2.5, -1.5)],
+        2995: [Caption("The airliner has completed its 4000-km, hydrogen- | powered flight from JFK to LAX after 7h", 0, -1.25, size=100)],
     }
 
+    def _make_grid(self, xs, ys):
+        h_lines = Group(*[Line(start=np.array([xs[0], y, 0]), end=np.array([xs[-1], y, 0])) for y in ys])
+        v_lines = Group(*[Line(start=np.array([x, ys[0], 0]), end=np.array([x, ys[-1], 0])) for x in xs])
+        grid_size = xs[1] - xs[0]
+        return Group(*[h_lines, v_lines]), grid_size
+
     def construct(self):
-        cap = cv2.VideoCapture("electric_airliner_video.avi")
+        viz_w, viz_h = 1800, 900
+        viz_scale = W / viz_w * (2 / 3)
+        viz_pos = (
+            np.array([-(W - viz_w * viz_scale), H - viz_h * viz_scale])
+            / 2
+            / PX_PER_UNIT
+        )
+        viz = VideoFeed(
+            fpath="electric_airliner_video.avi",
+            scale=viz_scale,
+            pos=viz_pos,
+        )
+        graph_w, graph_h = 640, 426
+        graph_scale = W / graph_w * (1 / 3)
+        soc_graph = VideoFeed(
+            fpath="electric_airliner_video-airliner-soc-graph.avi",
+            scale=graph_scale,
+            pos=(
+                np.array([W - graph_w * graph_scale, H - graph_h * graph_scale])
+                / 2
+                / PX_PER_UNIT
+            ),
+        )
+        speed_graph = VideoFeed(
+            fpath="electric_airliner_video-airliner-speed-graph.avi",
+            scale=graph_scale,
+            pos=(
+                np.array([W - graph_w * graph_scale, H - graph_h * graph_scale * 3])
+                / 2
+                / PX_PER_UNIT
+            ),
+        )
+        video_feeds = [viz, soc_graph, speed_graph]
 
         self.frame_i_15fps = 0
 
+        grid, _ = self._make_grid(
+            xs=np.arange(-8, 8), ys=np.arange(-5, 5)
+        )
+        viz_grid, viz_grid_size = self._make_grid(
+            xs=(
+                np.linspace(-viz_w, viz_w, 8 + 1) / 2 / PX_PER_UNIT * viz_scale
+                + viz_pos[0]
+            ),
+            ys=(
+                np.linspace(-viz_h, viz_h, 4 + 1) / 2 / PX_PER_UNIT * viz_scale
+                + viz_pos[1]
+            ),
+        )
+        grids = Group()
+
         while True:
-            flag, frame = cap.read()
-            if not flag or N_15FPS_FRAMES is not None and self.frame_i_15fps > N_15FPS_FRAMES:
+            if self.frame_i_15fps > N_15FPS_FRAMES:
                 break
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            frame_img = ImageMobject(frame)
-            self.add(frame_img)
+            for video_feed in video_feeds:
+                video_feed.add_to(scene=self)
+            self.add(grids)
             frame_captions = self.captions.get(self.frame_i_15fps)
             if frame_captions is not None:
                 for caption in frame_captions:
-                    caption.show(scene=self)
+                    caption.show(scene=self, scale=viz_scale, pos=viz_pos, grid_size=viz_grid_size)
             else:
                 self.wait(1 / FRAME_RATE)
                 # Caption(
                 #     f"{self.frame_i}", y=1, write_rate=0, wait_s=(1 / FRAME_RATE)
                 # ).show(scene=self)
-            self.remove(frame_img)
+            self.remove(grids)
+            for video_feed in video_feeds:
+                video_feed.remove_from(scene=self)
             self.frame_i_15fps += 1
 
-        cap.release()
+        for video_feed in video_feeds:
+            video_feed.release()
