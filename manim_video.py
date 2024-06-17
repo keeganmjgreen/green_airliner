@@ -134,7 +134,7 @@ class Video(Scene):
             / PX_PER_UNIT
         )
         viz = VideoFeed(
-            fpath="electric_airliner_video.avi",
+            fpath="electric_airliner_video-airliner-side-view.avi",
             scale=viz_scale,
             pos=viz_pos,
         )

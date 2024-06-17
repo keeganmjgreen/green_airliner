@@ -217,7 +217,7 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
             ScreenRecorder(
                 origin=(8, 128),
                 size=scene_size,
-                fname="/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video.avi",
+                fname=f"/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-{args.view}.avi",
             )
         ]
     elif args.preset == "record-graphs":

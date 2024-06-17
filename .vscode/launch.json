@@ -37,7 +37,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
-                "--view", "airplane-paths"
+                "--view", "airplane-paths",
             ]
         },
         {
@@ -68,7 +68,7 @@
             "args": [
                 "--view", "airplane-side-view",
                 "--track-airplane-id", "Airliner",
-                "--preset", "record-airplanes-viz"
+                "--preset", "record-airplanes-viz",
             ]
         },
         {
@@ -84,11 +84,11 @@
             "args": [
                 "--view", "airplane-side-view",
                 "--track-airplane-id", "Airliner",
-                "--preset", "record-graphs"
+                "--preset", "record-graphs",
             ]
         },
         {
-            "name": "Study Runner - Airliner Tail View",
+            "name": "Study Runner - Airliner Tail View, record-airplanes-viz",
             "type": "python",
             "request": "launch",
             "program": "src/three_d_sim/study_runner.py",
@@ -99,7 +99,8 @@
             },
             "args": [
                 "--view", "airplane-tail-view",
-                "--track-airplane-id", "Airliner"
+                "--track-airplane-id", "Airliner",
+                "--preset", "record-airplanes-viz",
             ]
         },
         {
@@ -114,7 +115,7 @@
             },
             "args": [
                 "--view", "airplane-side-view",
-                "--track-airplane-id", "PIT-UAV-1"
+                "--track-airplane-id", "PIT-UAV-1",
             ]
         },
         {
