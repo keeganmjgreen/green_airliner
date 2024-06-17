@@ -210,6 +210,40 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
         ),
     )
 
+    if args.track_airplane_id == "Airliner":
+        zoom = [
+            (0, 5),
+            (3, 0.05),
+            (51.3, 0.05),
+            (51.9, 5),
+            (52, 5),
+            (52.6, 0.8),
+            (57, 0.1),
+            (60, 0.07),
+            (63, 0.1),
+            (71.6, 0.8),
+            (72.2, 5),
+            (72.8, 0.1),
+            (75, 0.02),
+            (95, 0.001),
+            (250, 0.0005),
+            (260, 0.02),
+            (262.8, 0.05),
+            (263.4, 5),
+            (264, 0.3),
+            (280, 0.07),
+            (285, 0.3),
+            (295, 0.5),
+            (298, 0.02),
+            (320, 0.001),
+            (405, 0.001),
+            (410, 0.05),
+            (414, 0.5),
+            (415, 5),
+        ]
+    else:
+        zoom = [(0, 5), (415, 5)]
+
     scene_size = (1800, 900)
     captions = True
     if args.preset == "record-airplanes-viz":
@@ -217,7 +251,7 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
             ScreenRecorder(
                 origin=(8, 128),
                 size=scene_size,
-                fname=f"/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-{args.view}.avi",
+                fname=f"/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-{args.track_airplane_id}-{args.view}.avi",
             )
         ]
     elif args.preset == "record-graphs":
@@ -227,12 +261,12 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
             ScreenRecorder(
                 origin=(8, 218),
                 size=(640, 426),
-                fname="/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-airliner-soc-graph.avi",
+                fname="/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-Airliner-soc-graph.avi",
             ),
             ScreenRecorder(
                 origin=(8, 218 + 426),
                 size=(640, 426),
-                fname="/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-airliner-speed-graph.avi",
+                fname="/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-Airliner-speed-graph.avi",
             ),
         ]
     else:
@@ -266,36 +300,7 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
         AIRLINER_FLIGHT_PATH=airliner_fp,
         TRACK_AIRPLANE_ID=track_airplane_id,
         VIEW=view,
-        ZOOM=[
-            (0, 5),
-            (3, 0.05),
-            (51.3, 0.05),
-            (51.9, 5),
-            (52, 5),
-            (52.6, 0.8),
-            (57, 0.1),
-            (60, 0.07),
-            (63, 0.1),
-            (71.6, 0.8),
-            (72.2, 5),
-            (72.8, 0.1),
-            (75, 0.02),
-            (95, 0.001),
-            (250, 0.0005),
-            (260, 0.02),
-            (262.8, 0.05),
-            (263.4, 5),
-            (264, 0.3),
-            (280, 0.07),
-            (285, 0.3),
-            (295, 0.5),
-            (298, 0.02),
-            (320, 0.001),
-            (405, 0.001),
-            (410, 0.05),
-            (414, 0.5),
-            (415, 5),
-        ],
+        ZOOM=zoom,
         SCENE_SIZE=scene_size,
         N_VIEW_COLUMNS=n_view_columns,
         MODELS_SCALE_FACTOR=scale_factor,

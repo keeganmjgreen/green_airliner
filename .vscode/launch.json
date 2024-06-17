@@ -37,7 +37,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
-                "--view", "airplane-paths",
+                "--view", "paths",
             ]
         },
         {
@@ -51,7 +51,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
-                "--view", "airplane-side-view",
+                "--view", "side-view",
                 "--track-airplane-id", "Airliner",
             ]
         },
@@ -66,7 +66,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
-                "--view", "airplane-side-view",
+                "--view", "side-view",
                 "--track-airplane-id", "Airliner",
                 "--preset", "record-airplanes-viz",
             ]
@@ -82,7 +82,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
-                "--view", "airplane-side-view",
+                "--view", "side-view",
                 "--track-airplane-id", "Airliner",
                 "--preset", "record-graphs",
             ]
@@ -98,13 +98,13 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
-                "--view", "airplane-tail-view",
+                "--view", "tail-view",
                 "--track-airplane-id", "Airliner",
                 "--preset", "record-airplanes-viz",
             ]
         },
         {
-            "name": "Study Runner - PIT UAV 1 Side View",
+            "name": "Study Runner - PIT UAV 0 Side View, record-airplanes-viz",
             "type": "python",
             "request": "launch",
             "program": "src/three_d_sim/study_runner.py",
@@ -114,8 +114,9 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
-                "--view", "airplane-side-view",
-                "--track-airplane-id", "PIT-UAV-1",
+                "--view", "side-view",
+                "--track-airplane-id", "PIT-UAV-0",
+                "--preset", "record-airplanes-viz",
             ]
         },
         {

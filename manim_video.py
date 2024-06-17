@@ -134,7 +134,7 @@ class Video(Scene):
             / PX_PER_UNIT
         )
         viz = VideoFeed(
-            fpath="electric_airliner_video-airliner-side-view.avi",
+            fpath="electric_airliner_video-Airliner-side-view.avi",
             scale=viz_scale,
             pos=viz_pos,
         )
@@ -142,7 +142,7 @@ class Video(Scene):
         graph_wp = (W * viz_h * graph_w) / denom
         graph_scale = graph_wp / graph_w
         soc_graph = VideoFeed(
-            fpath="electric_airliner_video-airliner-soc-graph.avi",
+            fpath="electric_airliner_video-Airliner-soc-graph.avi",
             scale=graph_scale,
             pos=(
                 np.array([W - graph_w * graph_scale, H - graph_h * graph_scale])
@@ -151,7 +151,7 @@ class Video(Scene):
             ),
         )
         speed_graph = VideoFeed(
-            fpath="electric_airliner_video-airliner-speed-graph.avi",
+            fpath="electric_airliner_video-Airliner-speed-graph.avi",
             scale=graph_scale,
             pos=(
                 np.array([W - graph_w * graph_scale, H - graph_h * graph_scale * 3])

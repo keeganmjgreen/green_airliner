@@ -21,7 +21,7 @@ from src.utils.utils import (
     timedelta_to_minutes,
 )
 
-VIEW_TYPE = Literal["airplane-side-view", "airplane-tail-view"]
+VIEW_TYPE = Literal["side-view", "tail-view"]
 
 theme = _getenv("THEME", default_val="day")
 if theme == "day":
@@ -85,8 +85,8 @@ class AirplanesVisualizerEnvironment(Environment):
             screen_recorder.set_up(fps=int(1 / self.DELAY_TIME_STEP.total_seconds()))
 
         vp.scene.title = {
-            "airplane-tail-view": f"{self.TRACK_AIRPLANE_ID} Tail View",
-            "airplane-side-view": f"{self.TRACK_AIRPLANE_ID} Side View",
+            "tail-view": f"{self.TRACK_AIRPLANE_ID} Tail View",
+            "side-view": f"{self.TRACK_AIRPLANE_ID} Side View",
         }[self.VIEW]
         vp.scene.width, vp.scene.height = self.SCENE_SIZE
         vp.scene.width /= self.N_VIEW_COLUMNS
@@ -192,9 +192,9 @@ class AirplanesVisualizerEnvironment(Environment):
         heading[2] = 0
         heading = heading / np.linalg.norm(heading)
         heading[2] = -0.3
-        if self.VIEW == "airplane-tail-view":
+        if self.VIEW == "tail-view":
             vp.scene.forward = vp.vector(*heading)
-        elif self.VIEW == "airplane-side-view":
+        elif self.VIEW == "side-view":
             vp.scene.forward = vp.vector(*orthogonal_xy_vector(heading))
         if self.CAPTIONS:
             vp.scene.caption = "\n" + "\n".join([str(ev) for ev in evs_state.values()])
