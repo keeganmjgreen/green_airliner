@@ -54,8 +54,8 @@ class VideoFeed:
 @dataclasses.dataclass
 class Caption:
     text: str
-    x: float = 0.0
-    y: float = 0.0
+    x: float
+    y: float
     size: int = 150
     write_rate: float = 0.02
     wait_s: float = 1.0
@@ -85,10 +85,10 @@ class Video(Scene):
             Caption("JFK International Airport", 0, -1.5),
             Caption(
                 "Airbus A320 airliner modified to burn | hydrogen fuel, starting at 27200-L capacity",
-                0, -1
+                0, -0.75
             ),
         ],
-        32: [Caption("Takeoff", -1)],
+        32: [Caption("Takeoff", 0, -0.75)],
         470: [
             Caption("AT200 cargo UAV from | Pittsburgh International Airport", -2, 0.75),
             Caption("Airliner slows down to match UAV's speed", 1.5, -0.5),
@@ -98,7 +98,7 @@ class Video(Scene):
             Caption("UAV lands at Pittsburgh | International Airport", 1, -1),
             Caption("A second UAV takes off for further refueling", -1, -1.25),
         ],
-        1227: [Caption("The second UAV returns to | Pittsburgh International Airport", 1, 0.75)],
+        1227: [Caption("The second UAV returns to | Pittsburgh International Airport", 1.5, 0.75)],
         1280: [Caption("The airliner returns to cruise speed", 0, 0.5)],
         1330: [Caption("JFK", 2, 0.25), Caption("PIT", 0.75, 0.25)],
         1511: [Caption("Another UAV, from Denver | International Airport", -1.75, 0.5)],
@@ -107,11 +107,11 @@ class Video(Scene):
         1900: [Caption("A fourth", 0, -0.5)],
         2230: [
             Caption("The UAVs land at DEN", 1, -1.25),
-            Caption("Another three UAVs taking | off in succession", -1.25, -1.25),
+            Caption("Another three UAVs taking | off in succession", -1.5, -1.25),
         ],
         2555: [Caption("The airliner is now en route to LAX", 0, 0.5)],
         2755: [Caption("LAX International | Airport", -2.5, -1.5)],
-        2995: [Caption("The airliner has completed its 4000-km, hydrogen- | powered flight from JFK to LAX after 7h", 0, -1.25, size=100)],
+        2995: [Caption("The airliner has completed its | 4000-km, hydrogen-powered flight | from JFK to LAX after 7h", 0, -1.25)],
     }
 
     def _make_grid(self, xs, ys):
@@ -122,7 +122,12 @@ class Video(Scene):
 
     def construct(self):
         viz_w, viz_h = 1800, 900
-        viz_scale = W / viz_w * (2 / 3)
+        graph_w, graph_h = 640, 426
+        denom = (viz_h * graph_w + 2 * graph_h * viz_w)
+
+        # viz_scale = W / viz_w * (2 / 3)
+        viz_wp = (2 * W * graph_h * viz_w) / denom
+        viz_scale = viz_wp / viz_w
         viz_pos = (
             np.array([-(W - viz_w * viz_scale), H - viz_h * viz_scale])
             / 2
@@ -133,8 +138,9 @@ class Video(Scene):
             scale=viz_scale,
             pos=viz_pos,
         )
-        graph_w, graph_h = 640, 426
-        graph_scale = W / graph_w * (1 / 3)
+        # graph_scale = W / graph_w * (1 / 3)
+        graph_wp = (W * viz_h * graph_w) / denom
+        graph_scale = graph_wp / graph_w
         soc_graph = VideoFeed(
             fpath="electric_airliner_video-airliner-soc-graph.avi",
             scale=graph_scale,
