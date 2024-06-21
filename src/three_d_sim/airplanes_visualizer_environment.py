@@ -87,6 +87,7 @@ class AirplanesVisualizerEnvironment(Environment):
         vp.scene.title = {
             "tail-view": f"{self.TRACK_AIRPLANE_ID} Tail View",
             "side-view": f"{self.TRACK_AIRPLANE_ID} Side View",
+            "map-view": "Map View",
         }[self.VIEW]
         vp.scene.width, vp.scene.height = self.SCENE_SIZE
         vp.scene.width /= self.N_VIEW_COLUMNS
@@ -110,16 +111,14 @@ class AirplanesVisualizerEnvironment(Environment):
         #     *[(max(coords) - min(coords)) / 2 for coords in [x_coords, y_coords]], 0
         # )
         for loc in airport_locations:
-            cr = vp.shapes.circle(
-                pos=list(loc.xy_coords),
-                radius=(AIRPORT_RADIUS_KM * self.MODELS_SCALE_FACTOR),
-            )
+            cr = vp.shapes.circle(pos=list(loc.xy_coords), radius=AIRPORT_RADIUS_KM)
             for i in range(len(cr)):
                 vs = [loc.xy_coords, cr[i - 1], cr[i]]
                 vp.triangle(
                     vs=[
                         vp.vertex(
-                            pos=vp.vector(*v, -0.01), color=_rgb_to_vp_color(AIRPORT_COLOR)
+                            pos=vp.vector(*v, -0.01),
+                            color=_rgb_to_vp_color(AIRPORT_COLOR),
                         )
                         for v in vs
                     ]
@@ -138,8 +137,9 @@ class AirplanesVisualizerEnvironment(Environment):
         for vp_obj in self.airplane_vp_objs.values():
             vp_obj.size *= self.MODELS_SCALE_FACTOR
 
-        vp.scene.camera.follow(self.airplane_vp_objs[self.TRACK_AIRPLANE_ID])
-        vp.scene.up = vp.vector(0, 0, 1)
+        if self.VIEW != "map-view":
+            vp.scene.camera.follow(self.airplane_vp_objs[self.TRACK_AIRPLANE_ID])
+            vp.scene.up = vp.vector(0, 0, 1)
 
         self._set_up_graphs()
 
@@ -187,15 +187,19 @@ class AirplanesVisualizerEnvironment(Environment):
             self.airplane_vp_objs[ev.ID].pos = vp.vector(
                 *ev.location.xyz_coords
             ) + vp.vec(*ev.MODEL_CONFIG.TRANSLATION_VECTOR)
+            if self.VIEW == "map-view":
+                self.airplane_vp_objs[ev.ID].pos.z *= 10
+                self.airplane_vp_objs[ev.ID].pos.z += 1000
             self.airplane_vp_objs[ev.ID].axis = vp.vector(*ev.heading)
-        heading = evs_state[self.TRACK_AIRPLANE_ID].heading
-        heading[2] = 0
-        heading = heading / np.linalg.norm(heading)
-        heading[2] = -0.3
-        if self.VIEW == "tail-view":
-            vp.scene.forward = vp.vector(*heading)
-        elif self.VIEW == "side-view":
-            vp.scene.forward = vp.vector(*orthogonal_xy_vector(heading))
+        if self.VIEW != "map-view":
+            heading = evs_state[self.TRACK_AIRPLANE_ID].heading
+            heading[2] = 0
+            heading = heading / np.linalg.norm(heading)
+            heading[2] = -0.3
+            if self.VIEW == "tail-view":
+                vp.scene.forward = vp.vector(*heading)
+            elif self.VIEW == "side-view":
+                vp.scene.forward = vp.vector(*orthogonal_xy_vector(heading))
         if self.CAPTIONS:
             vp.scene.caption = "\n" + "\n".join([str(ev) for ev in evs_state.values()])
 

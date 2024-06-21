@@ -18,7 +18,7 @@ text_mobject.DEFAULT_LINE_SPACING_SCALE = 0.8
 
 config.max_files_cached = 4000
 
-N_15FPS_FRAMES = 10
+N_15FPS_FRAMES = 20
 FRAME_RATE = 15
 W = 1920
 H = 1080
@@ -159,7 +159,13 @@ class Video(Scene):
                 / PX_PER_UNIT
             ),
         )
-        video_feeds = [viz, soc_graph, speed_graph]
+        map_view_scale = (H - viz_h * viz_scale) / viz_h
+        map_view = VideoFeed(
+            fpath="electric_airliner_video--map-view.avi",
+            scale=map_view_scale,
+            pos=(np.array([- (W - viz_w * map_view_scale), - (H - viz_h * map_view_scale)]) / 2 / PX_PER_UNIT),
+        )
+        video_feeds = [viz, soc_graph, speed_graph, map_view]
 
         self.frame_i_15fps = 0
 

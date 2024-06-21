@@ -31,8 +31,6 @@ AIRLINER_ID = "Airliner"
 def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -> None:
     start_timestamp = dt.datetime(2000, 1, 1, 0, 0)
 
-    scale_factor = 1
-
     LH2_REFUELING_RATE_J_PER_MIN = 7e12 / 50
     charging_power_limit_kw = LH2_REFUELING_RATE_J_PER_MIN / J_PER_MJ * KWH_PER_MJ * MINUTES_PER_HOUR
 
@@ -242,7 +240,12 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
             (415, 5),
         ]
     else:
-        zoom = [(0, 5), (415, 5)]
+        zoom = [(0, 10), (415, 10)]
+
+    if args.view == "map-view":
+        scale_factor = 20000
+    else:
+        scale_factor = 1
 
     scene_size = (1800, 900)
     captions = True
@@ -251,7 +254,7 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
             ScreenRecorder(
                 origin=(8, 128),
                 size=scene_size,
-                fname=f"/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-{args.track_airplane_id}-{args.view}.avi",
+                fname=f"/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-{args.track_airplane_id or ''}-{args.view}.avi",
             )
         ]
     elif args.preset == "record-graphs":
@@ -318,7 +321,7 @@ def parse_cli_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--view")
     parser.add_argument("--n-view-columns", default=1)
-    parser.add_argument("--track-airplane-id", default=AIRLINER_ID)
+    parser.add_argument("--track-airplane-id", default=None)
     parser.add_argument("--preset", default=None)
     args = parser.parse_args()
     return args
