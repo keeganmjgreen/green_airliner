@@ -128,6 +128,7 @@ class Video(Scene):
         # viz_scale = W / viz_w * (2 / 3)
         viz_wp = (2 * W * graph_h * viz_w) / denom
         viz_scale = viz_wp / viz_w
+        viz_hp = viz_h * viz_scale
         viz_pos = (
             np.array([-(W - viz_w * viz_scale), H - viz_h * viz_scale])
             / 2
@@ -141,6 +142,7 @@ class Video(Scene):
         # graph_scale = W / graph_w * (1 / 3)
         graph_wp = (W * viz_h * graph_w) / denom
         graph_scale = graph_wp / graph_w
+        graph_hp = graph_h * graph_scale
         soc_graph = VideoFeed(
             fpath="electric_airliner_video-Airliner-soc-graph.avi",
             scale=graph_scale,
@@ -184,12 +186,19 @@ class Video(Scene):
         )
         grids = Group()
 
+        lines = Group(
+            Line(start=np.array([W / 2 - graph_wp, H / 2, 0])/PX_PER_UNIT, end=np.array([W / 2 - graph_wp, - H / 2, 0])/PX_PER_UNIT, color=BLACK),
+            Line(start=np.array([W / 2 - graph_wp, H / 2 - graph_hp, 0])/PX_PER_UNIT, end=np.array([W / 2, H / 2 - graph_hp, 0])/PX_PER_UNIT, color=BLACK),
+            Line(start=np.array([- W / 2, H / 2 - viz_hp, 0])/PX_PER_UNIT, end=np.array([W / 2, H / 2 - viz_hp, 0])/PX_PER_UNIT, color=BLACK),
+        )
+
         while True:
             if self.frame_i_15fps > N_15FPS_FRAMES:
                 break
             for video_feed in video_feeds:
                 video_feed.add_to(scene=self)
             self.add(grids)
+            self.add(lines)
             frame_captions = self.captions.get(self.frame_i_15fps)
             if frame_captions is not None:
                 for caption in frame_captions:
@@ -199,6 +208,7 @@ class Video(Scene):
                 # Caption(
                 #     f"{self.frame_i}", y=1, write_rate=0, wait_s=(1 / FRAME_RATE)
                 # ).show(scene=self)
+            self.remove(lines)
             self.remove(grids)
             for video_feed in video_feeds:
                 video_feed.remove_from(scene=self)
