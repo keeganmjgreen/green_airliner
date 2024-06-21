@@ -18,8 +18,8 @@ text_mobject.DEFAULT_LINE_SPACING_SCALE = 0.8
 
 config.max_files_cached = 4000
 
-N_15FPS_FRAMES = 20
-FRAME_RATE = 15
+N_FRAMES = 50
+FRAME_RATE = 30
 W = 1920
 H = 1080
 PX_PER_UNIT = 135
@@ -169,7 +169,7 @@ class Video(Scene):
         )
         video_feeds = [viz, soc_graph, speed_graph, map_view]
 
-        self.frame_i_15fps = 0
+        self.frame_i = 0
 
         grid, _ = self._make_grid(
             xs=np.arange(-8, 8), ys=np.arange(-5, 5)
@@ -193,13 +193,13 @@ class Video(Scene):
         )
 
         while True:
-            if self.frame_i_15fps > N_15FPS_FRAMES:
+            if self.frame_i > N_FRAMES:
                 break
             for video_feed in video_feeds:
                 video_feed.add_to(scene=self)
             self.add(grids)
             self.add(lines)
-            frame_captions = self.captions.get(self.frame_i_15fps)
+            frame_captions = self.captions.get(self.frame_i)
             if frame_captions is not None:
                 for caption in frame_captions:
                     caption.show(scene=self, scale=viz_scale, pos=viz_pos, grid_size=viz_grid_size)
@@ -212,7 +212,7 @@ class Video(Scene):
             self.remove(grids)
             for video_feed in video_feeds:
                 video_feed.remove_from(scene=self)
-            self.frame_i_15fps += 1
+            self.frame_i += 1
 
         for video_feed in video_feeds:
             video_feed.release()
