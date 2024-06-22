@@ -1,7 +1,13 @@
 """
-conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/Video.mp4
-conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/Video.mp4
-conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/Video.mp4
+Intro:
+    conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Intro && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/Intro.mp4
+    conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Intro && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/Intro.mp4
+    conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Intro && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/Intro.mp4
+
+Video:
+    conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/Video.mp4
+    conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/Video.mp4
+    conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/Video.mp4
 """
 
 import dataclasses
@@ -13,12 +19,78 @@ from manim import *
 
 from manim.mobject.text import text_mobject
 
+
+# ==================================================================================================
+# Intro
+
+class Intro(Scene):
+    tex_style = r"\sf"
+
+    def _title(
+        self,
+        title_str: str,
+        tex_size: str = "huge",
+        width: float = 200,
+        write_time: float = 1.0,
+        wait_time: float = 3.0,
+        unwrite_time: float = 0.5,
+    ) -> None:
+        title = Tex(f"{self.tex_style} \{tex_size} {title_str}", width=width)
+        self.play(Write(title), run_time=write_time)
+        self.wait(wait_time)
+        self.play(Unwrite(title), run_time=unwrite_time)
+
+    def _slide(
+        self,
+        title_str: str,
+        bullets_str: str,
+        title_write_time: float = 1.0,
+        pause_time: float = 1.0,
+        bullets_write_time: float = 2.0,
+        wait_time: float = 15.0,
+        bullets_unwrite_time: float = 1.0,
+        title_unwrite_time: float = 0.5,
+    ) -> None:
+        title = Title(f"{self.tex_style} {title_str}")
+        self.play(Write(title), run_time=title_write_time)
+        self.wait(pause_time)
+        bullets = [f"{self.tex_style} {b.strip()}" for b in bullets_str.split("\n") if b.strip() != ""]
+        blist = BulletedList(*bullets, width=250)
+        self.play(Write(blist), run_time=bullets_write_time)
+        self.wait(wait_time)
+        self.play(Unwrite(blist), run_time=bullets_unwrite_time)
+        self.play(Unwrite(title), run_time=title_unwrite_time)
+
+    def construct(self):
+        self._title("Simulation of Mid-Air Refueling of a Hydrogen-Powered Commercial Airliner")
+        self._slide(
+            "The Problem",
+            """
+            Commercial airliners contribute massive amounts of CO2 emissions, which is incompatible with the current goal of attaining net zero by 2050 to help mitigate the climate crisis.
+            Airliners and passengers are refusing to reduce air travel and will continue to do so until oil reserves are depleted (in which case the damage is done), unless a similarly affordable alternative is created.
+            Unless batteries or green fuel technology improves dramatically (which is unlikely), electric commercial airliners of similar size and serving similar routes will be infeasible.
+            """
+        )
+        self._slide(
+            "Proposed Solution",
+            """
+            Use of green alternatives to jet fuel is limited by their comparatively low energy density; storing the same amount of energy requires carrying far more weight, requiring more fuel, and so on.
+            Mid-air refueling of commercial airliners by jet-fueled UAVs (which would travel shorter distances) may be a solution.
+            The extra weight in green fuel would be efficiently carried and delivered to the airliner by UAVs operating out of airports over which the airliner flies.
+            Each UAV would take off, dock with the airliner to partially refuel it, then land again for its own refueling.
+            """
+        )
+
+
+# ==================================================================================================
+# Video
+
 text_mobject.TEXT_MOB_SCALE_FACTOR = 0.01
 text_mobject.DEFAULT_LINE_SPACING_SCALE = 0.8
 
 config.max_files_cached = 4000
 
-N_FRAMES = 50
+N_FRAMES = 3000
 FRAME_RATE = 30
 W = 1920
 H = 1080
@@ -91,7 +163,7 @@ class Video(Scene):
         32: [Caption("Takeoff", 0, -0.75)],
         470: [
             Caption("AT200 cargo UAV from | Pittsburgh International Airport", -2, 0.75),
-            Caption("Airliner slows down to match UAV's speed", 1.5, -0.5),
+            Caption("Airliner slows down to match UAV’s speed", 1.5, -0.5),
         ],
         553: [Caption("UAV docks with airliner for mid-air refueling", 0, 0.5)],
         880: [
