@@ -137,8 +137,9 @@ class AirplanesVisualizerEnvironment(Environment):
         for vp_obj in self.airplane_vp_objs.values():
             vp_obj.size *= self.MODELS_SCALE_FACTOR
 
-        if self.VIEW != "map-view":
+        if self.TRACK_AIRPLANE_ID is not None:
             vp.scene.camera.follow(self.airplane_vp_objs[self.TRACK_AIRPLANE_ID])
+        if self.VIEW != "map-view":
             vp.scene.up = vp.vector(0, 0, 1)
 
         self._set_up_graphs()
