@@ -28,7 +28,9 @@ from src.feasibility_study.study_params import BaseA320, Lh2FueledA320, at200, l
 AIRLINER_ID = "Airliner"
 
 
-def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -> None:
+def run_scenario(
+    view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str, preset: str
+) -> None:
     start_timestamp = dt.datetime(2000, 1, 1, 0, 0)
 
     LH2_REFUELING_RATE_J_PER_MIN = 7e12 / 50
@@ -208,56 +210,57 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
         ),
     )
 
-    if args.track_airplane_id == "Airliner":
-        zoom = [
-            (0, 5),
-            (3, 0.05),
-            (51.3, 0.05),
-            (51.9, 5),
-            (52, 5),
-            (52.6, 0.8),
-            (57, 0.1),
-            (60, 0.07),
-            (63, 0.1),
-            (71.6, 0.8),
-            (72.2, 5),
-            (72.8, 0.1),
-            (75, 0.02),
-            (95, 0.001),
-            (250, 0.0005),
-            (260, 0.02),
-            (262.8, 0.05),
-            (263.4, 5),
-            (264, 0.3),
-            (280, 0.07),
-            (285, 0.3),
-            (295, 0.5),
-            (298, 0.02),
-            (320, 0.001),
-            (405, 0.001),
-            (410, 0.05),
-            (414, 0.5),
-            (415, 5),
-        ]
+    if view != "map-view":
+        assert track_airplane_id is not None
+        models_scale_factor = 1
+        if track_airplane_id == "Airliner":
+            zoom = [
+                (0, 5),
+                (3, 0.05),
+                (51.3, 0.05),
+                (51.9, 5),
+                (52, 5),
+                (52.6, 0.8),
+                (57, 0.1),
+                (60, 0.07),
+                (63, 0.1),
+                (71.6, 0.8),
+                (72.2, 5),
+                (72.8, 0.1),
+                (75, 0.02),
+                (95, 0.001),
+                (250, 0.0005),
+                (260, 0.02),
+                (262.8, 0.05),
+                (263.4, 5),
+                (264, 0.3),
+                (280, 0.07),
+                (285, 0.3),
+                (295, 0.5),
+                (298, 0.02),
+                (320, 0.001),
+                (405, 0.001),
+                (410, 0.05),
+                (414, 0.5),
+                (415, 5),
+            ]
+        else:
+            zoom = [(0, 20), (415, 20)]
     else:
+        models_scale_factor = 20000
         zoom = [(0, 10), (415, 10)]
-
-    if args.view == "map-view":
-        scale_factor = 20000
-    else:
-        scale_factor = 1
 
     scene_size = (1800, 900)
     captions = True
-    if args.preset == "record-airplanes-viz":
+    if preset == "record-airplanes-viz":
         screen_recorders = [
             ScreenRecorder(
                 origin=(8, 128),
                 size=scene_size,
-                fname=f"/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-{args.track_airplane_id or ''}-{args.view}.avi",
+                fname=f"/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-{track_airplane_id or ''}-{view}.avi",
             )
         ]
-    elif args.preset == "record-graphs":
+    elif preset == "record-graphs":
         scene_size = (180, 90)
         captions = False
         screen_recorders = [
@@ -306,7 +309,7 @@ def run_scenario(view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str) -
         ZOOM=zoom,
         SCENE_SIZE=scene_size,
         N_VIEW_COLUMNS=n_view_columns,
-        MODELS_SCALE_FACTOR=scale_factor,
+        MODELS_SCALE_FACTOR=models_scale_factor,
         CAPTIONS=captions,
         SCREEN_RECORDERS=screen_recorders,
     )
@@ -334,4 +337,5 @@ if __name__ == "__main__":
         view=args.view,
         n_view_columns=int(args.n_view_columns),
         track_airplane_id=args.track_airplane_id,
+        preset=args.preset,
     )

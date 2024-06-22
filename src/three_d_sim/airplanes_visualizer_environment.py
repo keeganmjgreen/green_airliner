@@ -21,7 +21,7 @@ from src.utils.utils import (
     timedelta_to_minutes,
 )
 
-VIEW_TYPE = Literal["side-view", "tail-view"]
+VIEW_TYPE = Literal["side-view", "tail-view", "map-view"]
 
 theme = _getenv("THEME", default_val="day")
 if theme == "day":
