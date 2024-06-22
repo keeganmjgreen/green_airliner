@@ -7,6 +7,7 @@ dependencies:
       - ipykernel
       - kaleido
       - matplotlib
+      - moviepy
       - nbformat
       - pandas
       - psycopg2-binary  # Instead of `psycopg2` with, e.g., Linux `build-essential` package.

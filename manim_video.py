@@ -8,6 +8,11 @@ Video:
     conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/Video.mp4
     conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/Video.mp4
     conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/Video.mp4
+
+Combine:
+    conda activate electric_airline && cd /home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && python combine_manim_videos.py --work-dir=/home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/ && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/final.mp4
+    conda activate electric_airline && cd /home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && python combine_manim_videos.py --work-dir=/home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/ && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/final.mp4
+    conda activate electric_airline && cd /home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && python combine_manim_videos.py --work-dir=/home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/ && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/final.mp4
 """
 
 import dataclasses
