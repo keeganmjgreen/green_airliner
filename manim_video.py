@@ -115,7 +115,11 @@ class VideoFeed:
         flag, frame = self.cap.read()
         if flag:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            self.image_mobject = ImageMobject(frame).scale(self.scale).move_to([*self.pos, 0])
+            self.image_mobject = (
+                ImageMobject(frame)
+                .scale(self.scale)
+                .move_to([*(self.pos / PX_PER_UNIT), 0])
+            )
             scene.add(self.image_mobject)
         else:
             self.image_mobject = None
@@ -206,11 +210,7 @@ class Video(Scene):
         viz_wp = (2 * W * graph_h * viz_w) / denom
         viz_scale = viz_wp / viz_w
         viz_hp = viz_h * viz_scale
-        viz_pos = (
-            np.array([-(W - viz_w * viz_scale), H - viz_h * viz_scale])
-            / 2
-            / PX_PER_UNIT
-        )
+        viz_pos = np.array([-(W - viz_w * viz_scale), H - viz_h * viz_scale]) / 2
         viz = VideoFeed(
             fpath="electric_airliner_video-Airliner-side-view.avi",
             scale=viz_scale,
@@ -223,28 +223,27 @@ class Video(Scene):
         soc_graph = VideoFeed(
             fpath="electric_airliner_video-Airliner-soc-graph.avi",
             scale=graph_scale,
-            pos=(
-                np.array([W - graph_w * graph_scale, H - graph_h * graph_scale])
-                / 2
-                / PX_PER_UNIT
-            ),
+            pos=(np.array([W - graph_wp, H - graph_hp]) / 2),
         )
         speed_graph = VideoFeed(
             fpath="electric_airliner_video-Airliner-speed-graph.avi",
             scale=graph_scale,
-            pos=(
-                np.array([W - graph_w * graph_scale, H - graph_h * graph_scale * 3])
-                / 2
-                / PX_PER_UNIT
-            ),
+            pos=(np.array([W - graph_wp, H - graph_hp * 3]) / 2),
         )
-        map_view_scale = (H - viz_h * viz_scale) / viz_h
+        map_scale = (H - viz_h * viz_scale) / viz_h
+        map_wp = viz_w * map_scale
+        map_hp = viz_h * map_scale
         map_view = VideoFeed(
             fpath="electric_airliner_video--map-view.avi",
-            scale=map_view_scale,
-            pos=(np.array([- (W - viz_w * map_view_scale), - (H - viz_h * map_view_scale)]) / 2 / PX_PER_UNIT),
+            scale=map_scale,
+            pos=(np.array([-(W - map_wp), -(H - map_hp)]) / 2),
         )
-        video_feeds = [viz, soc_graph, speed_graph, map_view]
+        pit_uav_0_view = VideoFeed(
+            fpath="electric_airliner_video-PIT-UAV-0-side-view.avi",
+            scale=map_scale,
+            pos=(np.array([-(W - 3 * map_wp), -(H - map_hp)]) / 2),
+        )
+        video_feeds = [viz, soc_graph, speed_graph, map_view, pit_uav_0_view]
 
         self.frame_i = 0
 
@@ -263,10 +262,28 @@ class Video(Scene):
         )
         grids = Group()
 
+        def line(start: Tuple[float, float], end: Tuple[float, float]):
+            return Line(
+                start=(np.array([*start, 0]) / PX_PER_UNIT),
+                end=(np.array([*end, 0]) / PX_PER_UNIT),
+                color=BLACK,
+            )
+
+        def hline(x1: float, x2: float, y: float):
+            return line(start=(x1, y), end=(x2, y))
+
+        def vline(x: float, y1: float, y2: float):
+            return line(start=(x, y1), end=(x, y2))
+
         lines = Group(
-            Line(start=np.array([W / 2 - graph_wp, H / 2, 0])/PX_PER_UNIT, end=np.array([W / 2 - graph_wp, - H / 2, 0])/PX_PER_UNIT, color=BLACK),
-            Line(start=np.array([W / 2 - graph_wp, H / 2 - graph_hp, 0])/PX_PER_UNIT, end=np.array([W / 2, H / 2 - graph_hp, 0])/PX_PER_UNIT, color=BLACK),
-            Line(start=np.array([- W / 2, H / 2 - viz_hp, 0])/PX_PER_UNIT, end=np.array([W / 2, H / 2 - viz_hp, 0])/PX_PER_UNIT, color=BLACK),
+            # Line between airliner view and graphs:
+            vline(x=(W / 2 - graph_wp), y1=(H / 2), y2=(H / 2 - viz_hp)),
+            # Line between graphs:
+            hline(x1=(W / 2 - graph_wp), x2=(W / 2), y=(H / 2 - graph_hp)),
+            # Line between airliner view and map view & UAV view(s):
+            hline(x1=(- W / 2), x2=(W / 2), y=(H / 2 - viz_hp)),
+            # Line between map view and first UAV view:
+            vline(x=(- W / 2 + map_wp), y1=(H / 2 - viz_hp), y2=(- H / 2)),
         )
 
         while True:
