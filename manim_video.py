@@ -210,11 +210,15 @@ class Video(Scene):
         viz_wp = (2 * W * graph_h * viz_w) / denom
         viz_scale = viz_wp / viz_w
         viz_hp = viz_h * viz_scale
-        viz_pos = np.array([-(W - viz_w * viz_scale), H - viz_h * viz_scale]) / 2
+        viz_pos = (
+            np.array([-(W - viz_w * viz_scale), H - viz_h * viz_scale])
+            / 2
+            / PX_PER_UNIT
+        )
         viz = VideoFeed(
             fpath="electric_airliner_video-Airliner-side-view.avi",
             scale=viz_scale,
-            pos=viz_pos,
+            pos=(viz_pos * PX_PER_UNIT),
         )
         # graph_scale = W / graph_w * (1 / 3)
         graph_wp = (W * viz_h * graph_w) / denom
