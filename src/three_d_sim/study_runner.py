@@ -255,6 +255,7 @@ def run_scenario(
                 (60, 1),
                 (63, 5),
                 (65, 20),
+                (100, 20),
             ]
         else:
             zoom = [(0, 20), (415, 20)]
@@ -308,11 +309,12 @@ def run_scenario(
                 (320, 30),
                 (405, 30),
                 (410, 1),
+                (415, 1),
             ],
             DELAY_TIME_STEP=dt.timedelta(seconds=0.04),
             START_TIMESTAMP=start_timestamp,
             SKIP_TIMEDELTA=dt.timedelta(minutes=0),
-            END_TIMESTAMP=None,
+            END_TIMESTAMP=(start_timestamp + dt.timedelta(minutes=zoom[-1][0])),
         ),
         ev_taxis_emulator_or_interface=airplanes_emulator,
         AIRLINER_FLIGHT_PATH=airliner_fp,

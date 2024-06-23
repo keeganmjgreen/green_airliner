@@ -157,14 +157,11 @@ class AirplanesVisualizerEnvironment(Environment):
 
         BaseEnvironment.run(self)
 
-        winname = "Press `q` to exit"
-        cv2.namedWindow(winname)
-        cv2.moveWindow(winname, x=pyautogui.size().width, y=pyautogui.size().height)
-
         while True:
+            if self.END_TIMESTAMP is not None:
+                if self.current_timestamp >= self.END_TIMESTAMP:
+                    break
             self._run_iteration()
-            if cv2.waitKey(1) == ord("q"):
-                break
 
     def _run_iteration(self) -> None:
         super()._run_iteration()
