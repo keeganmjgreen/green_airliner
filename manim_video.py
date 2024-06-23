@@ -17,7 +17,7 @@ Combine:
 
 import dataclasses
 from pathlib import Path
-from typing import Tuple
+from typing import Optional, Tuple
 
 import cv2
 from manim import *
@@ -95,8 +95,8 @@ text_mobject.DEFAULT_LINE_SPACING_SCALE = 0.8
 
 config.max_files_cached = 4000
 
-N_FRAMES = 3000
-FRAME_RATE = 30
+N_FRAMES = 10
+FRAME_RATE = 15
 W = 1920
 H = 1080
 PX_PER_UNIT = 135
@@ -107,6 +107,7 @@ class VideoFeed:
     fpath: Path
     scale: float
     pos: np.array
+    crop_to_width: Optional[float] = None
 
     def __post_init__(self):
         self.cap = cv2.VideoCapture(self.fpath)
@@ -115,6 +116,13 @@ class VideoFeed:
         flag, frame = self.cap.read()
         if flag:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            if self.crop_to_width is not None:
+                h, w, _ = frame.shape
+                frame = frame[
+                    :,
+                    int((w - self.crop_to_width) // 2) : w
+                    - int((w - self.crop_to_width) // 2),
+                ]
             self.image_mobject = (
                 ImageMobject(frame)
                 .scale(self.scale)
@@ -239,12 +247,30 @@ class Video(Scene):
             scale=map_scale,
             pos=(np.array([-(W - map_wp), -(H - map_hp)]) / 2),
         )
-        pit_uav_0_view = VideoFeed(
+        uav_crop_to_width = (W - map_wp) / 2 / map_scale
+        uav1_view = VideoFeed(
             fpath="electric_airliner_video-PIT-UAV-0-side-view.avi",
             scale=map_scale,
-            pos=(np.array([-(W - 3 * map_wp), -(H - map_hp)]) / 2),
+            pos=np.array(
+                [
+                    -W / 2 + map_wp + uav_crop_to_width * map_scale / 2,
+                    -(H - map_hp) / 2,
+                ]
+            ),
+            crop_to_width=uav_crop_to_width,
         )
-        video_feeds = [viz, soc_graph, speed_graph, map_view, pit_uav_0_view]
+        uav2_view = VideoFeed(
+            fpath="electric_airliner_video-PIT-UAV-0-side-view.avi",
+            scale=map_scale,
+            pos=np.array(
+                [
+                    -W / 2 + map_wp + uav_crop_to_width * map_scale * 3 / 2,
+                    -(H - map_hp) / 2,
+                ]
+            ),
+            crop_to_width=uav_crop_to_width,
+        )
+        video_feeds = [viz, soc_graph, speed_graph, map_view, uav1_view, uav2_view]
 
         self.frame_i = 0
 
@@ -282,9 +308,15 @@ class Video(Scene):
             # Line between graphs:
             hline(x1=(W / 2 - graph_wp), x2=(W / 2), y=(H / 2 - graph_hp)),
             # Line between airliner view and map view & UAV view(s):
-            hline(x1=(- W / 2), x2=(W / 2), y=(H / 2 - viz_hp)),
+            hline(x1=(-W / 2), x2=(W / 2), y=(H / 2 - viz_hp)),
             # Line between map view and first UAV view:
-            vline(x=(- W / 2 + map_wp), y1=(H / 2 - viz_hp), y2=(- H / 2)),
+            vline(x=(-W / 2 + map_wp), y1=(H / 2 - viz_hp), y2=(-H / 2)),
+            # Line between first and second UAV views:
+            vline(
+                x=(-W / 2 + map_wp + uav_crop_to_width * map_scale),
+                y1=(H / 2 - viz_hp),
+                y2=(-H / 2),
+            ),
         )
 
         while True:
@@ -301,8 +333,8 @@ class Video(Scene):
             else:
                 self.wait(1 / FRAME_RATE)
                 # Caption(
-                #     f"{self.frame_i}", y=1, write_rate=0, wait_s=(1 / FRAME_RATE)
-                # ).show(scene=self)
+                #     f"{self.frame_i}", x=0, y=0, write_rate=0, wait_s=(1 / FRAME_RATE)
+                # ).show(scene=self, scale=viz_scale, pos=viz_pos, grid_size=viz_grid_size)
             self.remove(lines)
             self.remove(grids)
             for video_feed in video_feeds:
