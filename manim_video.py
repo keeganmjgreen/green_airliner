@@ -120,13 +120,10 @@ class VideoFeed:
                 .scale(self.scale)
                 .move_to([*(self.pos / PX_PER_UNIT), 0])
             )
-            scene.add(self.image_mobject)
-        else:
-            self.image_mobject = None
+        scene.add(self.image_mobject)
 
     def remove_from(self, scene: Scene):
-        if self.image_mobject is not None:
-            scene.remove(self.image_mobject)
+        scene.remove(self.image_mobject)
 
     def release(self):
         self.cap.release()
