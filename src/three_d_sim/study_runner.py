@@ -257,6 +257,20 @@ def run_scenario(
                 (65, 20),
                 (100, 20),
             ]
+        elif track_airplane_id == "PIT-UAV-1":
+            offset = 20.3
+            zoom = [
+                (offset + 0, 20),
+                (offset + 25, 20),
+                (offset + 30, 5),
+                (offset + 51.5, 5),
+                (offset + 51.7, 20),
+                (offset + 55, 1),
+                (offset + 60, 1),
+                (offset + 63, 5),
+                (offset + 65, 20),
+                (100, 20),
+            ]
         else:
             zoom = [(0, 20), (415, 20)]
     else:
