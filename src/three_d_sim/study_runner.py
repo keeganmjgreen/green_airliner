@@ -2,7 +2,6 @@ import argparse
 import datetime as dt
 import subprocess
 
-import cv2
 import numpy as np
 
 from src.emulators import EvTaxisEmulator as AirplanesEmulator
@@ -368,7 +367,6 @@ def run_scenario(
     environment.run()
     for screen_recorder in screen_recorders:
         screen_recorder.release()
-    cv2.destroyAllWindows()
     quit()
 
 
