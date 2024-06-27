@@ -680,6 +680,8 @@ def provision_uav_from_flight_path(
             uav_fp_half="second-half",
         )
 
+    uav.waypoints[0].LOCATION.TAG = f"{uav.ID}-first-point"
+
 
 def get_uav_on_airliner_point(
     airliner_fp: FlightPath,

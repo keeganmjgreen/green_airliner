@@ -294,7 +294,9 @@ def run_scenario(
                 ]
             if uav_airport_code != "PIT":
                 last_pit_uav_id = list(uavs["PIT"]["from-airport"].keys())[-1]
-                skip_timedelta = uavs["PIT"]["from-airport"][last_pit_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{last_pit_uav_id}-landed-point"]
+                skip_timedelta = uavs["PIT"]["from-airport"][last_pit_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{last_pit_uav_id}-landed-point"] + dt.timedelta(minutes=2)
+                # first_den_uav_id = list(uavs["DEN"]["to-airport"].keys())[0]
+                # skip_timedelta = uavs["DEN"]["to-airport"][first_den_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{first_den_uav_id}-first-point"] - dt.timedelta(minutes=2)
     else:
         models_scale_factor = 20000
         zoom = [(0, 10), (415, 10)]
