@@ -16,7 +16,6 @@ Combine:
 """
 
 import dataclasses
-from pathlib import Path
 from typing import Optional, Tuple
 
 import cv2
@@ -95,46 +94,55 @@ text_mobject.DEFAULT_LINE_SPACING_SCALE = 0.8
 
 config.max_files_cached = 4000
 
-N_FRAMES = 10
+N_FRAMES = 1500
 FRAME_RATE = 15
 W = 1920
 H = 1080
 PX_PER_UNIT = 135
 
 
+class VideoCapture(cv2.VideoCapture):
+    not_done: bool = True
+
+
 @dataclasses.dataclass
 class VideoFeed:
-    fpath: Path
+    name: str
+    fpath_lineup: List[str]
     scale: float
     pos: np.array
     crop_to_width: Optional[float] = None
 
     def __post_init__(self):
-        self.cap = cv2.VideoCapture(self.fpath)
+        self.caps = [VideoCapture(fpath) for fpath in self.fpath_lineup]
 
     def add_to(self, scene: Scene):
-        flag, frame = self.cap.read()
-        if flag:
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            if self.crop_to_width is not None:
-                h, w, _ = frame.shape
-                frame = frame[
-                    :,
-                    int((w - self.crop_to_width) // 2) : w
-                    - int((w - self.crop_to_width) // 2),
-                ]
-            self.image_mobject = (
-                ImageMobject(frame)
-                .scale(self.scale)
-                .move_to([*(self.pos / PX_PER_UNIT), 0])
-            )
+        for cap in self.caps:
+            if cap.not_done:
+                cap.not_done, frame = cap.read()
+                if cap.not_done:
+                    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                    if self.crop_to_width is not None:
+                        h, w, _ = frame.shape
+                        frame = frame[
+                            :,
+                            int((w - self.crop_to_width) // 2) : w
+                            - int((w - self.crop_to_width) // 2),
+                        ]
+                    self.image_mobject = (
+                        ImageMobject(frame)
+                        .scale(self.scale)
+                        .move_to([*(self.pos / PX_PER_UNIT), 0])
+                    )
+                    break
         scene.add(self.image_mobject)
 
     def remove_from(self, scene: Scene):
         scene.remove(self.image_mobject)
 
     def release(self):
-        self.cap.release()
+        for cap in self.caps:
+            cap.release()
 
 
 @dataclasses.dataclass
@@ -221,7 +229,8 @@ class Video(Scene):
             / PX_PER_UNIT
         )
         viz = VideoFeed(
-            fpath="electric_airliner_video-Airliner-side-view.avi",
+            name="Airliner side view",
+            fpath_lineup=["electric_airliner_video-Airliner-side-view.avi"],
             scale=viz_scale,
             pos=(viz_pos * PX_PER_UNIT),
         )
@@ -230,12 +239,14 @@ class Video(Scene):
         graph_scale = graph_wp / graph_w
         graph_hp = graph_h * graph_scale
         soc_graph = VideoFeed(
-            fpath="electric_airliner_video-Airliner-soc-graph.avi",
+            name="Airliner SoC graph",
+            fpath_lineup=["electric_airliner_video-Airliner-soc-graph.avi"],
             scale=graph_scale,
             pos=(np.array([W - graph_wp, H - graph_hp]) / 2),
         )
         speed_graph = VideoFeed(
-            fpath="electric_airliner_video-Airliner-speed-graph.avi",
+            name="Airliner speed graph",
+            fpath_lineup=["electric_airliner_video-Airliner-speed-graph.avi"],
             scale=graph_scale,
             pos=(np.array([W - graph_wp, H - graph_hp * 3]) / 2),
         )
@@ -243,13 +254,18 @@ class Video(Scene):
         map_wp = viz_w * map_scale
         map_hp = viz_h * map_scale
         map_view = VideoFeed(
-            fpath="electric_airliner_video--map-view.avi",
+            name="Map view",
+            fpath_lineup=["electric_airliner_video--map-view.avi"],
             scale=map_scale,
             pos=(np.array([-(W - map_wp), -(H - map_hp)]) / 2),
         )
         uav_crop_to_width = (W - map_wp) / 2 / map_scale
         uav1_view = VideoFeed(
-            fpath="electric_airliner_video-PIT-UAV-0-side-view.avi",
+            name="PIT/DEN-UAV-0 side view",
+            fpath_lineup=[
+                "electric_airliner_video-PIT-UAV-0-side-view.avi",
+                "electric_airliner_video-DEN-UAV-0-side-view.avi",
+            ],
             scale=map_scale,
             pos=np.array(
                 [
@@ -260,7 +276,11 @@ class Video(Scene):
             crop_to_width=uav_crop_to_width,
         )
         uav2_view = VideoFeed(
-            fpath="electric_airliner_video-PIT-UAV-0-side-view.avi",
+            name="PIT/DEN-UAV-1 side view",
+            fpath_lineup=[
+                "electric_airliner_video-PIT-UAV-1-side-view.avi",
+                "electric_airliner_video-DEN-UAV-1-side-view.avi",
+            ],
             scale=map_scale,
             pos=np.array(
                 [
