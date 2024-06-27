@@ -21,7 +21,7 @@ from src.three_d_sim.flight_path_generation import (
     provision_uav_from_flight_path,
     viz_airplane_paths,
 )
-from src.utils.utils import J_PER_MJ, KWH_PER_MJ, MINUTES_PER_HOUR
+from src.utils.utils import J_PER_MJ, KWH_PER_MJ, MINUTES_PER_HOUR, timedelta_to_minutes
 
 from src.feasibility_study.study_params import BaseA320, Lh2FueledA320, at200, lh2_fuel
 
@@ -210,6 +210,7 @@ def run_scenario(
         ),
     )
 
+    skip_timedelta = dt.timedelta(minutes=0)
     if view != "map-view":
         assert track_airplane_id is not None
         models_scale_factor = 1
@@ -244,35 +245,56 @@ def run_scenario(
                 (414, 0.5),
                 (415, 5),
             ]
-        elif track_airplane_id == "PIT-UAV-0":
-            zoom = [
-                (0, 20),
-                (25, 20),
-                (30, 5),
-                (51.5, 5),
-                (51.7, 20),
-                (55, 1),
-                (60, 1),
-                (63, 5),
-                (65, 20),
-                (100, 20),
-            ]
-        elif track_airplane_id == "PIT-UAV-1":
-            offset = 20.3
-            zoom = [
-                (offset + 0, 20),
-                (offset + 25, 20),
-                (offset + 30, 5),
-                (offset + 51.5, 5),
-                (offset + 51.7, 20),
-                (offset + 55, 1),
-                (offset + 60, 1),
-                (offset + 63, 5),
-                (offset + 65, 20),
-                (100, 20),
-            ]
         else:
-            zoom = [(0, 20), (415, 20)]
+            uav_id = track_airplane_id
+            uav_airport_code = track_airplane_id[:3]
+            service_side = "to-airport" if uav_id in uavs[uav_airport_code]["to-airport"] else "from-airport"
+            d = uavs[uav_airport_code][service_side][uav_id].get_elapsed_time_at_tagged_waypoints()
+            d = {k.removeprefix(f"{track_airplane_id}-").removesuffix("-point"): timedelta_to_minutes(v) for k, v in d.items()}
+
+            airport_last_uav_id = list(uavs[uav_airport_code]["from-airport"].keys())[-1]
+            airport_last_uav_td = uavs[uav_airport_code]["from-airport"][airport_last_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{airport_last_uav_id}-landed-point"]
+
+            if service_side == "to-airport":
+                zoom = [
+                    (0, 50),
+                    (d["takeoff"] - 2, 50),
+                    (d["takeoff"] - 1, 1),
+                    (d["ascended"], 1),
+                    (d["ascended"] + 1, 5),
+                    (d["arc-start"], 5),
+                    (d["descent-to-airliner"], 0.5),
+                    (d["on-airliner-docking"], 5),
+                    (d["on-airliner-docking"] + 0.1, 50),
+                    (d["on-airliner-undocking"] - 0.1, 50),
+                    (d["on-airliner-undocking"], 5),
+                    (d["ascended-from-airliner"], 0.5),
+                    (d["descent"], 0.5),
+                    (d["landed"], 5),
+                    (d["landed"] + 2, 50),
+                    (timedelta_to_minutes(airport_last_uav_td) + 2, 50),
+                ]
+            else:
+                zoom = [
+                    (0, 50),
+                    (d["takeoff"] - 2, 50),
+                    (d["takeoff"] - 1, 1),
+                    (d["ascended"], 1),
+                    (d["ascended"] + 1, 5),
+                    (d["descent-to-airliner"], 0.5),
+                    (d["on-airliner-docking"], 5),
+                    (d["on-airliner-docking"] + 0.1, 50),
+                    (d["on-airliner-undocking"] - 0.1, 50),
+                    (d["on-airliner-undocking"], 5),
+                    (d["ascended-from-airliner"], 0.5),
+                    (d["arc-end"], 0.25),
+                    (d["landed"], 5),
+                    (d["landed"] + 2, 50),
+                    (timedelta_to_minutes(airport_last_uav_td) + 2, 50),
+                ]
+            if uav_airport_code != "PIT":
+                last_pit_uav_id = list(uavs["PIT"]["from-airport"].keys())[-1]
+                skip_timedelta = uavs["PIT"]["from-airport"][last_pit_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{last_pit_uav_id}-landed-point"]
     else:
         models_scale_factor = 20000
         zoom = [(0, 10), (415, 10)]
@@ -282,7 +304,7 @@ def run_scenario(
     if preset == "record-airplanes-viz":
         screen_recorders = [
             ScreenRecorder(
-                origin=(8, 128),
+                origin=(8, 138),
                 size=scene_size,
                 fname=f"/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-{track_airplane_id or ''}-{view}.avi",
             )
@@ -327,7 +349,7 @@ def run_scenario(
             ],
             DELAY_TIME_STEP=dt.timedelta(seconds=0.04),
             START_TIMESTAMP=start_timestamp,
-            SKIP_TIMEDELTA=dt.timedelta(minutes=0),
+            SKIP_TIMEDELTA=skip_timedelta,
             END_TIMESTAMP=(start_timestamp + dt.timedelta(minutes=zoom[-1][0])),
         ),
         ev_taxis_emulator_or_interface=airplanes_emulator,

@@ -26,6 +26,7 @@ from random import shuffle
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
 import geopandas as gpd
+import pandas as pd
 import numpy as np
 import shapely
 
@@ -343,6 +344,22 @@ class EvTaxi(IdentifiedObject, EvSpec, Asset):
             if wp.LOCATION.TAG is not None:
                 travel_durations[wp.LOCATION.TAG] = deepcopy(cumulative_travel_duration)
         return travel_durations
+
+    def get_elapsed_time_at_tagged_waypoints(self) -> Dict[str, dt.timedelta]:
+        return {
+            k: self.waypoints[0].TIME_INTO_SIMULATION + v
+            for k, v in self.get_travel_durations_to_tagged_waypoints().items()
+        }
+
+    def get_elapsed_time_at_tagged_waypoints_ser(self, decimals: int = 1) -> pd.Series:
+        ser = (
+            pd.Series(self.get_elapsed_time_at_tagged_waypoints()).dt.total_seconds()
+            / 60
+        ).rename("minutes")
+        ser = ser.round(decimals)
+        if decimals == 0:
+            ser = ser.astype(int)
+        return ser
 
     @property
     def is_plugged_in(self) -> bool:

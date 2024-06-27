@@ -390,15 +390,16 @@ def _gen_takeoff_or_landing_waypoints(
     )
 
     if takeoff_or_landing == "TAKEOFF":
-        waypoints = speed_change_waypoints + altitude_transition_waypoints
         altitude_transition_waypoints[0].LOCATION.TAG = f"{airplane_id}-takeoff-point"
         altitude_transition_waypoints[-1].LOCATION.TAG = f"{airplane_id}-ascended-point"
+        waypoints = speed_change_waypoints + altitude_transition_waypoints
     else:
+        altitude_transition_waypoints[0].LOCATION.TAG = f"{airplane_id}-descent-point"
+        altitude_transition_waypoints[-1].LOCATION.TAG = f"{airplane_id}-landing-point"
+        speed_change_waypoints[-1].LOCATION.TAG = f"{airplane_id}-landed-point"
         waypoints = altitude_transition_waypoints + list(
             reversed(speed_change_waypoints)
         )
-        altitude_transition_waypoints[0].LOCATION.TAG = f"{airplane_id}-descent-point"
-        altitude_transition_waypoints[-1].LOCATION.TAG = f"{airplane_id}-landing-point"
 
     if inverted:
         waypoints = list(reversed(waypoints))
@@ -598,8 +599,8 @@ def provision_uav_from_flight_path(
             flight_path=uav_fp,
             wrt_runway=False,
         )
-        altitude_transition_waypoints[0].LOCATION.TAG = f"{uav}-lowering-point"
-        altitude_transition_waypoints[-1].LOCATION.TAG = f"{uav}-lowered-point"
+        altitude_transition_waypoints[0].LOCATION.TAG = f"{uav.ID}-lowering-point"
+        altitude_transition_waypoints[-1].LOCATION.TAG = f"{uav.ID}-lowered-point"
         uav.waypoints += _gen_tmp_speed_change_waypoints(
             start_location=uav.waypoints[-1].LOCATION,
             default_speed_kmph=uav_fp.CRUISE_SPEED_KMPH,
