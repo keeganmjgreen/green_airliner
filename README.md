@@ -30,6 +30,8 @@ Specifying ` --preset=record-airplanes-viz` records the 3D rendering and saves i
 
 ### Different 3D visualizations
 
+Note: Remove the usage of the `--preset` argument to disable screen-recording to a video file.
+
 #### Side views of airplanes
 
 Airliner:
@@ -74,18 +76,18 @@ The airliner's speed and SoC graphs are already shown in the browser tab. Given 
 
 #### Combining 3D visualizations and airliner graphs into a composite video
 
-- Low quality: `conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/Video.mp4`
-- Medium quality: `conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/Video.mp4`
-- High quality: `conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/Video.mp4`
+- Low quality: `cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/Video.mp4`
+- Medium quality: `cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/Video.mp4`
+- High quality: `cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/Video.mp4`
 
 #### Generating the presentation's intro
 
-- Low quality: `conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Intro && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/Intro.mp4`
-- Medium quality: `conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Intro && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/Intro.mp4`
-- High quality: `conda activate electric_airline && cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Intro && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/Intro.mp4`
+- Low quality: `cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Intro && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/Intro.mp4`
+- Medium quality: `cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Intro && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/Intro.mp4`
+- High quality: `cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Intro && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/Intro.mp4`
 
 #### Combining the intro and composite video into the video presentation
 
-- Low quality: `conda activate electric_airline && cd /home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && python combine_manim_videos.py --work-dir=/home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/ && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/final.mp4`
-- Medium quality: `conda activate electric_airline && cd /home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && python combine_manim_videos.py --work-dir=/home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/ && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/final.mp4`
-- High quality: `conda activate electric_airline && cd /home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && python combine_manim_videos.py --work-dir=/home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/ && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/final.mp4`
+- Low quality: `cd /home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && python combine_manim_videos.py --work-dir=/home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/ && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/final.mp4`
+- Medium quality: `cd /home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && python combine_manim_videos.py --work-dir=/home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/ && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/final.mp4`
+- High quality: `cd /home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && python combine_manim_videos.py --work-dir=/home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/ && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/final.mp4`
