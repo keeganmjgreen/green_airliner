@@ -10,6 +10,7 @@ dependencies:
       - moviepy
       - nbformat
       - pandas
+      - pango
       - psycopg2-binary  # Instead of `psycopg2` with, e.g., Linux `build-essential` package.
       - plotly
       - shapely
