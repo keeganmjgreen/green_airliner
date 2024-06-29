@@ -1,5 +1,4 @@
 import dataclasses
-from pathlib import Path
 from typing import List, Literal, Tuple
 
 import cv2
@@ -46,7 +45,7 @@ _rgb_to_vp_color = lambda rgb: vp.vec(*(np.array(rgb) / 255))
 class ScreenRecorder:
     origin: Tuple[int, int]
     size: Tuple[int, int]
-    fname: Path
+    fname: str
 
     def set_up(self, fps: int):
         self._video_writer = cv2.VideoWriter(
