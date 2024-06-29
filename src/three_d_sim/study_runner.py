@@ -254,6 +254,8 @@ def run_scenario(
             airport_last_uav_id = list(uavs[uav_airport_code]["from-airport"].keys())[-1]
             airport_last_uav_td = uavs[uav_airport_code]["from-airport"][airport_last_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{airport_last_uav_id}-landed-point"]
 
+            LANDED_UAVS_WAITING_TIME_MINS = 30
+
             if service_side == "to-airport":
                 zoom = [
                     (0, 50),
@@ -271,7 +273,7 @@ def run_scenario(
                     (d["descent"], 0.5),
                     (d["landed"], 5),
                     (d["landed"] + 2, 50),
-                    (timedelta_to_minutes(airport_last_uav_td) + 2, 50),
+                    (timedelta_to_minutes(airport_last_uav_td) + LANDED_UAVS_WAITING_TIME_MINS, 50),
                 ]
             else:
                 zoom = [
@@ -289,11 +291,11 @@ def run_scenario(
                     (d["arc-end"], 0.25),
                     (d["landed"], 5),
                     (d["landed"] + 2, 50),
-                    (timedelta_to_minutes(airport_last_uav_td) + 2, 50),
+                    (timedelta_to_minutes(airport_last_uav_td) + LANDED_UAVS_WAITING_TIME_MINS, 50),
                 ]
             if uav_airport_code != "PIT":
                 last_pit_uav_id = list(uavs["PIT"]["from-airport"].keys())[-1]
-                skip_timedelta = uavs["PIT"]["from-airport"][last_pit_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{last_pit_uav_id}-landed-point"] + dt.timedelta(minutes=2)
+                skip_timedelta = uavs["PIT"]["from-airport"][last_pit_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{last_pit_uav_id}-landed-point"] + dt.timedelta(minutes=LANDED_UAVS_WAITING_TIME_MINS)
                 # first_den_uav_id = list(uavs["DEN"]["to-airport"].keys())[0]
                 # skip_timedelta = uavs["DEN"]["to-airport"][first_den_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{first_den_uav_id}-first-point"] - dt.timedelta(minutes=2)
     else:
