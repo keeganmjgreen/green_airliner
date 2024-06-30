@@ -20,7 +20,7 @@ from src.three_d_sim.flight_path_generation import (
     provision_uav_from_flight_path,
     viz_airplane_paths,
 )
-from src.utils.utils import J_PER_MJ, KWH_PER_MJ, MINUTES_PER_HOUR, timedelta_to_minutes
+from src.utils.utils import J_PER_MJ, KWH_PER_MJ, MINUTES_PER_HOUR, SECONDS_PER_HOUR, timedelta_to_minutes
 
 from src.feasibility_study.study_params import BaseA320, Lh2FueledA320, at200, lh2_fuel
 
@@ -255,6 +255,7 @@ def run_scenario(
             airport_last_uav_td = uavs[uav_airport_code]["from-airport"][airport_last_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{airport_last_uav_id}-landed-point"]
 
             LANDED_UAVS_WAITING_TIME_MINS = 30
+            CORRECTION_MINS = (60 + 47) / SECONDS_PER_HOUR
 
             if service_side == "to-airport":
                 zoom = [
@@ -295,7 +296,7 @@ def run_scenario(
                 ]
             if uav_airport_code != "PIT":
                 last_pit_uav_id = list(uavs["PIT"]["from-airport"].keys())[-1]
-                skip_timedelta = uavs["PIT"]["from-airport"][last_pit_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{last_pit_uav_id}-landed-point"] + dt.timedelta(minutes=LANDED_UAVS_WAITING_TIME_MINS)
+                skip_timedelta = uavs["PIT"]["from-airport"][last_pit_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{last_pit_uav_id}-landed-point"] + dt.timedelta(minutes=(LANDED_UAVS_WAITING_TIME_MINS - CORRECTION_MINS))
                 # first_den_uav_id = list(uavs["DEN"]["to-airport"].keys())[0]
                 # skip_timedelta = uavs["DEN"]["to-airport"][first_den_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{first_den_uav_id}-first-point"] - dt.timedelta(minutes=2)
     else:
