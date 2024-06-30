@@ -95,10 +95,11 @@ def run_scenario(
         * (uav_refueling_capacity_MJ * J_PER_MJ)
     )
     undocking_distance_from_airport_km = 50
-    inter_uav_clearance_km = 10
+    inter_uav_clearance_km = 15
+    inter_uav_vertical_dist_km = 1
     uavs_per_airport = {
         "PIT": {"to-airport": 1, "from-airport": 1},
-        "DEN": {"to-airport": 4, "from-airport": 3},
+        "DEN": {"to-airport": 3, "from-airport": 2},
     }
     for uav_airport_code, x in uavs_per_airport.items():
         i = 0
@@ -148,6 +149,9 @@ def run_scenario(
 
                 AIRLINER_UAV_DOCKING_DISTANCE_KM = 0.0015
 
+                increasing_towards_airport = (j if service_side == "to-airport" else (n_uavs - j - 1))
+                decreasing_towards_airport = ((n_uavs - j - 1) if service_side == "to-airport" else j)
+
                 uav_fp = UavFlightPath(
                     AIRPORT_CODES=[uav_airport_code],
                     TAKEOFF_SPEED_KMPH=100,
@@ -156,7 +160,7 @@ def run_scenario(
                     TAKEOFF_LEVELING_DISTANCE_KM=0.1,
                     RATE_OF_CLIMB_MPS=35,
                     CLIMB_LEVELING_DISTANCE_KM=0.5,
-                    CRUISE_ALTITUDE_KM=11.5,
+                    CRUISE_ALTITUDE_KM=(11.5 + inter_uav_vertical_dist_km * increasing_towards_airport),
                     CRUISE_SPEED_KMPH=AT200_CRUISE_SPEED_KMPH,
                     TURNING_RADIUS_KM=airliner_fp.TURNING_RADIUS_KM,
                     DESCENT_LEVELING_DISTANCE_KM=0.5,
@@ -174,11 +178,11 @@ def run_scenario(
                     UNDOCKING_DISTANCE_FROM_AIRPORT_KM=(
                         undocking_distance_from_airport_km
                         + (refueling_distance_km + inter_uav_clearance_km)
-                        * ((n_uavs - j - 1) if service_side == "to-airport" else j)
+                        * decreasing_towards_airport
                     ),
                     AIRLINER_CLEARANCE_SPEED_KMPH=200,
                     AIRLINER_CLEARANCE_DISTANCE_KM=10,
-                    AIRLINER_CLEARANCE_ALTITUDE_KM=5,
+                    AIRLINER_CLEARANCE_ALTITUDE_KM=(5 + inter_uav_vertical_dist_km * increasing_towards_airport),
                 )
                 uav_fps[uav_airport_code][service_side][uav.ID] = uav_fp
 
