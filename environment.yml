@@ -6,6 +6,8 @@ dependencies:
       - geopandas
       - ipykernel
       - kaleido
+      - manim
+      - ManimPango
       - matplotlib
       - moviepy
       - nbformat
