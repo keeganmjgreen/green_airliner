@@ -77,15 +77,11 @@ text_mobject.DEFAULT_LINE_SPACING_SCALE = 0.8
 
 config.max_files_cached = 4000
 
-N_FRAMES = 1500
+N_FRAMES = 10
 FRAME_RATE = 15
 W = 1920
 H = 1080
 PX_PER_UNIT = 135
-
-
-class VideoCapture(cv2.VideoCapture):
-    not_done: bool = True
 
 
 @dataclasses.dataclass
@@ -97,27 +93,26 @@ class VideoFeed:
     crop_to_width: Optional[float] = None
 
     def __post_init__(self):
-        self.caps = [VideoCapture(fpath) for fpath in self.fpath_lineup]
+        self.caps = [cv2.VideoCapture(fpath) for fpath in self.fpath_lineup]
 
     def add_to(self, scene: Scene):
         for cap in self.caps:
-            if cap.not_done:
-                cap.not_done, frame = cap.read()
-                if cap.not_done:
-                    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                    if self.crop_to_width is not None:
-                        h, w, _ = frame.shape
-                        frame = frame[
-                            :,
-                            int((w - self.crop_to_width) // 2) : w
-                            - int((w - self.crop_to_width) // 2),
-                        ]
-                    self.image_mobject = (
-                        ImageMobject(frame)
-                        .scale(self.scale)
-                        .move_to([*(self.pos / PX_PER_UNIT), 0])
-                    )
-                    break
+            not_done, frame = cap.read()
+            if not_done:
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                if self.crop_to_width is not None:
+                    h, w, _ = frame.shape
+                    frame = frame[
+                        :,
+                        int((w - self.crop_to_width) // 2) : w
+                        - int((w - self.crop_to_width) // 2),
+                    ]
+                self.image_mobject = (
+                    ImageMobject(frame)
+                    .scale(self.scale)
+                    .move_to([*(self.pos / PX_PER_UNIT), 0])
+                )
+                break
         scene.add(self.image_mobject)
 
     def remove_from(self, scene: Scene):
