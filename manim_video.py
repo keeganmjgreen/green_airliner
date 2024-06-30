@@ -77,11 +77,12 @@ text_mobject.DEFAULT_LINE_SPACING_SCALE = 0.8
 
 config.max_files_cached = 4000
 
-N_FRAMES = 10
+N_FRAMES = 3000
 FRAME_RATE = 15
 W = 1920
 H = 1080
 PX_PER_UNIT = 135
+INDICES = False
 
 
 @dataclasses.dataclass
@@ -173,17 +174,16 @@ class Video(Scene):
         1227: [Caption("The second UAV returns to | Pittsburgh International Airport", 1.5, 0.75)],
         1280: [Caption("The airliner returns to cruise speed", 0, 0.5)],
         1330: [Caption("JFK", 2, 0.25), Caption("PIT", 0.75, 0.25)],
-        1511: [Caption("Another UAV, from Denver | International Airport", -1.75, 0.5)],
-        1760: [Caption("A second UAV from DEN", 0, -0.5)],
-        1830: [Caption("A third UAV", 0, -0.5)],
-        1900: [Caption("A fourth", 0, -0.5)],
+        1700: [Caption("Another UAV, from Denver | International Airport", -1.75, 0.5)],
+        1800: [Caption("A second UAV from DEN", 0, -0.5)],
+        1900: [Caption("A third UAV", 0, -0.5)],
         2230: [
             Caption("The UAVs land at DEN", 1, -1.25),
-            Caption("Another three UAVs taking | off in succession", -1.5, -1.25),
+            Caption("Another two UAVs taking | off in succession", -1.5, -1.25),
         ],
         2555: [Caption("The airliner is now en route to LAX", 0, 0.5)],
         2755: [Caption("LAX International | Airport", -2.5, -1.5)],
-        2995: [Caption("The airliner has completed its | 4000-km, hydrogen-powered flight | from JFK to LAX after 7h", 0, -1.25)],
+        3000: [Caption("The airliner has completed its | 4000-km, hydrogen-powered flight | from JFK to LAX after 7h", 0, -1.25)],
     }
 
     def _make_grid(self, xs, ys):
@@ -329,10 +329,12 @@ class Video(Scene):
                 for caption in frame_captions:
                     caption.show(scene=self, scale=viz_scale, pos=viz_pos, grid_size=viz_grid_size)
             else:
-                self.wait(1 / FRAME_RATE)
-                # Caption(
-                #     f"{self.frame_i}", x=0, y=0, write_rate=0, wait_s=(1 / FRAME_RATE)
-                # ).show(scene=self, scale=viz_scale, pos=viz_pos, grid_size=viz_grid_size)
+                if not INDICES:
+                    self.wait(1 / FRAME_RATE)
+                else:
+                    Caption(
+                        f"{self.frame_i}", x=0, y=0, write_rate=0, wait_s=(1 / FRAME_RATE)
+                    ).show(scene=self, scale=viz_scale, pos=viz_pos, grid_size=viz_grid_size)
             self.remove(lines)
             self.remove(grids)
             for video_feed in video_feeds:

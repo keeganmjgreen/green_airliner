@@ -62,7 +62,7 @@ UAVs from DEN:
 
 The following usage of `--view=map-view` shows all airplanes (airliner and UAVs) from above, zoomed out such that they are always visible. The airplane and UAVs' 3D models and elevations are scaled up, for illustrative purposes, such that they remain visible.
 
-`python src/three_d_sim/study_runner.py --view=map-view --track-airplane-id=Airliner --preset=record-airplanes-viz`
+`python src/three_d_sim/study_runner.py --view=map-view --preset=record-airplanes-viz`
 
 #### Airliner speed and SoC graphs
 

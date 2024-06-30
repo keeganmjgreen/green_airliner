@@ -538,22 +538,25 @@ def _generate_uav_waypoints(
 
 
 def provision_uav_from_flight_path(
-    uav: Uav, uav_fp: UavFlightPath, airliner_fp: FlightPath
+    uav: Uav, j: int, n_uavs: int, uav_fp: UavFlightPath, airliner_fp: FlightPath
 ) -> None:
     assert len(uav_fp.AIRPORT_LOCATIONS) == 1
     uav_airport_location = uav_fp.AIRPORT_LOCATIONS[0]
-    uav.location = uav_airport_location
-    # uav.set_heading(...)  # TODO?
     prev_airliner_airport_location = airliner_fp.AIRPORT_LOCATIONS[
         airliner_fp.AIRPORT_LOCATIONS.index(uav_airport_location) - 1
     ]
     next_airliner_airport_location = airliner_fp.AIRPORT_LOCATIONS[
         airliner_fp.AIRPORT_LOCATIONS.index(uav_airport_location) + 1
     ]
+    airport_A = prev_airliner_airport_location if uav_fp.SERVICE_SIDE == "to-airport" else next_airliner_airport_location
+    uav.location = Location(
+        *_intermediate_point_between(uav_airport_location.xy_coords, airport_A.xy_coords, intermediate_distance=(0.015 * (n_uavs - j)))
+    )
+    # uav.set_heading(...)  # TODO?
     if uav_fp.SERVICE_SIDE == "to-airport":
         uav.waypoints += _generate_uav_waypoints(
             airport_A=prev_airliner_airport_location,
-            airport_B=uav_airport_location,
+            airport_B=uav.location,
             uav=uav,
             uav_fp=uav_fp,
             uav_fp_half="first-half",
@@ -613,7 +616,9 @@ def provision_uav_from_flight_path(
         uav.waypoints += _gen_takeoff_or_landing_waypoints(
             airplane_id=uav.ID,
             takeoff_or_landing="LANDING",
-            airport_location=uav_airport_location,
+            airport_location=Location(
+                *_intermediate_point_between(uav_airport_location.xy_coords, airport_A.xy_coords, intermediate_distance=(0.015 * (j + 1)))
+            ),
             eventual_point=uav.waypoints[-1].LOCATION.xy_coords,
             flight_path=uav_fp,
             altitude_km=uav_fp.AIRLINER_CLEARANCE_ALTITUDE_KM,
@@ -631,7 +636,7 @@ def provision_uav_from_flight_path(
         uav.waypoints += _gen_takeoff_or_landing_waypoints(
             airplane_id=uav.ID,
             takeoff_or_landing="TAKEOFF",
-            airport_location=uav_airport_location,
+            airport_location=deepcopy(uav.location),
             eventual_point=next_airliner_airport_location.xy_coords,
             flight_path=uav_fp,
             altitude_km=uav_fp.CRUISE_ALTITUDE_KM,

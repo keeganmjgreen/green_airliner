@@ -149,7 +149,6 @@ def run_scenario(
 
                 AIRLINER_UAV_DOCKING_DISTANCE_KM = 0.0015
 
-                increasing_towards_airport = (j if service_side == "to-airport" else (n_uavs - j - 1))
                 decreasing_towards_airport = ((n_uavs - j - 1) if service_side == "to-airport" else j)
 
                 uav_fp = UavFlightPath(
@@ -160,7 +159,7 @@ def run_scenario(
                     TAKEOFF_LEVELING_DISTANCE_KM=0.1,
                     RATE_OF_CLIMB_MPS=35,
                     CLIMB_LEVELING_DISTANCE_KM=0.5,
-                    CRUISE_ALTITUDE_KM=(11.5 + inter_uav_vertical_dist_km * increasing_towards_airport),
+                    CRUISE_ALTITUDE_KM=(11.5 + inter_uav_vertical_dist_km * j),
                     CRUISE_SPEED_KMPH=AT200_CRUISE_SPEED_KMPH,
                     TURNING_RADIUS_KM=airliner_fp.TURNING_RADIUS_KM,
                     DESCENT_LEVELING_DISTANCE_KM=0.5,
@@ -181,12 +180,12 @@ def run_scenario(
                         * decreasing_towards_airport
                     ),
                     AIRLINER_CLEARANCE_SPEED_KMPH=200,
-                    AIRLINER_CLEARANCE_DISTANCE_KM=10,
-                    AIRLINER_CLEARANCE_ALTITUDE_KM=(5 + inter_uav_vertical_dist_km * increasing_towards_airport),
+                    AIRLINER_CLEARANCE_DISTANCE_KM=5,
+                    AIRLINER_CLEARANCE_ALTITUDE_KM=(5 + inter_uav_vertical_dist_km * j),
                 )
                 uav_fps[uav_airport_code][service_side][uav.ID] = uav_fp
 
-                provision_uav_from_flight_path(uav, uav_fp, airliner_fp)
+                provision_uav_from_flight_path(uav, j, n_uavs, uav_fp, airliner_fp)
 
                 i += 1
 
@@ -322,12 +321,12 @@ def run_scenario(
         captions = False
         screen_recorders = [
             ScreenRecorder(
-                origin=(8, 218),
+                origin=(8, 228),
                 size=(640, 426),
                 fname="/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-Airliner-soc-graph.avi",
             ),
             ScreenRecorder(
-                origin=(8, 218 + 426),
+                origin=(8, 228 + 426),
                 size=(640, 426),
                 fname="/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-Airliner-speed-graph.avi",
             ),
