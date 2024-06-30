@@ -92,36 +92,8 @@ class AirplanesVisualizerEnvironment(Environment):
         vp.scene.width /= self.N_VIEW_COLUMNS
         vp.scene.background = _rgb_to_vp_color(SKY_RGB_COLOR)
 
-        vp.quad(
-            vs=[
-                vp.vertex(
-                    pos=vp.vec(*(np.array(xy) * BOUND_KM), -0.1),
-                    color=_rgb_to_vp_color(GROUND_RGB_COLOR),
-                    shininess=0,
-                )
-                for xy in [[1, 1], [-1, 1], [-1, -1], [1, -1]]
-            ]
-        )
-
-        airport_locations = self.AIRLINER_FLIGHT_PATH.AIRPORT_LOCATIONS
-        # x_coords = [loc.X_KM for loc in airport_locations]
-        # y_coords = [loc.Y_KM for loc in airport_locations]
-        # center = vp.vector(
-        #     *[(max(coords) - min(coords)) / 2 for coords in [x_coords, y_coords]], 0
-        # )
-        for loc in airport_locations:
-            cr = vp.shapes.circle(pos=list(loc.xy_coords), radius=AIRPORT_RADIUS_KM)
-            for i in range(len(cr)):
-                vs = [loc.xy_coords, cr[i - 1], cr[i]]
-                vp.triangle(
-                    vs=[
-                        vp.vertex(
-                            pos=vp.vector(*v, -0.01),
-                            color=_rgb_to_vp_color(AIRPORT_COLOR),
-                        )
-                        for v in vs
-                    ]
-                )
+        self._render_ground()
+        self._render_airports()
 
         airplanes = self.ev_taxis_emulator_or_interface.current_state.evs_state.values()
 
@@ -142,6 +114,39 @@ class AirplanesVisualizerEnvironment(Environment):
             vp.scene.up = vp.vector(0, 0, 1)
 
         self._set_up_graphs()
+
+    def _render_ground(self):
+        vp.quad(
+            vs=[
+                vp.vertex(
+                    pos=vp.vec(*(np.array(xy) * BOUND_KM), -0.1),
+                    color=_rgb_to_vp_color(GROUND_RGB_COLOR),
+                    shininess=0,
+                )
+                for xy in [[1, 1], [-1, 1], [-1, -1], [1, -1]]
+            ]
+        )
+
+    def _render_airports(self):
+        airport_locations = self.AIRLINER_FLIGHT_PATH.AIRPORT_LOCATIONS
+        # x_coords = [loc.X_KM for loc in airport_locations]
+        # y_coords = [loc.Y_KM for loc in airport_locations]
+        # center = vp.vector(
+        #     *[(max(coords) - min(coords)) / 2 for coords in [x_coords, y_coords]], 0
+        # )
+        for loc in airport_locations:
+            cr = vp.shapes.circle(pos=list(loc.xy_coords), radius=AIRPORT_RADIUS_KM)
+            for i in range(len(cr)):
+                vs = [loc.xy_coords, cr[i - 1], cr[i]]
+                vp.triangle(
+                    vs=[
+                        vp.vertex(
+                            pos=vp.vector(*v, -0.01),
+                            color=_rgb_to_vp_color(AIRPORT_COLOR),
+                        )
+                        for v in vs
+                    ]
+                )
 
     def _set_up_graphs(self) -> None:
         self.airliner_soc_graph = vp.graph(title="Airliner SoC", xtitle="Time [min]", ytitle="SoC", ymin=0, ymax=1)
