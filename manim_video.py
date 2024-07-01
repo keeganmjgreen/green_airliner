@@ -208,7 +208,7 @@ class Video(Scene):
         )
         viz = VideoFeed(
             name="Airliner side view",
-            fpath_lineup=["electric_airliner_video-Airliner-side-view.avi"],
+            fpath_lineup=["inputs/Airliner-side-view.avi"],
             scale=viz_scale,
             pos=(viz_pos * PX_PER_UNIT),
         )
@@ -218,13 +218,13 @@ class Video(Scene):
         graph_hp = graph_h * graph_scale
         soc_graph = VideoFeed(
             name="Airliner SoC graph",
-            fpath_lineup=["electric_airliner_video-Airliner-soc-graph.avi"],
+            fpath_lineup=["inputs/Airliner-soc-graph.avi"],
             scale=graph_scale,
             pos=(np.array([W - graph_wp, H - graph_hp]) / 2),
         )
         speed_graph = VideoFeed(
             name="Airliner speed graph",
-            fpath_lineup=["electric_airliner_video-Airliner-speed-graph.avi"],
+            fpath_lineup=["inputs/Airliner-speed-graph.avi"],
             scale=graph_scale,
             pos=(np.array([W - graph_wp, H - graph_hp * 3]) / 2),
         )
@@ -233,7 +233,7 @@ class Video(Scene):
         map_hp = viz_h * map_scale
         map_view = VideoFeed(
             name="Map view",
-            fpath_lineup=["electric_airliner_video--map-view.avi"],
+            fpath_lineup=["inputs/-map-view.avi"],
             scale=map_scale,
             pos=(np.array([-(W - map_wp), -(H - map_hp)]) / 2),
         )
@@ -241,8 +241,8 @@ class Video(Scene):
         uav1_view = VideoFeed(
             name="PIT/DEN-UAV-0 side view",
             fpath_lineup=[
-                "electric_airliner_video-PIT-UAV-0-side-view.avi",
-                "electric_airliner_video-DEN-UAV-0-side-view.avi",
+                "inputs/-UAV-0-side-view.avi",
+                "inputs/DEN-UAV-0-side-view.avi",
             ],
             scale=map_scale,
             pos=np.array(
@@ -256,8 +256,8 @@ class Video(Scene):
         uav2_view = VideoFeed(
             name="PIT/DEN-UAV-1 side view",
             fpath_lineup=[
-                "electric_airliner_video-PIT-UAV-1-side-view.avi",
-                "electric_airliner_video-DEN-UAV-1-side-view.avi",
+                "inputs/PIT-UAV-1-side-view.avi",
+                "inputs/DEN-UAV-1-side-view.avi",
             ],
             scale=map_scale,
             pos=np.array(

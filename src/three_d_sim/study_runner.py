@@ -20,7 +20,7 @@ from src.three_d_sim.flight_path_generation import (
     provision_uav_from_flight_path,
     viz_airplane_paths,
 )
-from src.utils.utils import J_PER_MJ, KWH_PER_MJ, MINUTES_PER_HOUR, SECONDS_PER_HOUR, timedelta_to_minutes
+from src.utils.utils import J_PER_MJ, KWH_PER_MJ, MINUTES_PER_HOUR, SECONDS_PER_HOUR, _getenv, timedelta_to_minutes
 
 from src.feasibility_study.study_params import BaseA320, Lh2FueledA320, at200, lh2_fuel
 
@@ -309,26 +309,28 @@ def run_scenario(
     scene_size = (1800, 900)
     captions = True
     if preset == "record-airplanes-viz":
+        video_dir = _getenv("VIDEO_DIR", handling="raise")
         screen_recorders = [
             ScreenRecorder(
                 origin=(8, 138),
                 size=scene_size,
-                fname=f"/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-{track_airplane_id or ''}-{view}.avi",
+                fname=f"{video_dir}/inputs/{track_airplane_id or ''}-{view}.avi",
             )
         ]
     elif preset == "record-graphs":
+        video_dir = _getenv("VIDEO_DIR", handling="raise")
         scene_size = (180, 90)
         captions = False
         screen_recorders = [
             ScreenRecorder(
                 origin=(8, 228),
                 size=(640, 426),
-                fname="/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-Airliner-soc-graph.avi",
+                fname=f"{video_dir}/inputs/Airliner-soc-graph.avi",
             ),
             ScreenRecorder(
                 origin=(8, 228 + 426),
                 size=(640, 426),
-                fname="/home/keegan_green/Downloads/electric_airliner_video/electric_airliner_video-Airliner-speed-graph.avi",
+                fname=f"{video_dir}/inputs/Airliner-speed-graph.avi",
             ),
         ]
     else:

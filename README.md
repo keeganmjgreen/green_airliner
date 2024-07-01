@@ -10,15 +10,19 @@ The 3D simulation is run by `src/three_d_sim/study_runner.py` (the program's ent
 
 ### Running via command line
 
-1. Set `PYTHONPATH` to the repo root, e.g.:
+1. Set the `PYTHONPATH` environment variable to the repo root, e.g.:
     
     `export PYTHONPATH=/home/keegan_green/Dropbox/Documents/Projects/electric_airline/`
     
-2. Activate the Conda environment:
+2. Set a `VIDEO_DIR` environment variable, e.g.:
+    
+    `export VIDEO_DIR=/home/keegan_green/electric_airliner_video/`
+    
+3. Activate the Conda environment:
     
     `conda activate electric_airline`
     
-3. Run the 3D simulation:
+4. Run the 3D simulation:
     
     `python src/three_d_sim/study_runner.py --view=... --track-airplane-id=... --preset=...`
 
@@ -78,22 +82,24 @@ The airliner's speed and SoC graphs are already shown in the browser tab. Given 
 
 Examples:
 
-- Low quality: `cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/Video.mp4`
-- Medium quality: `cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/Video.mp4`
-- High quality: `cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/Video.mp4`
+- Low quality:    `cd ${VIDEO_DIR} && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc ${VIDEO_DIR}/media/videos/manim_video/480p15/Video.mp4`
+- Medium quality: `cd ${VIDEO_DIR} && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc ${VIDEO_DIR}/media/videos/manim_video/720p30/Video.mp4`
+- High quality:   `cd ${VIDEO_DIR} && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Video && vlc ${VIDEO_DIR}/media/videos/manim_video/1080p60/Video.mp4`
 
 #### Generating the presentation's intro
 
 Examples:
 
-- Low quality: `cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Intro && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/Intro.mp4`
-- Medium quality: `cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Intro && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/Intro.mp4`
-- High quality: `cd /home/keegan_green/Downloads/electric_airliner_video/ && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_video.py Intro && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/Intro.mp4`
+`export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/electric_airline/`
+
+- Low quality:    `cd ${VIDEO_DIR} && manim -ql ${REPO_DIR}/manim_video.py Intro && vlc ${VIDEO_DIR}/media/videos/manim_video/480p15/Intro.mp4`
+- Medium quality: `cd ${VIDEO_DIR} && manim -qm ${REPO_DIR}/manim_video.py Intro && vlc ${VIDEO_DIR}/media/videos/manim_video/720p30/Intro.mp4`
+- High quality:   `cd ${VIDEO_DIR} && manim -qH ${REPO_DIR}/manim_video.py Intro && vlc ${VIDEO_DIR}/media/videos/manim_video/1080p60/Intro.mp4`
 
 #### Combining the intro and composite video into the video presentation
 
 Examples:
 
-- Low quality: `cd /home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && python combine_manim_videos.py --work-dir=/home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/ && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/480p15/final.mp4`
-- Medium quality: `cd /home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && python combine_manim_videos.py --work-dir=/home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/ && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/720p30/final.mp4`
-- High quality: `cd /home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && python combine_manim_videos.py --work-dir=/home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/ && vlc /home/keegan_green/Downloads/electric_airliner_video/media/videos/manim_video/1080p60/final.mp4`
+- Low quality:    `cd ${VIDEO_DIR} && python combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/480p15/  && vlc ${VIDEO_DIR}/media/videos/manim_video/480p15/final.mp4`
+- Medium quality: `cd ${VIDEO_DIR} && python combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/720p30/  && vlc ${VIDEO_DIR}/media/videos/manim_video/720p30/final.mp4`
+- High quality:   `cd ${VIDEO_DIR} && python combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/1080p60/ && vlc ${VIDEO_DIR}/media/videos/manim_video/1080p60/final.mp4`
