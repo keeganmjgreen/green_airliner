@@ -1,7 +1,7 @@
 import datetime as dt
 import os
 import uuid
-from typing import Any, Dict, Optional, List, Tuple, Union
+from typing import Any, Dict, Literal, Optional, List, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -40,35 +40,38 @@ def invert_dict(d: Dict) -> Dict:
 def _getenv(
     env_var_name: str,
     _type: type = str,
-    warn: bool = False,
+    handling: Literal[None, "raise"] = None,
     default_val: Optional[Any] = None,
 ) -> Union[Any, None]:
-    """Thin wrapper of ``os.getenv`` with added functionality.
+    """Thin wrapper of `os.getenv` with added functionality.
 
     Args:
-        env_var_name (str): name of environment variable
-        _type (type, optional): type to cast environment variable to (if environment variable is not
-            None). Defaults to str (no typecasting).
-        warn (bool, optional): whether to log warning if environment variable is None (is unset OR
-            zero-length string). Defaults to False.
-        default_val (Optional[Any], optional): default value to use if environment variable is None.
-            Defaults to None.
+        env_var_name (str): Name of the environment variable.
+        _type (type, optional): Type to cast the environment variable to (if environment variable is
+            not None). Defaults to str (no typecasting).
+        handling (Literal[None, "warn", "raise"], optional): Whether to do nothing or raise an
+            exception if environment variable is None (is unset OR zero-length string). Defaults to
+            None to do nothing.
+        default_val (Optional[Any], optional): Default value to use if the environment variable is
+            None. Defaults to None.
 
     Returns:
-        Union[Any, None]: environment variable value
+        Union[Any, None]: The environment variable's value.
     """
 
     env_var = os.getenv(env_var_name)
     if env_var == "":
         env_var = None
     if env_var is None:
-        if warn:
-            print(
-                f"WARNING: Environment variable {env_var_name} is unset or zero-length string."
-            )
+        msg = f"Environment variable {env_var_name} is unset or zero-length string."
+        if handling == "raise":
+            raise Exception(msg)
         env_var = default_val
     if env_var is not None:
-        env_var = _type(env_var)
+        if _type is bool:
+            env_var = {"true": True, "false": False}[env_var]
+        else:
+            env_var = _type(env_var)
     return env_var
 
 
