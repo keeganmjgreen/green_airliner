@@ -100,6 +100,8 @@ Examples:
 
 Examples:
 
-- Low quality:    `cd ${VIDEO_DIR} && python combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/480p15/  && vlc ${VIDEO_DIR}/media/videos/manim_video/480p15/final.mp4`
-- Medium quality: `cd ${VIDEO_DIR} && python combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/720p30/  && vlc ${VIDEO_DIR}/media/videos/manim_video/720p30/final.mp4`
-- High quality:   `cd ${VIDEO_DIR} && python combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/1080p60/ && vlc ${VIDEO_DIR}/media/videos/manim_video/1080p60/final.mp4`
+`export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/electric_airline/`
+
+- Low quality:    `cd ${VIDEO_DIR} && python ${REPO_DIR}/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/480p15/  && vlc ${VIDEO_DIR}/media/videos/manim_video/480p15/final.mp4`
+- Medium quality: `cd ${VIDEO_DIR} && python ${REPO_DIR}/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/720p30/  && vlc ${VIDEO_DIR}/media/videos/manim_video/720p30/final.mp4`
+- High quality:   `cd ${VIDEO_DIR} && python ${REPO_DIR}/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/1080p60/ && vlc ${VIDEO_DIR}/media/videos/manim_video/1080p60/final.mp4`
