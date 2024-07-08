@@ -52,12 +52,16 @@ class Intro(Scene):
     def _slides_from_file(self, fpath: str):
         with open(fpath) as f:
             lines = f.readlines()
-        HEADER = "# "
+        TITLE = "# "
+        HEADER = "## "
         INDENT = "- "
         slide_title = None
         slide_bullets = []
         for l in lines + ["last line"]:
             if l.strip() != "":
+                if l.startswith(TITLE):
+                    title = l.removeprefix(TITLE).strip()
+                    self._title(title)
                 if l.startswith(HEADER):
                     if slide_title is not None:
                         self._slide(slide_title, "\n".join(slide_bullets))
@@ -67,7 +71,6 @@ class Intro(Scene):
                     slide_bullets.append(l.removeprefix(INDENT).strip())
 
     def construct(self):
-        self._title("Simulation of Mid-Air Refueling of a Hydrogen-Powered Commercial Airliner")
         self._slides_from_file(f"{_getenv('REPO_DIR')}/intro.md")
 
 
