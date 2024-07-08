@@ -3,8 +3,9 @@ from typing import Optional, Tuple
 
 import cv2
 from manim import *
-
 from manim.mobject.text import text_mobject
+
+from src.utils.utils import _getenv
 
 
 # ==================================================================================================
@@ -48,25 +49,24 @@ class Intro(Scene):
         self.play(Unwrite(blist), run_time=bullets_unwrite_time)
         self.play(Unwrite(title), run_time=title_unwrite_time)
 
+    def _slides_from_file(self, fpath: str):
+        with open(fpath) as f:
+            lines = f.readlines()
+        TAB = " " * 4
+        slide_title = None
+        slide_bullets = []
+        for l in lines + [""]:
+            if TAB not in l:
+                if slide_title is not None:
+                    self._slide(slide_title, "\n".join(slide_bullets))
+                    slide_bullets = []
+                slide_title = l
+            else:
+                slide_bullets.append(l.strip())
+
     def construct(self):
         self._title("Simulation of Mid-Air Refueling of a Hydrogen-Powered Commercial Airliner")
-        self._slide(
-            "The Problem",
-            """
-            Commercial airliners contribute massive amounts of CO2 emissions, which is incompatible with the current goal of attaining net zero by 2050 to help mitigate the climate crisis.
-            Airliners and passengers are refusing to reduce air travel and will continue to do so until oil reserves are depleted (in which case the damage is done), unless a similarly affordable alternative is created.
-            Unless batteries or green fuel technology improves dramatically (which is unlikely), electric commercial airliners of similar size and serving similar routes will be infeasible.
-            """
-        )
-        self._slide(
-            "Proposed Solution",
-            """
-            Use of green alternatives to jet fuel is limited by their comparatively low energy density; storing the same amount of energy requires carrying far more weight, requiring more fuel, and so on.
-            Mid-air refueling of commercial airliners by jet-fueled UAVs (which would travel shorter distances) may be a solution.
-            The extra weight in green fuel would be efficiently carried and delivered to the airliner by UAVs operating out of airports over which the airliner flies.
-            Each UAV would take off, dock with the airliner to partially refuel it, then land again for its own refueling.
-            """
-        )
+        self._slides_from_file(f"{_getenv('REPO_DIR')}/intro.txt")
 
 
 # ==================================================================================================
