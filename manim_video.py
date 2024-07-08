@@ -71,6 +71,7 @@ class Intro(Scene):
                     slide_bullets.append(l.removeprefix(INDENT).strip())
 
     def construct(self):
+        self.add(ImageMobject("splash-blurred-dimmed.png"))
         self._slides_from_file(f"{_getenv('REPO_DIR')}/intro.md")
 
 
