@@ -9,9 +9,9 @@ from src.utils.utils import _getenv
 
 
 # ==================================================================================================
-# Intro
+# Intro and Conclusion
 
-class Intro(Scene):
+class BaseSlideshowVideo(Scene):
     tex_style = r"\sf"
 
     def _title(
@@ -71,8 +71,19 @@ class Intro(Scene):
                     slide_bullets.append(l.removeprefix(INDENT).strip())
 
     def construct(self):
+        raise NotImplementedError
+
+
+class Intro(BaseSlideshowVideo):
+    def construct(self):
         self.add(ImageMobject("splash-blurred-dimmed.png"))
         self._slides_from_file(f"{_getenv('REPO_DIR')}/manim_videos/intro.md")
+
+
+class Conclusion(BaseSlideshowVideo):
+    def construct(self):
+        self.add(ImageMobject("splash-blurred-dimmed.png"))
+        self._slides_from_file(f"{_getenv('REPO_DIR')}/manim_videos/conclusion.md")
 
 
 # ==================================================================================================
