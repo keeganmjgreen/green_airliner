@@ -10,3 +10,9 @@
 - Midair refueling of commercial airliners by jet-fueled UAVs (which would travel much shorter distances) may be a solution.
 - Extra green fuel would be delivered to an airliner by UAVs operating out of airports over which the airliner flies.
 - Each UAV would take off, dock with the airliner to partially refuel it, then land again for its own refueling.
+
+## What should I think of this?
+- There are two ways to interpret this solution:
+- (1) Such a drastic and unorthodox solution is required to help decarbonize air travel – making it a reasonable solution.
+- (2) Such a solution is unreasonable and will never be accepted – it serves only as a demonstration that air travel cannot be decarbonized and that it must instead be severely reduced.
+- Both interpretations are valuable.
