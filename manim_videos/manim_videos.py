@@ -72,7 +72,7 @@ class Intro(Scene):
 
     def construct(self):
         self.add(ImageMobject("splash-blurred-dimmed.png"))
-        self._slides_from_file(f"{_getenv('REPO_DIR')}/intro.md")
+        self._slides_from_file(f"{_getenv('REPO_DIR')}/manim_videos/intro.md")
 
 
 # ==================================================================================================

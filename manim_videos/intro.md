@@ -1,4 +1,3 @@
-# The Problem
 # Simulation of Mid-Air Refueling of a Hydrogen-Powered Commercial Airliner
 
 ## The Problem
