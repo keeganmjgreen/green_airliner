@@ -3,6 +3,7 @@ dependencies:
   - python
   - pip
   - pip:
+      - furo
       - geopandas
       - ipykernel
       - kaleido
@@ -21,3 +22,4 @@ dependencies:
       - pywavefront
       - vpython
       - sphinx
+      - sphinxawesome-theme

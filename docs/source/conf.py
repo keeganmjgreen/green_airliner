@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Design and Feasibility Study of Mid-Air Refueling of an Electric Airliner'
-copyright = '2023, Keegan Green'
+copyright = '2024, Keegan Green'
 author = 'Keegan Green'
 
 # -- General configuration ---------------------------------------------------
@@ -23,5 +23,5 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
+html_theme = 'furo'  # 'sphinxawesome_theme'
 html_static_path = ['_static']
