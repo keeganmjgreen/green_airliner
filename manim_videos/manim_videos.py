@@ -59,7 +59,7 @@ class BaseSlideshowVideo(Scene):
         INDENT = "- "
         slide_title = None
         slide_bullets = []
-        for l in lines + ["last line"]:
+        for l in lines + ["## last line"]:
             if l.strip() != "":
                 if l.startswith(TITLE):
                     title = l.removeprefix(TITLE).strip()
