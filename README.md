@@ -78,23 +78,33 @@ The airliner's speed and SoC graphs are already shown in the browser tab. Given 
 
 `manim_videos.py`
 
+First, set the `REPO_DIR` environment variable, e.g.: `export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/electric_airline/`
+
+(Also ensure the `PYTHONPATH` and `VIDEO_DIR` environment variables are set like mentioned above.)
+
 #### Combining 3D visualizations and airliner graphs into a composite video
 
 Examples:
 
-- Low quality:    `cd ${VIDEO_DIR} && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_videos/manim_videos.py Video && vlc ${VIDEO_DIR}/media/videos/manim_video/480p15/Video.mp4`
-- Medium quality: `cd ${VIDEO_DIR} && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_videos/manim_videos.py Video && vlc ${VIDEO_DIR}/media/videos/manim_video/720p30/Video.mp4`
-- High quality:   `cd ${VIDEO_DIR} && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_videos/manim_videos.py Video && vlc ${VIDEO_DIR}/media/videos/manim_video/1080p60/Video.mp4`
+- Low quality:    `cd ${VIDEO_DIR} && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_videos/manim_videos.py Video && vlc ${VIDEO_DIR}/media/videos/manim_videos/480p15/Video.mp4`
+- Medium quality: `cd ${VIDEO_DIR} && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_videos/manim_videos.py Video && vlc ${VIDEO_DIR}/media/videos/manim_videos/720p30/Video.mp4`
+- High quality:   `cd ${VIDEO_DIR} && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_videos/manim_videos.py Video && vlc ${VIDEO_DIR}/media/videos/manim_videos/1080p60/Video.mp4`
 
 #### Generating the presentation's intro
 
 Examples:
 
-`export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/electric_airline/`
+- Low quality:    `cd ${VIDEO_DIR} && manim -ql ${REPO_DIR}/manim_videos/manim_videos.py Intro && vlc ${VIDEO_DIR}/media/videos/manim_videos/480p15/Intro.mp4`
+- Medium quality: `cd ${VIDEO_DIR} && manim -qm ${REPO_DIR}/manim_videos/manim_videos.py Intro && vlc ${VIDEO_DIR}/media/videos/manim_videos/720p30/Intro.mp4`
+- High quality:   `cd ${VIDEO_DIR} && manim -qH ${REPO_DIR}/manim_videos/manim_videos.py Intro && vlc ${VIDEO_DIR}/media/videos/manim_videos/1080p60/Intro.mp4`
 
-- Low quality:    `cd ${VIDEO_DIR} && manim -ql ${REPO_DIR}/manim_videos/manim_videos.py Intro && vlc ${VIDEO_DIR}/media/videos/manim_video/480p15/Intro.mp4`
-- Medium quality: `cd ${VIDEO_DIR} && manim -qm ${REPO_DIR}/manim_videos/manim_videos.py Intro && vlc ${VIDEO_DIR}/media/videos/manim_video/720p30/Intro.mp4`
-- High quality:   `cd ${VIDEO_DIR} && manim -qH ${REPO_DIR}/manim_videos/manim_videos.py Intro && vlc ${VIDEO_DIR}/media/videos/manim_video/1080p60/Intro.mp4`
+#### Generating the presentation's conclusion
+
+Examples:
+
+- Low quality:    `cd ${VIDEO_DIR} && manim -ql ${REPO_DIR}/manim_videos/manim_videos.py Conclusion && vlc ${VIDEO_DIR}/media/videos/manim_videos/480p15/Conclusion.mp4`
+- Medium quality: `cd ${VIDEO_DIR} && manim -qm ${REPO_DIR}/manim_videos/manim_videos.py Conclusion && vlc ${VIDEO_DIR}/media/videos/manim_videos/720p30/Conclusion.mp4`
+- High quality:   `cd ${VIDEO_DIR} && manim -qH ${REPO_DIR}/manim_videos/manim_videos.py Conclusion && vlc ${VIDEO_DIR}/media/videos/manim_videos/1080p60/Conclusion.mp4`
 
 #### Combining the intro and composite video into the video presentation
 
@@ -102,6 +112,6 @@ Examples:
 
 `export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/electric_airline/`
 
-- Low quality:    `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/480p15/  && vlc ${VIDEO_DIR}/media/videos/manim_video/480p15/final.mp4`
-- Medium quality: `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/720p30/  && vlc ${VIDEO_DIR}/media/videos/manim_video/720p30/final.mp4`
-- High quality:   `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/1080p60/ && vlc ${VIDEO_DIR}/media/videos/manim_video/1080p60/final.mp4`
+- Low quality:    `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/480p15/  && vlc ${VIDEO_DIR}/media/videos/manim_videos/480p15/final.mp4`
+- Medium quality: `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/720p30/  && vlc ${VIDEO_DIR}/media/videos/manim_videos/720p30/final.mp4`
+- High quality:   `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/1080p60/ && vlc ${VIDEO_DIR}/media/videos/manim_videos/1080p60/final.mp4`
