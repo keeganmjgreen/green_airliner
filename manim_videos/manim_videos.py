@@ -94,12 +94,7 @@ text_mobject.DEFAULT_LINE_SPACING_SCALE = 0.8
 
 config.max_files_cached = 4000
 
-N_FRAMES = 3000
-FRAME_RATE = 15
-W = 1920
-H = 1080
 PX_PER_UNIT = 135
-INDICES = False
 
 
 @dataclasses.dataclass
@@ -170,6 +165,11 @@ class Caption:
 
 
 class Video(Scene):
+    n_frames = 3000
+    frame_rate = 15
+    w = 1920
+    h = 1080
+    indices = False
     captions = {
         2: [
             Caption("JFK International Airport", 0, -1.5),
@@ -215,11 +215,11 @@ class Video(Scene):
         denom = (viz_h * graph_w + 2 * graph_h * viz_w)
 
         # viz_scale = W / viz_w * (2 / 3)
-        viz_wp = (2 * W * graph_h * viz_w) / denom
+        viz_wp = (2 * self.w * graph_h * viz_w) / denom
         viz_scale = viz_wp / viz_w
         viz_hp = viz_h * viz_scale
         viz_pos = (
-            np.array([-(W - viz_w * viz_scale), H - viz_h * viz_scale])
+            np.array([-(self.w - viz_w * viz_scale), self.h - viz_h * viz_scale])
             / 2
             / PX_PER_UNIT
         )
@@ -230,31 +230,31 @@ class Video(Scene):
             pos=(viz_pos * PX_PER_UNIT),
         )
         # graph_scale = W / graph_w * (1 / 3)
-        graph_wp = (W * viz_h * graph_w) / denom
+        graph_wp = (self.w * viz_h * graph_w) / denom
         graph_scale = graph_wp / graph_w
         graph_hp = graph_h * graph_scale
         soc_graph = VideoFeed(
             name="Airliner SoC graph",
             fpath_lineup=["inputs/Airliner-soc-graph.avi"],
             scale=graph_scale,
-            pos=(np.array([W - graph_wp, H - graph_hp]) / 2),
+            pos=(np.array([self.w - graph_wp, self.h - graph_hp]) / 2),
         )
         speed_graph = VideoFeed(
             name="Airliner speed graph",
             fpath_lineup=["inputs/Airliner-speed-graph.avi"],
             scale=graph_scale,
-            pos=(np.array([W - graph_wp, H - graph_hp * 3]) / 2),
+            pos=(np.array([self.w - graph_wp, self.h - graph_hp * 3]) / 2),
         )
-        map_scale = (H - viz_h * viz_scale) / viz_h
+        map_scale = (self.h - viz_h * viz_scale) / viz_h
         map_wp = viz_w * map_scale
         map_hp = viz_h * map_scale
         map_view = VideoFeed(
             name="Map view",
             fpath_lineup=["inputs/-map-view.avi"],
             scale=map_scale,
-            pos=(np.array([-(W - map_wp), -(H - map_hp)]) / 2),
+            pos=(np.array([-(self.w - map_wp), -(self.h - map_hp)]) / 2),
         )
-        uav_crop_to_width = (W - map_wp) / 2 / map_scale
+        uav_crop_to_width = (self.w - map_wp) / 2 / map_scale
         uav1_view = VideoFeed(
             name="PIT/DEN-UAV-0 side view",
             fpath_lineup=[
@@ -264,8 +264,8 @@ class Video(Scene):
             scale=map_scale,
             pos=np.array(
                 [
-                    -W / 2 + map_wp + uav_crop_to_width * map_scale / 2,
-                    -(H - map_hp) / 2,
+                    -self.w / 2 + map_wp + uav_crop_to_width * map_scale / 2,
+                    -(self.h - map_hp) / 2,
                 ]
             ),
             crop_to_width=uav_crop_to_width,
@@ -279,8 +279,8 @@ class Video(Scene):
             scale=map_scale,
             pos=np.array(
                 [
-                    -W / 2 + map_wp + uav_crop_to_width * map_scale * 3 / 2,
-                    -(H - map_hp) / 2,
+                    -self.w / 2 + map_wp + uav_crop_to_width * map_scale * 3 / 2,
+                    -(self.h - map_hp) / 2,
                 ]
             ),
             crop_to_width=uav_crop_to_width,
@@ -319,23 +319,23 @@ class Video(Scene):
 
         lines = Group(
             # Line between airliner view and graphs:
-            vline(x=(W / 2 - graph_wp), y1=(H / 2), y2=(H / 2 - viz_hp)),
+            vline(x=(self.w / 2 - graph_wp), y1=(self.h / 2), y2=(self.h / 2 - viz_hp)),
             # Line between graphs:
-            hline(x1=(W / 2 - graph_wp), x2=(W / 2), y=(H / 2 - graph_hp)),
+            hline(x1=(self.w / 2 - graph_wp), x2=(self.w / 2), y=(self.h / 2 - graph_hp)),
             # Line between airliner view and map view & UAV view(s):
-            hline(x1=(-W / 2), x2=(W / 2), y=(H / 2 - viz_hp)),
+            hline(x1=(-self.w / 2), x2=(self.w / 2), y=(self.h / 2 - viz_hp)),
             # Line between map view and first UAV view:
-            vline(x=(-W / 2 + map_wp), y1=(H / 2 - viz_hp), y2=(-H / 2)),
+            vline(x=(-self.w / 2 + map_wp), y1=(self.h / 2 - viz_hp), y2=(-self.h / 2)),
             # Line between first and second UAV views:
             vline(
-                x=(-W / 2 + map_wp + uav_crop_to_width * map_scale),
-                y1=(H / 2 - viz_hp),
-                y2=(-H / 2),
+                x=(-self.w / 2 + map_wp + uav_crop_to_width * map_scale),
+                y1=(self.h / 2 - viz_hp),
+                y2=(-self.h / 2),
             ),
         )
 
         while True:
-            if self.frame_i > N_FRAMES:
+            if self.frame_i > self.n_frames:
                 break
             for video_feed in video_feeds:
                 video_feed.add_to(scene=self)
@@ -346,11 +346,11 @@ class Video(Scene):
                 for caption in frame_captions:
                     caption.show(scene=self, scale=viz_scale, pos=viz_pos, grid_size=viz_grid_size)
             else:
-                if not INDICES:
-                    self.wait(1 / FRAME_RATE)
+                if not self.indices:
+                    self.wait(1 / self.frame_rate)
                 else:
                     Caption(
-                        f"{self.frame_i}", x=0, y=0, write_rate=0, wait_s=(1 / FRAME_RATE)
+                        f"{self.frame_i}", x=0, y=0, write_rate=0, wait_s=(1 / self.frame_rate)
                     ).show(scene=self, scale=viz_scale, pos=viz_pos, grid_size=viz_grid_size)
             self.remove(lines)
             self.remove(grids)
