@@ -39,15 +39,17 @@ class BaseSlideshowVideo(Scene):
         bullets_unwrite_time: float = 1.0,
         title_unwrite_time: float = 0.5,
     ) -> None:
-        title = Title(f"{self.tex_style} {title_str}")
-        self.play(Write(title), run_time=title_write_time)
-        self.wait(pause_time)
+        if title_str is not None:
+            title = Title(f"{self.tex_style} {title_str}")
+            self.play(Write(title), run_time=title_write_time)
+            self.wait(pause_time)
         bullets = [f"{self.tex_style} {b.strip()}" for b in bullets_str.split("\n") if b.strip() != ""]
         blist = BulletedList(*bullets, width=250)
         self.play(Write(blist), run_time=bullets_write_time)
         self.wait(wait_time)
         self.play(Unwrite(blist), run_time=bullets_unwrite_time)
-        self.play(Unwrite(title), run_time=title_unwrite_time)
+        if title_str is not None:
+            self.play(Unwrite(title), run_time=title_unwrite_time)
 
     def _slides_from_file(self, fpath: str):
         with open(fpath) as f:
@@ -62,10 +64,9 @@ class BaseSlideshowVideo(Scene):
                 if l.startswith(TITLE):
                     title = l.removeprefix(TITLE).strip()
                     self._title(title)
-                if l.startswith(HEADER):
-                    if slide_title is not None:
-                        self._slide(slide_title, "\n".join(slide_bullets))
-                        slide_bullets = []
+                elif l.startswith(HEADER):
+                    self._slide(slide_title, "\n".join(slide_bullets))
+                    slide_bullets = []
                     slide_title = l.removeprefix(HEADER).strip()
                 elif l.startswith(INDENT):
                     slide_bullets.append(l.removeprefix(INDENT).strip())
