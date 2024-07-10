@@ -65,8 +65,9 @@ class BaseSlideshowVideo(Scene):
                     title = l.removeprefix(TITLE).strip()
                     self._title(title)
                 elif l.startswith(HEADER):
-                    self._slide(slide_title, "\n".join(slide_bullets))
-                    slide_bullets = []
+                    if slide_bullets != []:
+                        self._slide(slide_title, "\n".join(slide_bullets))
+                        slide_bullets = []
                     slide_title = l.removeprefix(HEADER).strip()
                 elif l.startswith(INDENT):
                     slide_bullets.append(l.removeprefix(INDENT).strip())
