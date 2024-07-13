@@ -100,61 +100,26 @@ PX_PER_UNIT = 135
 
 
 @dataclasses.dataclass
-class VideoFeed:
-    name: str
-    fpath_lineup: List[str]
-    scale: float
-    pos: np.array
-    crop_to_width: Optional[float] = None
-
-    def __post_init__(self):
-        self.caps = [cv2.VideoCapture(fpath) for fpath in self.fpath_lineup]
-
-    def add_to(self, scene: Scene):
-        for cap in self.caps:
-            not_done, frame = cap.read()
-            if not_done:
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                if self.crop_to_width is not None:
-                    h, w, _ = frame.shape
-                    frame = frame[
-                        :,
-                        int((w - self.crop_to_width) // 2) : w
-                        - int((w - self.crop_to_width) // 2),
-                    ]
-                self.image_mobject = (
-                    ImageMobject(frame)
-                    .scale(self.scale)
-                    .move_to([*(self.pos / PX_PER_UNIT), 0])
-                )
-                break
-        scene.add(self.image_mobject)
-
-    def remove_from(self, scene: Scene):
-        scene.remove(self.image_mobject)
-
-    def release(self):
-        for cap in self.caps:
-            cap.release()
-
-
-@dataclasses.dataclass
 class Caption:
     text: str
     x: float
     y: float
-    size: int = 150
+    size: int = 125
+    scale: bool = False
+    color: ManimColor = dataclasses.field(default_factory=(lambda: WHITE))
     write_rate: float = 0.02
     wait_s: float = 1.0
 
-    def show(self, scene: Scene, scale: float, pos: Tuple[float, float], grid_size: float) -> None:
+    def show(self, scene: Scene, scale: float, pos: Tuple[float, float], grid_size_px: float) -> None:
         texts = self.text.split(" | ")
-        kwargs = dict(font="FreeSans", font_size=self.size)
+        kwargs = dict(font="FreeSans", font_size=self.size, color=self.color)
         if len(texts) > 0:
             text = Paragraph(*texts, **kwargs)
         else:
             text = Text(texts[0], **kwargs)
-        text.scale(scale).move_to([pos[0] + self.x * grid_size, pos[1] + self.y * grid_size, 0])
+        if self.scale:
+            text.scale(scale)
+        text.move_to((pos[0] / PX_PER_UNIT + self.x * grid_size_px / PX_PER_UNIT, pos[1] / PX_PER_UNIT + self.y * grid_size_px / PX_PER_UNIT, 0))
         if self.write_rate > 0:
             run_time = self.write_rate * len(self.text)
             scene.play(Write(text, run_time=run_time))
@@ -166,50 +131,82 @@ class Caption:
             scene.remove(text)
 
 
+@dataclasses.dataclass
+class VideoFeed:
+    name: str
+    fpath_lineup: List[str]
+    scale: float
+    pos: np.array
+    scaled_size: Tuple[float, float]
+    grids_per_h: float = 4
+    show_grid: bool = False
+    crop_to_width: Optional[float] = None
+    captions: Dict[float, List[Caption]] = dataclasses.field(default_factory=dict)
+    show_indices: bool = False
+
+    def __post_init__(self):
+        self.caps = [cv2.VideoCapture(fpath) for fpath in self.fpath_lineup]
+
+        w, h = self.scaled_size
+        self.grid_size_px = h / self.grids_per_h
+        half_xs = np.arange(0, w / 2 + 1e-3, self.grid_size_px)
+        half_ys = np.arange(0, h / 2 + 1e-3, self.grid_size_px)
+        self.grid = self._make_grid(
+            xs=(
+                self.pos[0] + np.concatenate([-half_xs[::-1], half_xs])
+            ) / PX_PER_UNIT,
+            ys=(
+                self.pos[1] + np.concatenate([-half_ys[::-1], half_ys])
+            ) / PX_PER_UNIT,
+        )
+
+    def _make_grid(self, xs, ys, stroke_width: float = 0.5, color: ManimColor = BLACK) -> Group:
+        h_lines = Group(*[Line(start=np.array([xs[0], y, 0]), end=np.array([xs[-1], y, 0]), stroke_width=stroke_width, color=color) for y in ys])
+        v_lines = Group(*[Line(start=np.array([x, ys[0], 0]), end=np.array([x, ys[-1], 0]), stroke_width=stroke_width, color=color) for x in xs])
+        return Group(*[h_lines, v_lines])
+
+    def add_to(self, scene: Scene):
+        for cap in self.caps:
+            not_done, frame = cap.read()
+            if not_done:
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                if self.crop_to_width is not None:
+                    h, w, _ = frame.shape
+                    frame = frame[
+                        :,
+                        int((w - self.crop_to_width / self.scale) // 2) : w
+                        - int((w - self.crop_to_width / self.scale) // 2),
+                    ]
+                self.image_mobject = (
+                    ImageMobject(frame)
+                    .scale(self.scale)
+                    .move_to([*(self.pos / PX_PER_UNIT), 0])
+                )
+                break
+        scene.add(self.image_mobject)
+
+        if self.show_grid:
+            scene.add(self.grid)
+
+        self.captions_to_show = self.captions.get(scene.frame_i)
+
+    def remove_from(self, scene: Scene):
+        if self.show_grid:
+            scene.remove(self.grid)
+
+        scene.remove(self.image_mobject)
+
+    def release(self):
+        for cap in self.caps:
+            cap.release()
+
+
 class Video(Scene):
-    n_frames = 3000
+    n_frames = 5
     frame_rate = 15
     w = 1920
     h = 1080
-    indices = False
-    captions = {
-        2: [
-            Caption("JFK International Airport", 0, -1.5),
-            Caption(
-                "Airbus A320 airliner modified to burn | hydrogen fuel, starting at 27200-L capacity",
-                0, -0.75
-            ),
-        ],
-        32: [Caption("Takeoff", 0, -0.75)],
-        470: [
-            Caption("AT200 cargo UAV from | Pittsburgh International Airport", -2, 0.75),
-            Caption("Airliner slows down to match UAV’s speed", 1.5, -0.5),
-        ],
-        553: [Caption("UAV docks with airliner for mid-air refueling", 0, 0.5)],
-        880: [
-            Caption("UAV lands at Pittsburgh | International Airport", 1, -1),
-            Caption("A second UAV takes off for further refueling", -1, -1.25),
-        ],
-        1227: [Caption("The second UAV returns to | Pittsburgh International Airport", 1.5, 0.75)],
-        1280: [Caption("The airliner returns to cruise speed", 0, 0.5)],
-        1330: [Caption("JFK", 2, 0.25), Caption("PIT", 0.75, 0.25)],
-        1700: [Caption("Another UAV, from Denver | International Airport", -1.75, 0.5)],
-        1800: [Caption("A second UAV from DEN", 0, -0.5)],
-        1900: [Caption("A third UAV", 0, -0.5)],
-        2230: [
-            Caption("The UAVs land at DEN", 1, -1.25),
-            Caption("Another two UAVs taking | off in succession", -1.5, -1.25),
-        ],
-        2555: [Caption("The airliner is now en route to LAX", 0, 0.5)],
-        2755: [Caption("LAX International | Airport", -2.5, -1.5)],
-        3000: [Caption("The airliner has completed its | 4000-km, hydrogen-powered flight | from JFK to LAX after 7h", 0, -1.25)],
-    }
-
-    def _make_grid(self, xs, ys):
-        h_lines = Group(*[Line(start=np.array([xs[0], y, 0]), end=np.array([xs[-1], y, 0])) for y in ys])
-        v_lines = Group(*[Line(start=np.array([x, ys[0], 0]), end=np.array([x, ys[-1], 0])) for x in xs])
-        grid_size = xs[1] - xs[0]
-        return Group(*[h_lines, v_lines]), grid_size
+    show_grid: bool = False
 
     def construct(self):
         viz_w, viz_h = 1800, 900
@@ -230,6 +227,42 @@ class Video(Scene):
             fpath_lineup=["inputs/Airliner-side-view.avi"],
             scale=viz_scale,
             pos=(viz_pos * PX_PER_UNIT),
+            scaled_size=(viz_wp, viz_hp),
+            show_grid=self.show_grid,
+            captions={
+                2: [
+                    Caption("JFK International Airport", 0, -1.5),
+                    Caption(
+                        "Airbus A320 airliner modified to burn | hydrogen fuel, starting at 27200-L capacity",
+                        0, -0.75
+                    ),
+                ],
+                32: [Caption("Takeoff", 0, -0.75)],
+                470: [
+                    Caption("AT200 cargo UAV from | Pittsburgh International Airport", -2, 0.75),
+                    Caption("Airliner slows down to match UAV’s speed", 1.5, -0.5),
+                ],
+                553: [Caption("UAV docks with airliner for mid-air refueling", 0, 0.5)],
+                880: [
+                    Caption("UAV lands at Pittsburgh | International Airport", 1, -1),
+                    Caption("A second UAV takes off for further refueling", -1, -1.25),
+                ],
+                1227: [Caption("The second UAV returns to | Pittsburgh International Airport", 1.5, 0.75)],
+                1280: [Caption("The airliner returns to cruise speed", 0, 0.5)],
+                1330: [Caption("JFK", 2, 0.25), Caption("PIT", 0.75, 0.25)],
+                1700: [Caption("Another UAV, from Denver | International Airport", -1.75, 0.5)],
+                1800: [Caption("A second UAV from DEN", 0, -0.5)],
+                1900: [Caption("A third UAV", 0, -0.5)],
+                2230: [
+                    Caption("The UAVs land at DEN", 1, -1.25),
+                    Caption("Another two UAVs taking | off in succession", -1.5, -1.25),
+                ],
+                2555: [Caption("The airliner is now en route to LAX", 0, 0.5)],
+                2755: [Caption("LAX International | Airport", -2.5, -1.5)],
+                3000: [Caption(
+                    "The airliner has completed its | 4000-km, hydrogen-powered flight | from JFK to LAX after 7h", 0,
+                    -1.25)],
+            },
         )
         # graph_scale = W / graph_w * (1 / 3)
         graph_wp = (self.w * viz_h * graph_w) / denom
@@ -240,12 +273,19 @@ class Video(Scene):
             fpath_lineup=["inputs/Airliner-soc-graph.avi"],
             scale=graph_scale,
             pos=(np.array([self.w - graph_wp, self.h - graph_hp]) / 2),
+            scaled_size=(graph_wp, graph_hp),
+            show_grid=self.show_grid,
+            captions={
+                2: [Caption("Graphs of airliner's | state of charge (SoC) | and speed over time", 0, -1.6, color=BLACK)],
+            },
         )
         speed_graph = VideoFeed(
             name="Airliner speed graph",
             fpath_lineup=["inputs/Airliner-speed-graph.avi"],
             scale=graph_scale,
             pos=(np.array([self.w - graph_wp, self.h - graph_hp * 3]) / 2),
+            scaled_size=(graph_wp, graph_hp),
+            show_grid=self.show_grid,
         )
         map_scale = (self.h - viz_h * viz_scale) / viz_h
         map_wp = viz_w * map_scale
@@ -255,22 +295,29 @@ class Video(Scene):
             fpath_lineup=["inputs/-map-view.avi"],
             scale=map_scale,
             pos=(np.array([-(self.w - map_wp), -(self.h - map_hp)]) / 2),
+            scaled_size=(map_wp, map_hp),
+            show_grid=self.show_grid,
         )
-        uav_crop_to_width = (self.w - map_wp) / 2 / map_scale
+        uav_crop_to_width = (self.w - map_wp) / 2
         uav1_view = VideoFeed(
             name="PIT/DEN-UAV-0 side view",
             fpath_lineup=[
-                "inputs/-UAV-0-side-view.avi",
+                "inputs/PIT-UAV-0-side-view.avi",
                 "inputs/DEN-UAV-0-side-view.avi",
             ],
             scale=map_scale,
             pos=np.array(
                 [
-                    -self.w / 2 + map_wp + uav_crop_to_width * map_scale / 2,
+                    -self.w / 2 + map_wp + uav_crop_to_width / 2,
                     -(self.h - map_hp) / 2,
                 ]
             ),
+            scaled_size=(uav_crop_to_width, map_hp),
+            show_grid=self.show_grid,
             crop_to_width=uav_crop_to_width,
+            captions={
+                2: [Caption("2 refueling UAVs ready at | Pittsburgh International Airport", 3, 1.25)],
+            },
         )
         uav2_view = VideoFeed(
             name="PIT/DEN-UAV-1 side view",
@@ -281,30 +328,17 @@ class Video(Scene):
             scale=map_scale,
             pos=np.array(
                 [
-                    -self.w / 2 + map_wp + uav_crop_to_width * map_scale * 3 / 2,
+                    -self.w / 2 + map_wp + uav_crop_to_width * 3 / 2,
                     -(self.h - map_hp) / 2,
                 ]
             ),
+            scaled_size=(uav_crop_to_width, map_hp),
+            show_grid=self.show_grid,
             crop_to_width=uav_crop_to_width,
         )
         video_feeds = [viz, soc_graph, speed_graph, map_view, uav1_view, uav2_view]
 
         self.frame_i = 0
-
-        grid, _ = self._make_grid(
-            xs=np.arange(-8, 8), ys=np.arange(-5, 5)
-        )
-        viz_grid, viz_grid_size = self._make_grid(
-            xs=(
-                np.linspace(-viz_w, viz_w, 8 + 1) / 2 / PX_PER_UNIT * viz_scale
-                + viz_pos[0]
-            ),
-            ys=(
-                np.linspace(-viz_h, viz_h, 4 + 1) / 2 / PX_PER_UNIT * viz_scale
-                + viz_pos[1]
-            ),
-        )
-        grids = Group()
 
         def line(start: Tuple[float, float], end: Tuple[float, float]):
             return Line(
@@ -330,7 +364,7 @@ class Video(Scene):
             vline(x=(-self.w / 2 + map_wp), y1=(self.h / 2 - viz_hp), y2=(-self.h / 2)),
             # Line between first and second UAV views:
             vline(
-                x=(-self.w / 2 + map_wp + uav_crop_to_width * map_scale),
+                x=(-self.w / 2 + map_wp + uav_crop_to_width),
                 y1=(self.h / 2 - viz_hp),
                 y2=(-self.h / 2),
             ),
@@ -341,21 +375,17 @@ class Video(Scene):
                 break
             for video_feed in video_feeds:
                 video_feed.add_to(scene=self)
-            self.add(grids)
             self.add(lines)
-            frame_captions = self.captions.get(self.frame_i)
-            if frame_captions is not None:
-                for caption in frame_captions:
-                    caption.show(scene=self, scale=viz_scale, pos=viz_pos, grid_size=viz_grid_size)
-            else:
-                if not self.indices:
-                    self.wait(1 / self.frame_rate)
-                else:
+            for vf in video_feeds:
+                if vf.captions_to_show is not None:
+                    for caption in vf.captions_to_show:
+                        caption.show(scene=self, scale=vf.scale, pos=vf.pos, grid_size_px=vf.grid_size_px)
+                elif vf.show_indices:
                     Caption(
                         f"{self.frame_i}", x=0, y=0, write_rate=0, wait_s=(1 / self.frame_rate)
-                    ).show(scene=self, scale=viz_scale, pos=viz_pos, grid_size=viz_grid_size)
+                    ).show(scene=self, scale=vf.scale, pos=vf.pos, grid_size_px=vf.grid_size_px)
+            self.wait(1 / self.frame_rate)
             self.remove(lines)
-            self.remove(grids)
             for video_feed in video_feeds:
                 video_feed.remove_from(scene=self)
             self.frame_i += 1

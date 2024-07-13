@@ -86,9 +86,9 @@ First, set the `REPO_DIR` environment variable, e.g.: `export REPO_DIR=/home/kee
 
 Examples:
 
-- Low quality:    `cd ${VIDEO_DIR} && manim -ql /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_videos/manim_videos.py Video && vlc ${VIDEO_DIR}/media/videos/manim_videos/480p15/Video.mp4`
-- Medium quality: `cd ${VIDEO_DIR} && manim -qm /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_videos/manim_videos.py Video && vlc ${VIDEO_DIR}/media/videos/manim_videos/720p30/Video.mp4`
-- High quality:   `cd ${VIDEO_DIR} && manim -qH /home/keegan_green/Dropbox/Documents/Projects/electric_airline/manim_videos/manim_videos.py Video && vlc ${VIDEO_DIR}/media/videos/manim_videos/1080p60/Video.mp4`
+- Low quality:    `cd ${VIDEO_DIR} && manim -ql ${REPO_DIR}/manim_videos/manim_videos.py Video && vlc ${VIDEO_DIR}/media/videos/manim_videos/480p15/Video.mp4`
+- Medium quality: `cd ${VIDEO_DIR} && manim -qm ${REPO_DIR}/manim_videos/manim_videos.py Video && vlc ${VIDEO_DIR}/media/videos/manim_videos/720p30/Video.mp4`
+- High quality:   `cd ${VIDEO_DIR} && manim -qH ${REPO_DIR}/manim_videos/manim_videos.py Video && vlc ${VIDEO_DIR}/media/videos/manim_videos/1080p60/Video.mp4`
 
 #### Generating the presentation's intro
 
