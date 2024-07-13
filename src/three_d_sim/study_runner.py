@@ -321,15 +321,17 @@ def run_scenario(
         video_dir = _getenv("VIDEO_DIR", handling="raise")
         scene_size = (180, 90)
         captions = False
+        OFFSET_H = 229 # 228
+        GRAPH_H = 445 # 426
         screen_recorders = [
             ScreenRecorder(
-                origin=(8, 228),
-                size=(640, 426),
+                origin=(8, OFFSET_H),
+                size=(640, GRAPH_H),
                 fname=f"{video_dir}/inputs/Airliner-soc-graph.avi",
             ),
             ScreenRecorder(
-                origin=(8, 228 + 426),
-                size=(640, 426),
+                origin=(8, OFFSET_H + GRAPH_H),
+                size=(640, GRAPH_H),
                 fname=f"{video_dir}/inputs/Airliner-speed-graph.avi",
             ),
         ]

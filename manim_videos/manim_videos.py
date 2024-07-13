@@ -202,7 +202,7 @@ class VideoFeed:
 
 
 class Video(Scene):
-    n_frames = 5
+    n_frames = 100
     frame_rate = 15
     w = 1920
     h = 1080
@@ -210,7 +210,7 @@ class Video(Scene):
 
     def construct(self):
         viz_w, viz_h = 1800, 900
-        graph_w, graph_h = 640, 426
+        graph_w, graph_h = 640, 445 # 426
         denom = (viz_h * graph_w + 2 * graph_h * viz_w)
 
         # viz_scale = W / viz_w * (2 / 3)
@@ -276,7 +276,7 @@ class Video(Scene):
             scaled_size=(graph_wp, graph_hp),
             show_grid=self.show_grid,
             captions={
-                2: [Caption("Graphs of airliner's | state of charge (SoC) | and speed over time", 0, -1.6, color=BLACK)],
+                2: [Caption("Graphs of airliner’s | state of charge (SoC) | and speed over time", 0, -1.6, color=BLACK)],
             },
         )
         speed_graph = VideoFeed(

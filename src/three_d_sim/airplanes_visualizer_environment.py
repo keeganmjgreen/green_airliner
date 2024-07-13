@@ -149,9 +149,13 @@ class AirplanesVisualizerEnvironment(Environment):
                 )
 
     def _set_up_graphs(self) -> None:
-        self.airliner_soc_graph = vp.graph(title="Airliner SoC", xtitle="Time [min]", ytitle="SoC", ymin=0, ymax=1)
+        self.airliner_soc_graph = vp.graph(
+            title="Airliner SoC", xtitle="Time [min]", ytitle="SoC", ymin=0, ymax=1, fast=False
+        )
         self.airliner_soc_gcurve = vp.gcurve()
-        self.airliner_speed_graph = vp.graph(title="Airliner Speed", xtitle="Time [min]", ytitle="Speed [kmph]", ymin=0, ymax=1e3)
+        self.airliner_speed_graph = vp.graph(
+            title="Airliner Speed", xtitle="Time [min]", ytitle="Speed [kmph]", ymin=0, ymax=1e3, fast=False
+        )
         self.airliner_speed_gcurve = vp.gcurve()
 
     def run(self) -> None:
