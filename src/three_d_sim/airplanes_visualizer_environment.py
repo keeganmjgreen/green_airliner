@@ -31,7 +31,7 @@ elif theme == "night":
     SKY_RGB_COLOR = [26, 35, 126]
     GROUND_RGB_COLOR = [27, 94, 32]
     AIRPORT_COLOR = [117] * 3
-BOUND_KM = 1e4
+BOUND_KM = 2e4
 AIRPORT_RADIUS_KM = 1
 
 MIN_SOC = 0.0
@@ -116,16 +116,26 @@ class AirplanesVisualizerEnvironment(Environment):
         self._set_up_graphs()
 
     def _render_ground(self):
-        vp.quad(
-            vs=[
-                vp.vertex(
-                    pos=vp.vec(*(np.array(xy) * BOUND_KM), -0.1),
-                    color=_rgb_to_vp_color(GROUND_RGB_COLOR),
-                    shininess=0,
-                )
-                for xy in [[1, 1], [-1, 1], [-1, -1], [1, -1]]
-            ]
+        vp.box(
+            pos=vp.vec(0, 0, -0.1),
+            length=BOUND_KM,
+            width=0,
+            height=BOUND_KM,
+            texture=dict(file="earth_texture.jpg"),
+            # Open textures folder using:
+            #     nautilus ~/miniconda3/envs/electric_airline/lib/python3.12/site-packages/vpython/vpython_data/
         )
+        vp.scene.waitfor("textures")
+        # vp.quad(
+        #     vs=[
+        #         vp.vertex(
+        #             pos=vp.vec(*(np.array(xy) * BOUND_KM), -0.1),
+        #             color=_rgb_to_vp_color(GROUND_RGB_COLOR),
+        #             shininess=0,
+        #         )
+        #         for xy in [[1, 1], [-1, 1], [-1, -1], [1, -1]]
+        #     ]
+        # )
 
     def _render_airports(self):
         airport_locations = self.AIRLINER_FLIGHT_PATH.AIRPORT_LOCATIONS
