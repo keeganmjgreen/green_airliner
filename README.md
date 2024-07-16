@@ -10,13 +10,13 @@ The 3D simulation is run by `src/three_d_sim/study_runner.py` (the program's ent
 
 ### Running via command line
 
-1. Set the `PYTHONPATH` environment variable to the repo root, e.g.:
+1. Set the `REPO_DIR`, `PYTHONPATH`, and `VIDEO_DIR` environment variables, e.g.:
     
-    `export PYTHONPATH=/home/keegan_green/Dropbox/Documents/Projects/electric_airline/`
+    `export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/electric_airline/ PYTHONPATH=$REPO_DIR VIDEO_DIR=/home/keegan_green/electric_airliner_video/`
     
-2. Set a `VIDEO_DIR` environment variable, e.g.:
+2. Ensure you are in the repo directory:
     
-    `export VIDEO_DIR=/home/keegan_green/electric_airliner_video/`
+    `cd $REPO_DIR`
     
 3. Activate the Conda environment:
     
@@ -77,10 +77,6 @@ The airliner's speed and SoC graphs are already shown in the browser tab. Given 
 ### Generating the video presentation using Manim
 
 `manim_videos.py`
-
-First, set the `REPO_DIR` environment variable, e.g.: `export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/electric_airline/`
-
-(Also ensure the `PYTHONPATH` and `VIDEO_DIR` environment variables are set like mentioned above.)
 
 #### Combining 3D visualizations and airliner graphs into a composite video
 
