@@ -7,6 +7,7 @@ import pyautogui
 import vpython as vp
 
 from src.environments import BaseEnvironment, Environment
+from src.modeling_objects import KM_PER_LAT_LON
 from src.three_d_sim.flight_path_generation import (
     FlightPath,
     orthogonal_xy_vector,
@@ -31,7 +32,7 @@ elif theme == "night":
     SKY_RGB_COLOR = [26, 35, 126]
     GROUND_RGB_COLOR = [27, 94, 32]
     AIRPORT_COLOR = [117] * 3
-BOUND_KM = 2e4
+BOUND_KM = 200 * KM_PER_LAT_LON
 AIRPORT_RADIUS_KM = 1
 
 MIN_SOC = 0.0
@@ -91,6 +92,7 @@ class AirplanesVisualizerEnvironment(Environment):
         vp.scene.width, vp.scene.height = self.SCENE_SIZE
         vp.scene.width /= self.N_VIEW_COLUMNS
         vp.scene.background = _rgb_to_vp_color(SKY_RGB_COLOR)
+        vp.scene.ambient = vp.color.white * 0.5
 
         self._render_ground()
         self._render_airports()
@@ -100,8 +102,14 @@ class AirplanesVisualizerEnvironment(Environment):
         self.airplane_vp_objs = {}
         for airplane in airplanes:
             print(f"Rendering {airplane.ID}...")
+            if self.VIEW == "map-view":
+                shininess = 0.3
+                color = vp.vector(*([0.8] * 3))
+            else:
+                shininess = 0.3
+                color = vp.color.white
             self.airplane_vp_objs[airplane.ID] = simple_wavefront_obj_to_vp(
-                airplane.MODEL_CONFIG, make_trail=True, retain=2000
+                airplane.MODEL_CONFIG, shininess=shininess, color=color, make_trail=True, retain=3000
             )
         print("Done rendering airplanes.")
 
@@ -117,11 +125,15 @@ class AirplanesVisualizerEnvironment(Environment):
 
     def _render_ground(self):
         vp.box(
-            pos=vp.vec(0, 0, -0.1),
+            pos=vp.vec(0, 0, -0.5 - 0.1),
             length=BOUND_KM,
-            width=0,
+            width=-1,
             height=BOUND_KM,
-            texture=dict(file="earth_texture.jpg"),
+            texture=dict(
+                file="Miller_projection_SW-tessellated-cropped_to_pm_200deg_around_jfk_lax_centroid.jpg",
+                flipx=True,
+            ),
+            shininess=0,
             # Open textures folder using:
             #     nautilus ~/miniconda3/envs/electric_airline/lib/python3.12/site-packages/vpython/vpython_data/
         )
@@ -205,7 +217,7 @@ class AirplanesVisualizerEnvironment(Environment):
             ) + vp.vec(*ev.MODEL_CONFIG.TRANSLATION_VECTOR)
             if self.VIEW == "map-view":
                 self.airplane_vp_objs[ev.ID].pos.z *= 10
-                self.airplane_vp_objs[ev.ID].pos.z += 1000
+                self.airplane_vp_objs[ev.ID].pos.z += 200
             self.airplane_vp_objs[ev.ID].axis = vp.vector(*ev.heading)
         if self.VIEW != "map-view":
             heading = evs_state[self.TRACK_AIRPLANE_ID].heading

@@ -25,7 +25,7 @@ def simple_wavefront_obj_to_vp(
             if elements[0] == "vn":
                 vn = vp.vec(*vec)
             elif elements[0] == "v":
-                vertices.append(vp.vertex(pos=vp.vec(*vec), normal=vn, shininess=0.3))
+                vertices.append(vp.vertex(pos=vp.vec(*vec), normal=vn))
         elif elements[0] == "f":
             faces.append(
                 vp.triangle(
