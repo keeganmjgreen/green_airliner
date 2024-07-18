@@ -130,7 +130,7 @@ class AirplanesVisualizerEnvironment(Environment):
             width=-1,
             height=BOUND_KM,
             texture=dict(
-                file="Miller_projection_SW-tessellated-cropped_to_pm_200deg_around_jfk_lax_centroid.jpg",
+                file="Miller_projection_SW-tessellated-vert_distortion_removed-cropped_to_pm_200deg_around_jfk_lax_centroid-fixed.jpg",
                 flipx=True,
             ),
             shininess=0,
