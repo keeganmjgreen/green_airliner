@@ -12,7 +12,7 @@ The 3D simulation is run by `src/three_d_sim/study_runner.py` (the program's ent
 
 1. Set the `REPO_DIR`, `PYTHONPATH`, and `VIDEO_DIR` environment variables, e.g.:
     
-    `export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/electric_airline/ PYTHONPATH=$REPO_DIR VIDEO_DIR=/home/keegan_green/electric_airliner_video/`
+    `export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && export PYTHONPATH=$REPO_DIR && export VIDEO_DIR=/home/keegan_green/electric_airliner_video/`
     
 2. Ensure you are in the repo directory:
     
@@ -105,8 +105,6 @@ Examples:
 #### Combining the intro and composite video into the video presentation
 
 Examples:
-
-`export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/electric_airline/`
 
 - Low quality:    `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/480p15/  && vlc ${VIDEO_DIR}/media/videos/manim_videos/480p15/final.mp4`
 - Medium quality: `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/720p30/  && vlc ${VIDEO_DIR}/media/videos/manim_videos/720p30/final.mp4`

@@ -3,6 +3,7 @@ dependencies:
   - python
   - pip
   - pip:
+      - opencv-python
       - furo
       - geopandas
       - ipykernel

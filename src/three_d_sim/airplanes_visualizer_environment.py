@@ -124,13 +124,17 @@ class AirplanesVisualizerEnvironment(Environment):
         self._set_up_graphs()
 
     def _render_ground(self):
+        if self.VIEW == "map-view":
+            texture_file = "Miller_projection_SW-tessellated-vert_distortion_removed-cropped_to_pm_200deg_around_jfk_lax_centroid-fixed-waifu2x.jpg"
+        else:
+            texture_file = "Miller_projection_SW-tessellated-vert_distortion_removed-cropped_to_pm_200deg_around_jfk_lax_centroid-fixed-gridlines_removed-waifu2x-2x.jpg"
         vp.box(
             pos=vp.vec(0, 0, -0.5 - 0.1),
             length=BOUND_KM,
             width=-1,
             height=BOUND_KM,
             texture=dict(
-                file="Miller_projection_SW-tessellated-vert_distortion_removed-cropped_to_pm_200deg_around_jfk_lax_centroid-fixed.jpg",
+                file=texture_file,
                 flipx=True,
             ),
             shininess=0,
