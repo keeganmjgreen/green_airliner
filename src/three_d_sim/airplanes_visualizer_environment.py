@@ -3,6 +3,7 @@ from typing import List, Literal, Tuple
 
 import cv2
 import numpy as np
+import pandas as pd
 import pyautogui
 import vpython as vp
 
@@ -80,6 +81,9 @@ class AirplanesVisualizerEnvironment(Environment):
 
     def __post_init__(self):
         super().__post_init__()
+
+        assert pd.DataFrame(self.ZOOM)[0].is_monotonic_increasing
+        self.zoom_factor_interpolator = get_interpolator_by_elapsed_time(self.ZOOM)
 
         for screen_recorder in self.SCREEN_RECORDERS:
             screen_recorder.set_up(fps=int(1 / self.DELAY_TIME_STEP.total_seconds()))
@@ -208,8 +212,7 @@ class AirplanesVisualizerEnvironment(Environment):
             vp.rate(1 / self.DELAY_TIME_STEP.total_seconds())
 
     def _update_airplanes_viz(self) -> None:
-        zoom_factor_interpolator = get_interpolator_by_elapsed_time(self.ZOOM)
-        zoom_factor = zoom_factor_interpolator(
+        zoom_factor = self.zoom_factor_interpolator(
             self.current_timestamp - self.START_TIMESTAMP
         )
         vp.scene.range = self.MODELS_SCALE_FACTOR / zoom_factor

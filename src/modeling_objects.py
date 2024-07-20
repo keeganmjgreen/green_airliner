@@ -36,6 +36,7 @@ from src.utils.utils import (
     cosd,
     datetime_to_utc_string,
     sind,
+    timedelta_to_minutes,
 )
 
 SECONDS_PER_HOUR = 3600
@@ -353,8 +354,7 @@ class EvTaxi(IdentifiedObject, EvSpec, Asset):
 
     def get_elapsed_time_at_tagged_waypoints_ser(self, decimals: int = 1) -> pd.Series:
         ser = (
-            pd.Series(self.get_elapsed_time_at_tagged_waypoints()).dt.total_seconds()
-            / 60
+            pd.Series(self.get_elapsed_time_at_tagged_waypoints()).apply(timedelta_to_minutes)
         ).rename("minutes")
         ser = ser.round(decimals)
         if decimals == 0:

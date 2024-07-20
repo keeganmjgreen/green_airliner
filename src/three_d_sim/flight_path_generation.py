@@ -692,7 +692,7 @@ def get_uav_on_airliner_point(
     airliner_fp: FlightPath,
     uav: Uav,
     kind: Literal["docking", "undocking"],
-) -> List[Location]:
+) -> Location:
     point = deepcopy(
         uav.get_tagged_waypoint(
             location_tag=f"{uav.ID}-on-airliner-{kind}-point"
@@ -810,7 +810,12 @@ def provision_airliner_from_flight_path(
                             end_speed_kmph=end_speed_kmph,
                         )
                     if j < len(airport_uavs):
-                        airliner.waypoints[-1].LOCATION = uav_on_airliner_docking_point
+                        airliner.waypoints.append(
+                            Waypoint(
+                                uav_on_airliner_docking_point,
+                                DIRECT_APPROACH_SPEED_KMPH=uav_fp.CRUISE_SPEED_KMPH,
+                            )
+                        )
                         airliner.waypoints.append(
                             Waypoint(
                                 get_uav_on_airliner_point(
