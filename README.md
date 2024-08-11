@@ -26,7 +26,7 @@ The 3D simulation is run by `src/three_d_sim/study_runner.py` (the program's ent
     
     `python src/three_d_sim/study_runner.py --view=... --track-airplane-id=... --preset=...`
 
-For options for the `--view`, `--track-airplane-id`, and `--preset` command-line arguments, see the "Different visualizations" subsection.
+For options for the `--view`, `--track-airplane-id`, and `--preset` command-line arguments, see the "Different 3D visualizations" subsection.
 
 Specifying ` --preset=record-airplanes-viz` records the 3D rendering and saves it to a `.avi` video file with a specific name. Because newer VPython no longer supports opening 3D renderings in standalone windows and the functionality to write the 3D rendering to a video file seems to no longer work, this is done by screen-recording region(s) of the screen whose coordinates are hard-coded in `study_runner.py`. While automatic, a consequence is not being able to use that screen region for other purposes during simulation/recording. An advantage over manual screen-recording, however, is that the recorded frame rate is fixed and synced with the simulation, and thus unaffected by any lags in running the program.
 

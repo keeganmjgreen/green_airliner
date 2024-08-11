@@ -213,41 +213,46 @@ def run_scenario(
     )
 
     skip_timedelta = dt.timedelta(minutes=0)
+    d_airliner = airliner.get_elapsed_time_at_tagged_waypoints()
+    d_airliner = {k: timedelta_to_minutes(v) for k, v in d_airliner.items()}
+    airliner_curve_over_pit_midpoint = (
+        d_airliner["Airliner-curve-over-PIT-start-point"]
+        + d_airliner["Airliner-curve-over-PIT-end-point"]
+    ) / 2
+    airliner_curve_over_den_midpoint = (
+       d_airliner["Airliner-curve-over-DEN-start-point"]
+       + d_airliner["Airliner-curve-over-DEN-end-point"]
+    ) / 2
     if view != "map-view":
         assert track_airplane_id is not None
         models_scale_factor = 1
         if track_airplane_id == "Airliner":
-            d = airliner.get_elapsed_time_at_tagged_waypoints()
-            d = {k: timedelta_to_minutes(v) for k, v in d.items()}
-            airliner_curve_over_pit_midpoint = (d["Airliner-curve-over-PIT-start-point"] + d["Airliner-curve-over-PIT-end-point"]) / 2
-            airliner_curve_over_den_midpoint = (d["Airliner-curve-over-DEN-start-point"] + d["Airliner-curve-over-DEN-end-point"]) / 2
+            d = d_airliner
             zoom = [
                 (0, 5),
                 (d["Airliner-takeoff-point"], 0.5),
                 (d["Airliner-ascended-point"], 0.5),
                 (d["Airliner-ascended-point"] + 0.5, 0.04),
 
-                (d["PIT-UAV-0-on-airliner-docking-point"] - 1, 0.01),
+                (d["PIT-UAV-0-on-airliner-docking-point"] - 1, 0.02),
                 (d["PIT-UAV-0-on-airliner-docking-point"] - 0.3, 0.5),
-                (d["PIT-UAV-0-on-airliner-docking-point"], 5),
-                (d["PIT-UAV-0-on-airliner-undocking-point"] - 0.1, 5),
-                (d["PIT-UAV-0-on-airliner-undocking-point"] + 0.7, 0.5),
+                (d["PIT-UAV-0-on-airliner-undocking-point"] - 0.1, 10),
+                (d["PIT-UAV-0-on-airliner-undocking-point"] + 0.5, 0.5),
                 (airliner_curve_over_pit_midpoint - 5, 0.1),
-                (airliner_curve_over_pit_midpoint, 0.07),
+                (airliner_curve_over_pit_midpoint, 0.05),
                 (airliner_curve_over_pit_midpoint + 5, 0.1),
                 (d["PIT-UAV-1-on-airliner-docking-point"] - 0.3, 0.5),
-                (d["PIT-UAV-1-on-airliner-undocking-point"] - 0.1, 5),
-                (d["PIT-UAV-1-on-airliner-undocking-point"] + 0.3, 0.5),
+                (d["PIT-UAV-1-on-airliner-undocking-point"] - 0.1, 10),
+                (d["PIT-UAV-1-on-airliner-undocking-point"] + 0.5, 0.5),
                 (d["PIT-UAV-1-on-airliner-undocking-point"] + 2, 0.02),
-                (d["PIT-UAV-1-on-airliner-undocking-point"] + 23, 0.002),
+                (d["PIT-UAV-1-on-airliner-undocking-point"] + 20, 0.005),
 
-                (d["DEN-UAV-0-on-airliner-docking-point"] - 5, 0.001),
-                (d["DEN-UAV-0-on-airliner-docking-point"] - 4, 0.005),
-                (d["DEN-UAV-0-on-airliner-docking-point"] - 2, 0.01),
+                (d["DEN-UAV-0-on-airliner-docking-point"] - 5, 0.004),
+                (d["DEN-UAV-0-on-airliner-docking-point"] - 1, 0.02),
                 (d["DEN-UAV-0-on-airliner-docking-point"] - 0.3, 0.5),
-                (d["DEN-UAV-0-on-airliner-undocking-point"], 5),
+                (d["DEN-UAV-0-on-airliner-undocking-point"] - 0.1, 10),
                 (d["DEN-UAV-0-on-airliner-undocking-point"] + 0.5, 0.5),
-                (airliner_curve_over_den_midpoint, 0.07),
+                (airliner_curve_over_den_midpoint, 0.05),
                 (d["DEN-UAV-3-on-airliner-docking-point"], 0.5),
                 (d["DEN-UAV-4-on-airliner-undocking-point"], 0.1),
                 (d["DEN-UAV-4-on-airliner-undocking-point"] + 1, 0.02),
@@ -354,21 +359,26 @@ def run_scenario(
         ENVIRONMENT_CONFIG=EnvironmentConfig(
             TIME_STEP=[
                 (0, 1),
-                (5, 1),
-                (10, 30),
-                (40, 30),
-                (50, 1),
-                (62, 3),
-                (74, 1),
-                (84, 50),
-                (250, 50),
-                (260, 1),
-                (264, 2),
-                (285, 2),
-                (320, 30),
-                (405, 30),
-                (410, 1),
-                (415, 1),
+                (d_airliner["Airliner-ascended-point"], 1),
+                (d_airliner["Airliner-ascended-point"] + 5, 30),
+
+                (d_airliner["PIT-UAV-0-on-airliner-docking-point"] - 5, 30),
+                (d_airliner["PIT-UAV-0-on-airliner-docking-point"] - 1.5, 1),
+                (d_airliner["PIT-UAV-0-on-airliner-undocking-point"] + 1.5, 1),
+                (airliner_curve_over_pit_midpoint, 3),
+                (d_airliner["PIT-UAV-1-on-airliner-docking-point"] - 1.5, 2),
+                (d_airliner["PIT-UAV-1-on-airliner-undocking-point"] + 1.5, 2),
+                (d_airliner["PIT-UAV-1-on-airliner-undocking-point"] + 10, 50),
+
+                (d_airliner["DEN-UAV-0-on-airliner-docking-point"] - 10, 50),
+                (d_airliner["DEN-UAV-0-on-airliner-docking-point"] - 1.5, 1),
+                (d_airliner["DEN-UAV-0-on-airliner-undocking-point"] + 1.5, 1),
+                (airliner_curve_over_den_midpoint, 3),
+                (airliner_curve_over_den_midpoint + 40, 30),
+
+                (d_airliner["Airliner-descent-point"] - 5, 30),
+                (d_airliner["Airliner-descent-point"], 2),
+                (d_airliner["Airliner-landed-point"] + 5, 2),
             ],
             DELAY_TIME_STEP=dt.timedelta(seconds=0.04),
             START_TIMESTAMP=start_timestamp,

@@ -88,11 +88,11 @@ class AirplanesVisualizerEnvironment(Environment):
         for screen_recorder in self.SCREEN_RECORDERS:
             screen_recorder.set_up(fps=int(1 / self.DELAY_TIME_STEP.total_seconds()))
 
-        vp.scene.title = {
-            "tail-view": f"{self.TRACK_AIRPLANE_ID} Tail View",
-            "side-view": f"{self.TRACK_AIRPLANE_ID} Side View",
-            "map-view": "Map View",
-        }[self.VIEW]
+        # vp.scene.title = {
+        #     "tail-view": f"{self.TRACK_AIRPLANE_ID} Tail View",
+        #     "side-view": f"{self.TRACK_AIRPLANE_ID} Side View",
+        #     "map-view": "Map View",
+        # }[self.VIEW]
         vp.scene.width, vp.scene.height = self.SCENE_SIZE
         vp.scene.width /= self.N_VIEW_COLUMNS
         vp.scene.background = _rgb_to_vp_color(SKY_RGB_COLOR)
@@ -205,6 +205,7 @@ class AirplanesVisualizerEnvironment(Environment):
         super()._run_iteration()
 
         if self.current_timestamp >= self.START_TIMESTAMP + self.SKIP_TIMEDELTA:
+            vp.scene.title = str(self.current_timestamp - self.START_TIMESTAMP).split(".")[0]
             self._update_airplanes_viz()
             self._update_graphs()
             for screen_recorder in self.SCREEN_RECORDERS:
@@ -212,9 +213,10 @@ class AirplanesVisualizerEnvironment(Environment):
             vp.rate(1 / self.DELAY_TIME_STEP.total_seconds())
 
     def _update_airplanes_viz(self) -> None:
-        zoom_factor = self.zoom_factor_interpolator(
+        zoom_factor = float(self.zoom_factor_interpolator(
             self.current_timestamp - self.START_TIMESTAMP
-        )
+        ))
+        print(f"zoom_factor: {zoom_factor:.2f}")
         vp.scene.range = self.MODELS_SCALE_FACTOR / zoom_factor
 
         evs_state = self.ev_taxis_emulator_or_interface.current_state.evs_state

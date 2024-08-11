@@ -12,7 +12,7 @@ from typing import Optional, Union
 
 from src.emulators import EvTaxisEmulator
 from src.modeling_objects import EnvironmentState
-from src.utils.utils import get_interpolator_by_elapsed_time, now
+from src.utils.utils import get_interpolator_by_elapsed_time, now, timedelta_to_minutes
 
 
 @dataclasses.dataclass(init=False)
@@ -138,10 +138,7 @@ class Environment(BaseEnvironment):
 
     def _run_iteration(self) -> None:
         # NOTE: Set a breakpoint here to debug iterations.
-        print(
-            f"current_timestamp of the {type(self).__name__}: {self.current_timestamp}. "
-            f"Waiting for DELAY_TIME_STEP = {self.DELAY_TIME_STEP}..."
-        )
+        print(f"{timedelta_to_minutes(self.current_timestamp - self.START_TIMESTAMP):.2f} minutes elapsed", end=";  ")
         self._get_state(timestamp=self.current_timestamp)
         if self.TIME_STEP is not None:
             time_step_interpolator = get_interpolator_by_elapsed_time(self.TIME_STEP)
@@ -152,4 +149,5 @@ class Environment(BaseEnvironment):
                     )
                 )
             )
+            print(f"time_step: {time_step.total_seconds():.2f}", end=";  ")
             self.current_timestamp += time_step
