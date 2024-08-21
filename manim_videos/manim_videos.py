@@ -78,13 +78,13 @@ class BaseSlideshowVideo(Scene):
 
 class Intro(BaseSlideshowVideo):
     def construct(self):
-        self.add(ImageMobject("splash-blurred-dimmed.png"))
+        self.add(ImageMobject("splash-blurred150-dimmed50.png"))
         self._slides_from_file(f"{_getenv('REPO_DIR')}/manim_videos/intro.md")
 
 
 class Conclusion(BaseSlideshowVideo):
     def construct(self):
-        self.add(ImageMobject("splash-blurred-dimmed.png"))
+        self.add(ImageMobject("splash-blurred150-dimmed50.png"))
         self._slides_from_file(f"{_getenv('REPO_DIR')}/manim_videos/conclusion.md")
 
 
@@ -188,7 +188,7 @@ class VideoFeed:
         if self.show_grid:
             scene.add(self.grid)
 
-        self.captions_to_show = self.captions.get(scene.frame_i)
+        self.captions_to_show = self.captions.get(scene.frame_i, [])
 
     def remove_from(self, scene: Scene):
         if self.show_grid:
@@ -202,8 +202,8 @@ class VideoFeed:
 
 
 class Video(Scene):
-    n_frames = 100
-    frame_rate = 15
+    n_frames = 2820
+    frame_rate = 30
     w = 1920
     h = 1080
     show_grid: bool = False
@@ -230,39 +230,40 @@ class Video(Scene):
             scaled_size=(viz_wp, viz_hp),
             show_grid=self.show_grid,
             captions={
-                2: [
-                    Caption("JFK International Airport", 0, -1.5),
+                3: [
+                    Caption("JFK International Airport", 0, -1.5, color=BLACK),
                     Caption(
                         "Airbus A320 airliner modified to burn | hydrogen fuel, starting at 27200-L capacity",
-                        0, -0.75
+                        0, -0.75, color=BLACK
                     ),
                 ],
-                32: [Caption("Takeoff", 0, -0.75)],
-                470: [
-                    Caption("AT200 cargo UAV from | Pittsburgh International Airport", -2, 0.75),
-                    Caption("Airliner slows down to match UAV’s speed", 1.5, -0.5),
+                35: [Caption("Takeoff", 0, -0.75)],
+                410: [
+                    Caption("AT200 cargo UAV from | Pittsburgh International Airport", -1.5, 0.75),
+                    Caption("Airliner slows down to match UAV’s speed", 1, -0.5),
                 ],
-                553: [Caption("UAV docks with airliner for mid-air refueling", 0, 0.5)],
-                880: [
-                    Caption("UAV lands at Pittsburgh | International Airport", 1, -1),
+                505: [Caption("UAV docks with airliner for mid-air refueling", 0, 0.5)],
+                890: [
+                    Caption("UAV lands at Pittsburgh | International Airport", 0.5, -1.5),
                     Caption("A second UAV takes off for further refueling", -1, -1.25),
                 ],
-                1227: [Caption("The second UAV returns to | Pittsburgh International Airport", 1.5, 0.75)],
-                1280: [Caption("The airliner returns to cruise speed", 0, 0.5)],
-                1330: [Caption("JFK", 2, 0.25), Caption("PIT", 0.75, 0.25)],
-                1700: [Caption("Another UAV, from Denver | International Airport", -1.75, 0.5)],
-                1800: [Caption("A second UAV from DEN", 0, -0.5)],
-                1900: [Caption("A third UAV", 0, -0.5)],
-                2230: [
-                    Caption("The UAVs land at DEN", 1, -1.25),
+                1180: [Caption("The second UAV returns to | Pittsburgh International Airport", 2, 1.25)],
+                1220: [Caption("The airliner returns to cruise speed", 0, 0.5)],
+                1207: [Caption("PIT", 2.5, -0.75)],
+                1470: [Caption("Another UAV, from Denver | International Airport", -1.5, 0.5)],
+                1755: [Caption("A second UAV from DEN", 0, -0.5)],
+                1895: [Caption("A third UAV", 0, -0.5)],
+                2172: [
+                    Caption("The UAVs land at DEN", 0.5, -1.25),
                     Caption("Another two UAVs taking | off in succession", -1.5, -1.25),
                 ],
-                2555: [Caption("The airliner is now en route to LAX", 0, 0.5)],
-                2755: [Caption("LAX International | Airport", -2.5, -1.5)],
-                3000: [Caption(
+                2325: [Caption("The airliner is now en route to LAX", 0, 0.5)],
+                2590: [Caption("LAX International | Airport", -1.75, -1.25)],
+                2780: [Caption(
                     "The airliner has completed its | 4000-km, hydrogen-powered flight | from JFK to LAX after 7h", 0,
-                    -1.25)],
+                    -1, color=BLACK)],
             },
+            # show_indices=True,
         )
         # graph_scale = W / graph_w * (1 / 3)
         graph_wp = (self.w * viz_h * graph_w) / denom
@@ -276,7 +277,7 @@ class Video(Scene):
             scaled_size=(graph_wp, graph_hp),
             show_grid=self.show_grid,
             captions={
-                2: [Caption("Graphs of airliner’s | state of charge (SoC) | and speed over time", 0, -1.6, color=BLACK)],
+                3: [Caption("Graphs of airliner’s | state of charge (SoC) | and speed over time", 0, -1.6, color=BLACK)],
             },
         )
         speed_graph = VideoFeed(
@@ -316,7 +317,7 @@ class Video(Scene):
             show_grid=self.show_grid,
             crop_to_width=uav_crop_to_width,
             captions={
-                2: [Caption("2 refueling UAVs ready at | Pittsburgh International Airport", 3, 1.25)],
+                3: [Caption("2 refueling UAVs ready at | Pittsburgh International Airport", 3, 1.25, color=BLACK)],
             },
         )
         uav2_view = VideoFeed(
@@ -377,13 +378,14 @@ class Video(Scene):
                 video_feed.add_to(scene=self)
             self.add(lines)
             for vf in video_feeds:
-                if vf.captions_to_show is not None:
+                if not vf.show_indices:
                     for caption in vf.captions_to_show:
                         caption.show(scene=self, scale=vf.scale, pos=vf.pos, grid_size_px=vf.grid_size_px)
-                elif vf.show_indices:
+                else:
                     Caption(
                         f"{self.frame_i}", x=0, y=0, write_rate=0, wait_s=(1 / self.frame_rate)
                     ).show(scene=self, scale=vf.scale, pos=vf.pos, grid_size_px=vf.grid_size_px)
+                    break
             self.wait(1 / self.frame_rate)
             self.remove(lines)
             for video_feed in video_feeds:

@@ -56,11 +56,9 @@ UAVs from DEN:
     - `python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=DEN-UAV-0 --preset=record-airplanes-viz`
     - `python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=DEN-UAV-1 --preset=record-airplanes-viz`
     - `python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=DEN-UAV-2 --preset=record-airplanes-viz`
-    - `python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=DEN-UAV-3 --preset=record-airplanes-viz`
   - Directly after DEN flyover:
+    - `python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=DEN-UAV-3 --preset=record-airplanes-viz`
     - `python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=DEN-UAV-4 --preset=record-airplanes-viz`
-    - `python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=DEN-UAV-5 --preset=record-airplanes-viz`
-    - `python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=DEN-UAV-6 --preset=record-airplanes-viz`
 
 #### "Bird's eye" (map) view of all airplanes
 
@@ -106,6 +104,6 @@ Examples:
 
 Examples:
 
-- Low quality:    `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/480p15/  && vlc ${VIDEO_DIR}/media/videos/manim_videos/480p15/final.mp4`
-- Medium quality: `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/720p30/  && vlc ${VIDEO_DIR}/media/videos/manim_videos/720p30/final.mp4`
-- High quality:   `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_video/1080p60/ && vlc ${VIDEO_DIR}/media/videos/manim_videos/1080p60/final.mp4`
+- Low quality:    `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_videos/480p15/  && vlc ${VIDEO_DIR}/media/videos/manim_videos/480p15/final.mp4`
+- Medium quality: `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_videos/720p30/  && vlc ${VIDEO_DIR}/media/videos/manim_videos/720p30/final.mp4`
+- High quality:   `cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_videos/1080p60/ && vlc ${VIDEO_DIR}/media/videos/manim_videos/1080p60/final.mp4`
