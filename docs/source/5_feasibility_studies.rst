@@ -208,3 +208,5 @@ An LH₂-fueled A320ceo would need to be refueled by TODO UAVs to have the same 
 Assuming that the A320ceo starts with maximum fuel, the following graph illustrates its energy level over time from JFK to LAX, parameterized by different energy storage media and whether or not the A320ceo is refueled the minimum required amount to stay above a 100-GJ reserve level where possible. If refueled, the A320ceo is refueled over PIT and DEN as many times as necessary for it to stay above the reserve level by the time it reaches its next airport.
 
 .. image:: feasibility_study.svg
+
+.. TODO fix >100% SoCs

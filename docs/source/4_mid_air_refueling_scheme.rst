@@ -1,6 +1,8 @@
 The Mid-Air Refueling Scheme
 ============================
 
+.. TODO diagrams
+
 The airliner would be recharged by one or more UAVs over the course of its flight from origin airport to destination airport.
 
 To facilitate the operations required to store, maintain, refuel, recharge, launch, and monitor these UAVs, the UAVs would most practically operate out of international airports between the origin and destination. The UAVs would share the same kind of provisions and services used by airliners operating out of these intermediate airports (hangars, refueling equipment, runways, and air traffic control), but would most practically be owned by the airport and shared between airlines rather than owned by separate airlines. Such intermediate airports and their services would be expanded as necessary to operate the UAVs. Airliners would be charged for their use of UAV operations.
