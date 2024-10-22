@@ -5,14 +5,14 @@ Design and Feasibility Study of Mid-Air Refueling of an Electric Airliner
    :maxdepth: 2
    :caption: Contents:
 
-   1_background
-   2_study_objectives
-   3_airliner_uav_selection
-   4_mid_air_refueling_scheme
-   5_feasibility_studies
-   6_n_uavs_approximation
-   7_airliner_uav_interaction
-   8_admin_and_logistics
+   1_background/1_background.rst
+   2_study_objectives/2_study_objectives.rst
+   3_airliner_uav_selection/3_airliner_uav_selection.rst
+   4_mid_air_refueling_scheme/4_mid_air_refueling_scheme.rst
+   5_feasibility_studies/5_feasibility_studies.rst
+   6_n_uavs_approximation/6_n_uavs_approximation.rst
+   7_airliner_uav_interaction/7_airliner_uav_interaction.rst
+   8_admin_and_logistics/8_admin_and_logistics.rst
 
 
 .. Indices and tables
