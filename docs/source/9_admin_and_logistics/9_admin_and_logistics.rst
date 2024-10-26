@@ -19,9 +19,9 @@ For utmost safety, all tests/trials would be done without passengers and with ai
 
 Among many types of testing would be two types of air trial, which are summarized as follows.
 
-The **type 1 air trial** is a minimal test of a UAV's docking sequence with an airliner in which the airliner is not flying its full route and, thus, recharging is not necessary. The air trial can also test multiple UAVs docking with the airliner in succession. The type 1 air trial would not be performed over intermediate airports' airspace, such that mid-air collisions or crashes over/in populated areas are avoided.
+The **type 1 air trial** is a minimal test of a UAV's docking sequence with an airliner in which the airliner is not flying its full route and, thus, recharging is not necessary. The air trial can also test multiple UAVs docking with the airliner in succession. The type 1 air trial would not be performed over flyover airports' airspace, such that mid-air collisions or crashes over/in populated areas are avoided.
 
-The **type 2 air trial** mimics the full recharging process of an airliner by one or more UAVs operating out of an intermediate airport, thereby testing their flight plan and docking sequence with the airliner (charging the airliner if necessary). Type 2 air trials would only be attempted if and when the type 1 air trials succeed. For coordination and to simplify the first tests, the type 2 air trials may follow the following progression:
+The **type 2 air trial** mimics the full recharging process of an airliner by one or more UAVs operating out of an flyover airport, thereby testing their flight plan and docking sequence with the airliner (charging the airliner if necessary). Type 2 air trials would only be attempted if and when the type 1 air trials succeed. For coordination and to simplify the first tests, the type 2 air trials may follow the following progression:
 
 1. Operating the test airliner out of the same airport as the UAV(s).
 2. Operating the test airliner out of one or two nearby airports.
@@ -34,7 +34,7 @@ Rollout
 
 Rollout refers to the gradual application of (a) UAV-to-airliner docking, and (b) the mid-air recharging of electric airliners by this means, to airliners with passengers. Except perhaps in the case of electric airliners fulfilling relatively short routes, the rollout of both (a) and (b) is required for the rollout of electric airliners themselves.
 
-Similar to item (2) in the progression of type 2 air trials, the rollout of (a) and (b) may first be applied to airliners fulfilling relatively short routes, flying over or being redirected to fly over an intermediate airport out of which a UAV operates. The airliner does not need to be in need of recharging, nor does it need to be an electric airliner (qualifying as rollout of (a) but not (b)).
+Similar to item (2) in the progression of type 2 air trials, the rollout of (a) and (b) may first be applied to airliners fulfilling relatively short routes, flying over or being redirected to fly over an flyover airport out of which a UAV operates. The airliner does not need to be in need of recharging, nor does it need to be an electric airliner (qualifying as rollout of (a) but not (b)).
 
 Logistics
 ---------
