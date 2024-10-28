@@ -101,7 +101,7 @@ class AirplanesVisualizerEnvironment(Environment):
         self._render_ground()
         self._render_airports()
 
-        airplanes = self.ev_taxis_emulator_or_interface.current_state.evs_state.values()
+        airplanes = self.ev_taxis_emulator_or_interface.current_state.airplanes.values()
 
         self.airplane_vp_objs = {}
         for airplane in airplanes:
@@ -219,7 +219,7 @@ class AirplanesVisualizerEnvironment(Environment):
         print(f"zoom_factor: {zoom_factor:.2f}")
         vp.scene.range = self.MODELS_SCALE_FACTOR / zoom_factor
 
-        evs_state = self.ev_taxis_emulator_or_interface.current_state.evs_state
+        evs_state = self.ev_taxis_emulator_or_interface.current_state.airplanes
         for ev in evs_state.values():
             self.airplane_vp_objs[ev.ID].pos = vp.vector(
                 *ev.location.xyz_coords
@@ -242,7 +242,7 @@ class AirplanesVisualizerEnvironment(Environment):
 
     def _update_graphs(self) -> None:
         minutes_elapsed = timedelta_to_minutes(self.current_timestamp - self.START_TIMESTAMP)
-        evs_state = self.ev_taxis_emulator_or_interface.current_state.evs_state
+        evs_state = self.ev_taxis_emulator_or_interface.current_state.airplanes
         self.airliner_soc_gcurve.plot(
             minutes_elapsed,
             evs_state["Airliner"].soc,

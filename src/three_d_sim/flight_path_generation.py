@@ -10,7 +10,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from src.modeling_objects import (
-    EV_ID_TYPE,
+    AirplaneId,
     KM_PER_LAT_LON,
     Airliner,
     Airplane,
@@ -355,7 +355,7 @@ def _gen_altitude_transition_waypoints(
 
 
 def _gen_takeoff_or_landing_waypoints(
-    airplane_id: EV_ID_TYPE,
+    airplane_id: AirplaneId,
     takeoff_or_landing: Literal["TAKEOFF", "LANDING"],
     airport_location: AirportLocation,
     eventual_point: np.array,
@@ -407,7 +407,7 @@ def _gen_takeoff_or_landing_waypoints(
 
 
 def _gen_horizontal_curve_waypoints(
-    airplane_id: EV_ID_TYPE,
+    airplane_id: AirplaneId,
     prev_airport: AirportLocation,
     curr_airport: AirportLocation,
     next_airport: AirportLocation,
@@ -705,8 +705,8 @@ def get_uav_on_airliner_point(
 def provision_airliner_from_flight_path(
     airliner: Airliner,
     airliner_fp: FlightPath,
-    uavs: Dict[AIRPORT_CODE_TYPE, Dict[EV_ID_TYPE, Uav]],
-    uav_fps: Dict[AIRPORT_CODE_TYPE, Dict[EV_ID_TYPE, UavFlightPath]],
+    uavs: Dict[AIRPORT_CODE_TYPE, Dict[AirplaneId, Uav]],
+    uav_fps: Dict[AIRPORT_CODE_TYPE, Dict[AirplaneId, UavFlightPath]],
 ) -> None:
     for i in range(len(airliner_fp.AIRPORT_LOCATIONS) - 1):
         prev_airport = airliner_fp.AIRPORT_LOCATIONS[i]
@@ -851,7 +851,7 @@ def provision_airliner_from_flight_path(
 
 
 def delay_uavs(
-    uavs: Dict[AIRPORT_CODE_TYPE, Dict[EV_ID_TYPE, Uav]], airliner: Airliner
+    uavs: Dict[AIRPORT_CODE_TYPE, Dict[AirplaneId, Uav]], airliner: Airliner
 ) -> None:
     for airport_uavs in uavs.values():
         for uav in airport_uavs.values():

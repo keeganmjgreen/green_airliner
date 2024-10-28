@@ -11,7 +11,7 @@ from copy import deepcopy
 from typing import Optional, Union
 
 from src.emulators import EvTaxisEmulator
-from src.modeling_objects import EnvironmentState
+from src.modeling_objects import AirplanesState
 from src.utils.utils import get_interpolator_by_elapsed_time, now, timedelta_to_minutes
 
 
@@ -100,10 +100,8 @@ class BaseEnvironment(EnvironmentConfig):
     def run(self) -> None:
         print(f"{type(self).__name__} running...")
 
-    def _get_state(self, timestamp: dt.datetime) -> EnvironmentState:
-        """Get the EnvironmentState, in part by updating the EvTaxisEmulator's state and accessing
-        its ``evs_state`` and ``charging_sites_state`` attributes.
-        """
+    def _get_state(self) -> AirplanesState:
+        """Update and return the EvTaxisEmulator's state."""
 
         self.ev_taxis_emulator_or_interface.update_state(
             timestamp=self.current_timestamp
@@ -139,7 +137,7 @@ class Environment(BaseEnvironment):
     def _run_iteration(self) -> None:
         # NOTE: Set a breakpoint here to debug iterations.
         print(f"{timedelta_to_minutes(self.current_timestamp - self.START_TIMESTAMP):.2f} minutes elapsed", end=";  ")
-        self._get_state(timestamp=self.current_timestamp)
+        self._get_state()
         if self.TIME_STEP is not None:
             time_step_interpolator = get_interpolator_by_elapsed_time(self.TIME_STEP)
             time_step = dt.timedelta(

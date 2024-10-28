@@ -4,7 +4,7 @@ import dataclasses
 import datetime as dt
 from copy import deepcopy
 
-from src.modeling_objects import Airliner, EnvironmentState
+from src.modeling_objects import Airliner, AirplanesState
 
 from .base_emulator import BaseEmulator
 
@@ -28,48 +28,15 @@ class EvTaxisEmulator(BaseEmulator):
             the ``determine_revenue`` method of the ``TRIP_CLASS`` for ended trips.
     """
 
-    START_STATE: EnvironmentState
+    START_STATE: AirplanesState
     # TODO: Implement optional `.END_TIMESTAMP`.
 
-    APPROX_MAX_TIME_STEP: dt.timedelta = dataclasses.field(
-        init=False, default=dt.timedelta(minutes=10)
-    )  # Somewhat arbitrary.
-    """See docstring of method ``update_state``."""
-
-    current_state: EnvironmentState = dataclasses.field(init=False)
-
-    def __post_init__(self):
-        # If the `START_TIMESTAMP` is None or not specified, set it to the earliest requested
-        #     timestamp in the `TRIPS_DEMAND_DATASET`:
-        if self.START_TIMESTAMP is None:
-            self.START_TIMESTAMP = (
-                self._trips_dataset["requested_timestamp"].min().to_pydatetime()
-            )
-
-        super().__post_init__()
+    current_state: AirplanesState = dataclasses.field(init=False)
 
     def update_state(self, timestamp: dt.datetime) -> None:
-        """Update the current EnvironmentState by first updating the current timestamp
-        (BaseEmulator.update_state), then by updating EVs' trip assignments, locations, and SoCs.
-
-        NOTE: Although each of the ``self._update_...`` methods operates in continuous-time (as
-        opposed to discrete-time) between iterations of ``self.update_state`` (from prev_timestamp
-        to current_timestamp), each of those methods operate on ``self.current_state`` sequentially,
-        meaning that too long of a time step from ``self.current_timestamp`` to ``timestamp`` will
-        cause less-than-realistic simulated behavior (see ``self.APPROX_MAX_TIME_STEP``).
-        EVs' trip assignments are processed before their location changes and SoC changes; trip
-        assignments depend on EVs' locations and availabilities, but those are processed after.
-
-        Todos:
-            Make the aforementioned ``self._update_...`` methods's operations on
-            ``self.current_state`` concurrent.
+        """Update the current AirplanesState by first updating the current timestamp
+        (BaseEmulator.update_state), then by updating airplanes' locations and SoCs.
         """
-
-        if timestamp - self.current_timestamp >= self.APPROX_MAX_TIME_STEP:
-            raise Exception(
-                f"{type(self).__name__}: Time step longer than `self.APPROX_MAX_TIME_STEP`, which "
-                "may cause less-than-realistic simulated behavior."
-            )
 
         prev_timestamp = deepcopy(self.current_timestamp)
         super().update_state(timestamp)
@@ -82,7 +49,7 @@ class EvTaxisEmulator(BaseEmulator):
     ) -> None:
         """Update the locations and (discharging) SoCs of EVs that are in motion."""
 
-        for ev in self.current_state.evs_state.values():
+        for ev in self.current_state.airplanes.values():
             intermediate_timestamp = deepcopy(prev_timestamp)
 
             for i, waypoint in enumerate(ev.waypoints):
@@ -110,11 +77,11 @@ class EvTaxisEmulator(BaseEmulator):
                     if tag is not None:
                         print(f"{ev.ID} has reached waypoint with location tag {tag}.")
                         if "-on-airliner-docking-point" in tag:
-                            self.current_state.evs_state[
+                            self.current_state.airplanes[
                                 "Airliner"
-                            ].connector = tag.removesuffix("-on-airliner-docking-point")
+                            ].docked_uav = tag.removesuffix("-on-airliner-docking-point")
                         elif "-on-airliner-undocking-point" in tag:
-                            self.current_state.evs_state["Airliner"].connector = None
+                            self.current_state.airplanes["Airliner"].docked_uav = None
                     # 'Clear' the waypoint:
                     ev.waypoints[i] = None  # Marked to be removed from waypoints.
                 else:
@@ -140,10 +107,10 @@ class EvTaxisEmulator(BaseEmulator):
         site).
         """
 
-        for ev in self.current_state.evs_state.values():
-            if type(ev) is Airliner and ev.is_plugged_in:
+        for ev in self.current_state.airplanes.values():
+            if type(ev) is Airliner and ev.docked_uav:
                 airliner = ev
-                uav = self.current_state.evs_state[ev.connector]
+                uav = self.current_state.airplanes[ev.docked_uav]
 
                 charging_power_kw = min(
                     ev.CHARGING_POWER_LIMIT_KW,

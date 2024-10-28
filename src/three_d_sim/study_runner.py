@@ -6,7 +6,7 @@ import numpy as np
 
 from src.emulators import EvTaxisEmulator as AirplanesEmulator
 from src.environments import EnvironmentConfig
-from src.modeling_objects import Airliner, EnvironmentState, Uav, ModelConfig
+from src.modeling_objects import Airliner, AirplanesState, Uav, ModelConfig
 from src.three_d_sim.airplanes_visualizer_environment import (
     VIEW_TYPE,
     AirplanesVisualizerEnvironment,
@@ -44,8 +44,6 @@ def run_scenario(
         ),
         ENERGY_CAPACITY_KWH=(Lh2FueledA320.energy_capacity_MJ * KWH_PER_MJ),
         CHARGING_POWER_LIMIT_KW=charging_power_limit_kw,
-        # ^ https://en.wikipedia.org/wiki/Megawatt_Charging_System
-        DEFAULT_SPEED_KMPH=...,
         soc=1,
         MODEL_CONFIG=ModelConfig(
             MODEL_SUBPATH="airliner/airbus-a320--1/Airbus_A320__Before_Scale_Up_-meshlabjs-simplified.obj",
@@ -125,7 +123,6 @@ def run_scenario(
                         * KWH_PER_MJ
                     ),
                     CHARGING_POWER_LIMIT_KW=charging_power_limit_kw,
-                    DEFAULT_SPEED_KMPH=...,
                     soc=1,
                     REFUELING_ENERGY_CAPACITY_KWH=(
                         uav_refueling_capacity_MJ * KWH_PER_MJ
@@ -207,8 +204,8 @@ def run_scenario(
 
     airplanes_emulator = AirplanesEmulator(
         START_TIMESTAMP=start_timestamp,
-        START_STATE=EnvironmentState(
-            evs_state={airplane.ID: airplane for airplane in airplanes},
+        START_STATE=AirplanesState(
+            airplanes={airplane.ID: airplane for airplane in airplanes},
         ),
     )
 
