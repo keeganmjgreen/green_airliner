@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Tuple, Union
 import pandas as pd
 import numpy as np
 
-from src.utils.utils import KWH_PER_MWH, cosd, sind, timedelta_to_minutes
+from src.utils.utils import J_PER_WH, cosd, sind, timedelta_to_minutes
 
 SECONDS_PER_HOUR = 3600
 
@@ -127,8 +127,8 @@ class Waypoint:
 class EvSpec:
     """The static specifications (provisioning information) of an EV."""
 
-    DISCHARGE_RATE_KWH_PER_KM: float  # 'Fuel economy'.
-    ENERGY_CAPACITY_KWH: float
+    energy_consumption_rate_MJ_per_km: float  # 'Fuel economy'.
+    energy_capacity_MJ: float
     CHARGING_POWER_LIMIT_KW: float
     SOC_BOUNDS: Tuple[float, float] = (0.0, 1.0)
 
@@ -208,30 +208,30 @@ class Airplane(EvSpec):
             self.location, new_location
         )
         self.charge_with_energy(
-            delta_energy_kwh=(-self.DISCHARGE_RATE_KWH_PER_KM * direct_distance_km)
+            delta_energy_MJ=(-self.energy_consumption_rate_MJ_per_km * direct_distance_km)
         )
 
         self.location = new_location
 
     def charge_with_energy(
-        self, delta_energy_kwh: float, refueling_soc: bool = False
+        self, delta_energy_MJ: float, refueling_soc: bool = False
     ) -> None:
-        if delta_energy_kwh > 0:
+        if delta_energy_MJ > 0:
             # If charging:
-            delta_energy_kwh *= self.ENERGY_EFFICIENCY
+            delta_energy_MJ *= self.ENERGY_EFFICIENCY
             # Less-than-efficient charging requires extra energy to be delivered; magnitude of delta
             #     SoC will be smaller.
         else:
             # If discharging:
-            delta_energy_kwh /= self.ENERGY_EFFICIENCY
+            delta_energy_MJ /= self.ENERGY_EFFICIENCY
             # Less-than-efficient discharging requires extra energy to be spent; magnitude of delta
             #     SoC will be larger.
 
         if not refueling_soc:
-            self.soc += delta_energy_kwh / self.ENERGY_CAPACITY_KWH
+            self.soc += delta_energy_MJ / self.energy_capacity_MJ
             self.soc = np.clip(a=self.soc, a_min=None, a_max=self.SOC_BOUNDS[1])
         else:
-            self.refueling_soc += delta_energy_kwh / self.ENERGY_CAPACITY_KWH
+            self.refueling_soc += delta_energy_MJ / self.energy_capacity_MJ
 
     def charge_for_duration(
         self,
@@ -241,35 +241,36 @@ class Airplane(EvSpec):
     ) -> None:
         duration_hrs = duration.total_seconds() / SECONDS_PER_HOUR
         self.charge_with_energy(
-            delta_energy_kwh=(charging_power_kw * duration_hrs),
+            delta_energy_MJ=(charging_power_kw * duration_hrs * J_PER_WH / 1000),
             refueling_soc=refueling_soc,
         )
 
     @property
-    def energy_level_kWh(self) -> float:
-        return self.soc * self.ENERGY_CAPACITY_KWH
+    def energy_level_MJ(self) -> float:
+        return self.soc * self.energy_capacity_MJ
 
     def __str__(self) -> str:
-        return f"{self.ID}:  SoC = {(self.soc * 100):.2f}%  |  Energy Level = {(self.energy_level_kWh / KWH_PER_MWH):.2f} / {(self.ENERGY_CAPACITY_KWH / KWH_PER_MWH):.2f} MWh"
+        return f"{self.ID}:  SoC = {(self.soc * 100):.2f}%  |  Energy Level = {self.energy_level_MJ:.2f} / {self.energy_capacity_MJ:.2f} MJ"
 
 
 class Airliner(Airplane):
+    ID = "Airliner"
     docked_uav: Union[AirplaneId, None] = None
 
 
 @dataclasses.dataclass(kw_only=True)
 class Uav(Airplane):
-    REFUELING_ENERGY_CAPACITY_KWH: float
+    refueling_energy_capacity_MJ: float
     refueling_soc: float  # TODO: Change to refueling energy level?
 
     @property
-    def refueling_energy_level_kWh(self) -> float:
-        return self.refueling_soc * self.REFUELING_ENERGY_CAPACITY_KWH
+    def refueling_energy_level_MJ(self) -> float:
+        return self.refueling_soc * self.refueling_energy_capacity_MJ
 
     def __str__(self) -> str:
         return (
             super().__str__()
-            + f"  |  Refueling SoC = {(self.refueling_soc * 100):.2f}%  |  Refueling Energy Level = {(self.refueling_energy_level_kWh / KWH_PER_MWH):.2f} / {(self.REFUELING_ENERGY_CAPACITY_KWH / KWH_PER_MWH):.2f} MWh"
+            + f"  |  Refueling SoC = {(self.refueling_soc * 100):.2f}%  |  Refueling Energy Level = {self.refueling_energy_level_MJ:.2f} / {self.refueling_energy_capacity_MJ:.2f} MJ"
         )
 
 

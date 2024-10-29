@@ -67,7 +67,7 @@ def run_study(
                         and airliner.energy_quantity_MJ < airliner.energy_capacity_MJ
                     ):
                         airliner.refuel(
-                            energy_quantity_MJ=uav.energy_capacity_MJ(
+                            energy_quantity_MJ=uav.refueling_energy_capacity_MJ(
                                 fuel=airliner.fuel
                             )
                         )
@@ -78,7 +78,7 @@ def run_study(
                 n_refuels = n_refuels_by_waypoint[waypoints[i + 1]]
                 for j in range(n_refuels):
                     airliner.refuel(
-                        energy_quantity_MJ=uav.energy_capacity_MJ(fuel=airliner.fuel)
+                        energy_quantity_MJ=uav.refueling_energy_capacity_MJ(fuel=airliner.fuel)
                     )
                     update_ser()
 

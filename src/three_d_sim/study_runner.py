@@ -24,8 +24,6 @@ from src.utils.utils import J_PER_MJ, KWH_PER_MJ, MINUTES_PER_HOUR, SECONDS_PER_
 
 from src.feasibility_study.study_params import BaseA320, Lh2FueledA320, at200, lh2_fuel
 
-AIRLINER_ID = "Airliner"
-
 
 def run_scenario(
     view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str, preset: str
@@ -36,13 +34,8 @@ def run_scenario(
     charging_power_limit_kw = LH2_REFUELING_RATE_J_PER_MIN / J_PER_MJ * KWH_PER_MJ * MINUTES_PER_HOUR
 
     airliner = Airliner(
-        ID=AIRLINER_ID,
-        DISCHARGE_RATE_KWH_PER_KM=(
-            BaseA320.energy_consumption_rate_MJph
-            / BaseA320.cruise_speed_kmph
-            * KWH_PER_MJ
-        ),
-        ENERGY_CAPACITY_KWH=(Lh2FueledA320.energy_capacity_MJ * KWH_PER_MJ),
+        energy_consumption_rate_MJ_per_km=BaseA320.energy_consumption_rate_MJ_per_km,
+        energy_capacity_MJ=Lh2FueledA320.energy_capacity_MJ,
         CHARGING_POWER_LIMIT_KW=charging_power_limit_kw,
         soc=1,
         MODEL_CONFIG=ModelConfig(
@@ -80,17 +73,11 @@ def run_scenario(
 
     uavs = {}
     uav_fps = {}
-    AT200_FUEL_CONSUMPTION_RATE_L_PER_H = 184
-    AT200_FUEL_CAPACITY_L = 1256
-    # ^ https://www.aerospace.co.nz/files/dmfile/PAL%202016%20P-750%20XSTOL%20Brochure%20final.pdf
-    AT200_CRUISE_SPEED_KMPH = 300
-    JET_A1_FUEL_ENERGY_DENSITY_MJ_PER_KG = 43.15
-    JET_A1_FUEL_DENSITY_KG_PER_L = 0.804
-    uav_refueling_capacity_MJ = at200.energy_capacity_MJ(fuel=lh2_fuel)
+    uav_refueling_energy_capacity_MJ = at200.refueling_energy_capacity_MJ(fuel=lh2_fuel)
     refueling_distance_km = (
-        AT200_CRUISE_SPEED_KMPH
+        at200.cruise_speed_kmph
         / (LH2_REFUELING_RATE_J_PER_MIN * MINUTES_PER_HOUR)
-        * (uav_refueling_capacity_MJ * J_PER_MJ)
+        * (uav_refueling_energy_capacity_MJ * J_PER_MJ)
     )
     undocking_distance_from_airport_km = 50
     inter_uav_clearance_km = 15
@@ -109,24 +96,11 @@ def run_scenario(
             for j in range(n_uavs):
                 uav = Uav(
                     ID=f"{uav_airport_code}-UAV-{i}",
-                    DISCHARGE_RATE_KWH_PER_KM=(
-                        AT200_FUEL_CONSUMPTION_RATE_L_PER_H
-                        / AT200_CRUISE_SPEED_KMPH
-                        * JET_A1_FUEL_DENSITY_KG_PER_L
-                        * JET_A1_FUEL_ENERGY_DENSITY_MJ_PER_KG
-                        * KWH_PER_MJ
-                    ),
-                    ENERGY_CAPACITY_KWH=(
-                        AT200_FUEL_CAPACITY_L
-                        * JET_A1_FUEL_DENSITY_KG_PER_L
-                        * JET_A1_FUEL_ENERGY_DENSITY_MJ_PER_KG
-                        * KWH_PER_MJ
-                    ),
+                    energy_consumption_rate_MJ_per_km=at200.energy_consumption_rate_MJ_per_km,
+                    energy_capacity_MJ=at200.energy_capacity_MJ,
                     CHARGING_POWER_LIMIT_KW=charging_power_limit_kw,
                     soc=1,
-                    REFUELING_ENERGY_CAPACITY_KWH=(
-                        uav_refueling_capacity_MJ * KWH_PER_MJ
-                    ),
+                    refueling_energy_capacity_MJ=uav_refueling_energy_capacity_MJ,
                     refueling_soc=1,
                     MODEL_CONFIG=ModelConfig(
                         MODEL_SUBPATH="uav/cessna-208-1.snapshot.2/Cessna_208-meshlab.obj",
@@ -157,7 +131,7 @@ def run_scenario(
                     RATE_OF_CLIMB_MPS=35,
                     CLIMB_LEVELING_DISTANCE_KM=0.5,
                     CRUISE_ALTITUDE_KM=(11.5 + inter_uav_vertical_dist_km * j),
-                    CRUISE_SPEED_KMPH=AT200_CRUISE_SPEED_KMPH,
+                    CRUISE_SPEED_KMPH=at200.cruise_speed_kmph,
                     TURNING_RADIUS_KM=airliner_fp.TURNING_RADIUS_KM,
                     DESCENT_LEVELING_DISTANCE_KM=0.5,
                     RATE_OF_DESCENT_MPS=50,

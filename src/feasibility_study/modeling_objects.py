@@ -2,6 +2,8 @@ import dataclasses
 
 import numpy as np
 
+from utils.utils import J_PER_WH
+
 
 @dataclasses.dataclass
 class Fuel:
@@ -40,17 +42,21 @@ def get_energy_capacity_MJ(
 
 
 @dataclasses.dataclass
-class BaseAirliner:
+class BaseAirplane:
     # Sub-class (e.g., `A320`) attributes:
     cruise_speed_kmph: float = dataclasses.field(init=False)
     fuel_capacity_L: float = dataclasses.field(init=False)
     """Analogous to total volume of energy storage medium (e.g., jet fuel)."""
-    fuel_capacity_kg: float = dataclasses.field(init=False)
-    energy_consumption_rate_MJph: float = dataclasses.field(init=False)
+    energy_consumption_rate_MJ_per_km: float = dataclasses.field(init=False)
 
     # Sub-sub-class (e.g., `JetFueledA320`) attributes:
     propulsion: Propulsion = dataclasses.field(init=False)
     fuel: Fuel = dataclasses.field(init=False)
+
+
+@dataclasses.dataclass
+class BaseAirliner(BaseAirplane):
+    fuel_capacity_kg: float = dataclasses.field(init=False)
 
     # Sub-sub-class instance (e.g., `JetFueledA320()`) attributes:
     reserve_energy_thres_MJ: float
@@ -69,14 +75,21 @@ class BaseAirliner:
         time_delta_h = distance_km / self.cruise_speed_kmph
         self.time_into_flight_h += time_delta_h
         self.energy_quantity_MJ -= (
-            self.energy_consumption_rate_MJph / self.propulsion.efficiency
+            self.energy_consumption_rate_MJ_per_km
+            * self.cruise_speed_kmph
+            * J_PER_WH
+            / self.propulsion.efficiency
         ) * time_delta_h
 
     def calculate_range_km(self, energy_quantity_MJ: float) -> float:
         range_h = (
             (energy_quantity_MJ - self.reserve_energy_thres_MJ)
-            / self.energy_consumption_rate_MJph
-            * self.propulsion.efficiency
+            / (
+                self.energy_consumption_rate_MJ_per_km
+                * self.cruise_speed_kmph
+                * J_PER_WH
+                / self.propulsion.efficiency
+            )
         )
         range_km = range_h * self.cruise_speed_kmph
         return range_km
@@ -89,11 +102,16 @@ class BaseAirliner:
 
 
 @dataclasses.dataclass
-class Uav:
+class Uav(BaseAirplane):
     payload_volume_L: float
     payload_capacity_kg: float
 
-    def energy_capacity_MJ(self, fuel: Fuel) -> float:
+    @classmethod
+    @property
+    def energy_capacity_MJ(cls) -> float:
+        return cls.fuel_capacity_L * cls.fuel.energy_density_lhv_MJpL
+
+    def refueling_energy_capacity_MJ(self, fuel: Fuel) -> float:
         return get_energy_capacity_MJ(
             fuel_capacity_L=self.payload_volume_L,
             fuel_capacity_kg=self.payload_capacity_kg,

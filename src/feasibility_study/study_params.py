@@ -40,18 +40,15 @@ turbofan = Propulsion(
 )
 
 
-A320_JET_A1_FUEL_CAPACITY_L = 27200
-A320_JET_A1_FUEL_CONSUMPTION_RATE_KGPH = 2430
-
-
 class BaseA320(BaseAirliner):
     cruise_speed_kmph = 829
-    fuel_capacity_L = A320_JET_A1_FUEL_CAPACITY_L
-    fuel_capacity_kg = A320_JET_A1_FUEL_CAPACITY_L * jet_a1_fuel.density_kgpL
-    energy_consumption_rate_MJph = (
-        A320_JET_A1_FUEL_CONSUMPTION_RATE_KGPH
+    fuel_capacity_L = 27200
+    fuel_capacity_kg = fuel_capacity_L * jet_a1_fuel.density_kgpL
+    energy_consumption_rate_MJ_per_km = (
+        2430  # kg/h
         * jet_a1_fuel.specific_energy_lhv_MJpkg
         * turbofan.efficiency
+        * cruise_speed_kmph
     )
 
 
@@ -75,7 +72,17 @@ class LipoFueledA320(BaseA320):
     fuel = lipo_fuel
 
 
+AT200_FUEL_CONSUMPTION_RATE_L_PER_H = 184
+AT200_CRUISE_SPEED_KMPH = 300
 at200 = Uav(
+    cruise_speed_kmph=AT200_CRUISE_SPEED_KMPH,
+    fuel_capacity_L=1256,
+    # ^ https://www.aerospace.co.nz/files/dmfile/PAL%202016%20P-750%20XSTOL%20Brochure%20final.pdf300
+    energy_consumption_rate_MJ_per_km=(
+        jet_a1_fuel.energy_density_lhv_MJpL  # TODO: Replace with avgas.
+        * AT200_FUEL_CONSUMPTION_RATE_L_PER_H
+        / AT200_CRUISE_SPEED_KMPH
+    ),
     payload_capacity_kg=1500,
     payload_volume_L=(5 * L_PER_CUBIC_M),
 )

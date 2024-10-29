@@ -8,15 +8,15 @@ import pandas as pd
 import pytz
 import scipy as sp
 
-J_PER_MJ = 1e6
-KWH_PER_MJ = 0.2777
-KWH_PER_MWH = 1000
-
 MINUTES_PER_HOUR = SECONDS_PER_MINUTE = 60
 SECONDS_PER_HOUR = SECONDS_PER_MINUTE * MINUTES_PER_HOUR
 MILLISECONDS_PER_SECOND = 1000
 
 timedelta_to_minutes = lambda timedelta: timedelta.total_seconds() / SECONDS_PER_MINUTE
+
+J_PER_MJ = 1e6
+J_PER_WH = SECONDS_PER_HOUR
+KWH_PER_MWH = 1000
 
 M_PER_KM = 1000
 
