@@ -10,7 +10,7 @@ MODELS_DIR = "src/three_d_sim/models/"
 def simple_wavefront_obj_to_vp(
     model_config: ModelConfig, **vp_obj_kwargs
 ) -> vp.compound:
-    with open(MODELS_DIR + model_config.MODEL_SUBPATH, "r") as f:
+    with open(MODELS_DIR + model_config.model_subpath, "r") as f:
         lines = f.readlines()
 
     vertices = []
@@ -21,7 +21,7 @@ def simple_wavefront_obj_to_vp(
         elements = line[:-1].split(" ")
         if elements[0] in ["vn", "v"]:
             vec = np.array([float(e) for e in elements[1:]])
-            vec = vec.dot(model_config.ROTATION_MATRIX)
+            vec = vec.dot(model_config.rotation_matrix)
             if elements[0] == "vn":
                 vn = vp.vec(*vec)
             elif elements[0] == "v":
@@ -42,8 +42,8 @@ def simple_wavefront_obj_to_vp(
     #     obj._axis.value = norm(obj._axis)*obj._size._x
     # in `~/miniconda3/envs/electric_airline/lib/python3.12/site-packages/vpython/vpython.py`.
 
-    if model_config.LENGTH_M is not None:
-        vp_obj.size *= model_config.LENGTH_M / M_PER_KM / vp_obj.size.x
+    if model_config.length_m is not None:
+        vp_obj.size *= model_config.length_m / M_PER_KM / vp_obj.size.x
 
     return vp_obj
 

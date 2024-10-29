@@ -123,26 +123,16 @@ class Waypoint:
 # Airplanes
 
 
-@dataclasses.dataclass(unsafe_hash=True)
-class EvSpec:
-    """The static specifications (provisioning information) of an EV."""
-
-    energy_consumption_rate_MJ_per_km: float  # 'Fuel economy'.
-    energy_capacity_MJ: float
-    refueling_rate_kW: float
-    energy_level_pc_bounds: Tuple[float, float] = (0.0, 1.0)
-
-
 @dataclasses.dataclass
 class ModelConfig:
-    MODEL_SUBPATH: str
-    ROTATION_MATRIX: Optional[np.ndarray] = None
+    model_subpath: str
+    rotation_matrix: Optional[np.ndarray] = None
     TRANSLATION_VECTOR: Optional[np.ndarray] = None
-    LENGTH_M: float = None
+    length_m: float = None
 
     def __post_init__(self):
-        if self.ROTATION_MATRIX is None:
-            self.ROTATION_MATRIX = np.eye(3)
+        if self.rotation_matrix is None:
+            self.rotation_matrix = np.eye(3)
         if self.TRANSLATION_VECTOR is None:
             self.TRANSLATION_VECTOR = np.zeros(3)
 
@@ -151,14 +141,26 @@ AirplaneId = str
 
 
 @dataclasses.dataclass(kw_only=True)
-class Airplane(EvSpec):
+class Airplane:
     id: AirplaneId
-    energy_level_pc: float
+    energy_capacity_MJ: float
+    energy_consumption_rate_MJ_per_km: float
+    refueling_rate_kW: float
+    initial_energy_level_pc: float
+    energy_level_pc_bounds: Tuple[float, float] = (0.0, 1.0)
+    energy_efficiency_pc: float = 100.0
     model_config: Union[ModelConfig, None] = None
-    location: Union[Location, None] = None
-    heading: Union[np.ndarray, None] = None
-    energy_efficiency_pc: float = 1.0
-    waypoints: List[Location] = dataclasses.field(default_factory=(lambda: []))
+
+    energy_level_pc: float = dataclasses.field(init=False)
+    location: Union[Location, None] = dataclasses.field(init=False)
+    heading: Union[np.ndarray, None] = dataclasses.field(init=False)
+    waypoints: List[Location] = dataclasses.field(init=False)
+
+    def __post_init__(self):
+        self.energy_level_pc = deepcopy(self.initial_energy_level_pc)
+        self.location = None
+        self.heading = None
+        self.waypoints = None
 
     def set_heading(self, to_waypoint: Waypoint) -> np.ndarray:
         heading = to_waypoint.LOCATION.xyz_coords - self.location.xyz_coords
@@ -261,7 +263,13 @@ class Airliner(Airplane):
 @dataclasses.dataclass(kw_only=True)
 class Uav(Airplane):
     refueling_energy_capacity_MJ: float
-    refueling_energy_level_pc: float
+    initial_refueling_energy_level_pc: float
+
+    refueling_energy_level_pc: float = dataclasses.field(init=False)
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.refueling_energy_level_pc = deepcopy(self.initial_refueling_energy_level_pc)
 
     @property
     def refueling_energy_level_MJ(self) -> float:

@@ -34,20 +34,20 @@ def run_scenario(
     refueling_rate_kW = LH2_REFUELING_RATE_J_PER_MIN / J_PER_WH * MINUTES_PER_HOUR
 
     airliner = Airliner(
-        energy_consumption_rate_MJ_per_km=BaseA320.energy_consumption_rate_MJ_per_km,
         energy_capacity_MJ=Lh2FueledA320.energy_capacity_MJ,
+        energy_consumption_rate_MJ_per_km=BaseA320.energy_consumption_rate_MJ_per_km,
         refueling_rate_kW=refueling_rate_kW,
-        energy_level_pc=100.0,
-        MODEL_CONFIG=ModelConfig(
-            MODEL_SUBPATH="airliner/airbus-a320--1/Airbus_A320__Before_Scale_Up_-meshlabjs-simplified.obj",
-            ROTATION_MATRIX=np.array(
+        initial_energy_level_pc=100.0,
+        model_config=ModelConfig(
+            model_subpath="airliner/airbus-a320--1/Airbus_A320__Before_Scale_Up_-meshlabjs-simplified.obj",
+            rotation_matrix=np.array(
                 [
                     [0, 1, 0],
                     [0, 0, 1],
                     [1, 0, 0],
                 ]
             ),
-            LENGTH_M=37.57,
+            length_m=37.57,
             # ^ https://aircraft.airbus.com/en/aircraft/a320-the-most-successful-aircraft-family-ever/a320ceo
         ),
     )
@@ -96,22 +96,22 @@ def run_scenario(
             for j in range(n_uavs):
                 uav = Uav(
                     id=f"{uav_airport_code}-UAV-{i}",
-                    energy_consumption_rate_MJ_per_km=at200.energy_consumption_rate_MJ_per_km,
                     energy_capacity_MJ=at200.energy_capacity_MJ,
+                    energy_consumption_rate_MJ_per_km=at200.energy_consumption_rate_MJ_per_km,
                     refueling_rate_kW=refueling_rate_kW,
-                    energy_level_pc=100.0,
+                    initial_energy_level_pc=100.0,
                     refueling_energy_capacity_MJ=uav_refueling_energy_capacity_MJ,
-                    refueling_energy_level_pc=1,
+                    initial_refueling_energy_level_pc=100.0,
                     model_config=ModelConfig(
-                        MODEL_SUBPATH="uav/cessna-208-1.snapshot.2/Cessna_208-meshlab.obj",
-                        ROTATION_MATRIX=np.array(
+                        model_subpath="uav/cessna-208-1.snapshot.2/Cessna_208-meshlab.obj",
+                        rotation_matrix=np.array(
                             [
                                 [-1, 0, 0],
                                 [0, 1, 0],
                                 [0, 0, 1],
                             ]
                         ),
-                        LENGTH_M=11.45,
+                        length_m=11.45,
                         # ^ https://cessna.txtav.com/en/turboprop/caravan
                         #     https://cessna.txtav.com/-/media/cessna/files/caravan/caravan/caravan_short_productcard.ashx
                     ),
