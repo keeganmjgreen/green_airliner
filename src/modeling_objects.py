@@ -3,11 +3,12 @@ from __future__ import annotations
 import dataclasses
 import datetime as dt
 from copy import deepcopy
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Type, Union
 
 import pandas as pd
 import numpy as np
 
+from feasibility_study.modeling_objects import BaseAirplane as AirplaneSpec
 from src.utils.utils import J_PER_WH, cosd, sind, timedelta_to_minutes
 
 SECONDS_PER_HOUR = 3600
@@ -143,20 +144,23 @@ AirplaneId = str
 @dataclasses.dataclass(kw_only=True)
 class Airplane:
     id: AirplaneId
-    energy_capacity_MJ: float
-    energy_consumption_rate_MJ_per_km: float
+    airplane_spec: Type[AirplaneSpec]
     refueling_rate_kW: float
     initial_energy_level_pc: float
     energy_level_pc_bounds: Tuple[float, float] = (0.0, 1.0)
     energy_efficiency_pc: float = 100.0
     model_config: Union[ModelConfig, None] = None
 
+    energy_capacity_MJ: float
+    energy_consumption_rate_MJ_per_km: float
     energy_level_pc: float = dataclasses.field(init=False)
     location: Union[Location, None] = dataclasses.field(init=False)
     heading: Union[np.ndarray, None] = dataclasses.field(init=False)
     waypoints: List[Location] = dataclasses.field(init=False)
 
     def __post_init__(self):
+        self.energy_capacity_MJ = self.airplane_spec.energy_capacity_MJ
+        self.energy_consumption_rate_MJ_per_km = self.airplane_spec.energy_consumption_rate_MJ_per_km
         self.energy_level_pc = deepcopy(self.initial_energy_level_pc)
         self.location = None
         self.heading = None

@@ -13,7 +13,7 @@ from src.feasibility_study.study_params import (
     JetFueledA320,
     Lh2FueledA320,
     LionFueledA320,
-    at200,
+    At200,
 )
 from src.feasibility_study.study_runner import run_study
 
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         results_df = run_study(
             study_label,
             airliner=airliner,
-            uav=at200,
+            uav=At200,
             origin_airport="JFK",
             destination_airport="LAX",
             n_refuels_by_waypoint=n_refuels_by_waypoint,

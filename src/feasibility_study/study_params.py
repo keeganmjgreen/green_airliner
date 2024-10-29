@@ -72,20 +72,18 @@ class LipoFueledA320(BaseA320):
     fuel = lipo_fuel
 
 
-AT200_FUEL_CONSUMPTION_RATE_L_PER_H = 184
-AT200_CRUISE_SPEED_KMPH = 300
-at200 = Uav(
-    cruise_speed_kmph=AT200_CRUISE_SPEED_KMPH,
-    fuel_capacity_L=1256,
-    # ^ https://www.aerospace.co.nz/files/dmfile/PAL%202016%20P-750%20XSTOL%20Brochure%20final.pdf300
+class At200(Uav):
+    cruise_speed_kmph = 300
+    fuel_capacity_L = 1256
+    """From https://www.aerospace.co.nz/files/dmfile/PAL%202016%20P-750%20XSTOL%20Brochure%20final.pdf300."""
+    _fuel_consumption_rate_l_per_h = 184
     energy_consumption_rate_MJ_per_km=(
         jet_a1_fuel.energy_density_lhv_MJpL  # TODO: Replace with avgas.
-        * AT200_FUEL_CONSUMPTION_RATE_L_PER_H
-        / AT200_CRUISE_SPEED_KMPH
-    ),
-    payload_capacity_kg=1500,
-    payload_volume_L=(5 * L_PER_CUBIC_M),
-)
+        * _fuel_consumption_rate_l_per_h
+        / cruise_speed_kmph
+    )
+    payload_capacity_kg = 1500
+    payload_volume_L = 5 * L_PER_CUBIC_M
 
 
 KM_PER_MILE = 1.609344

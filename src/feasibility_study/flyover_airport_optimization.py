@@ -8,7 +8,7 @@ from src.feasibility_study.study_params import (
     Lh2FueledA320,
     LionFueledA320,
     Uav,
-    at200,
+    At200,
 )
 from src.feasibility_study.study_runner import run_study
 from src.modeling_objects import Location
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     airliner.energy_quantity_MJ = airliner.energy_capacity_MJ
     generate_optimized_flight_plan(
         airliner=airliner,
-        uav=at200,
+        uav=At200,
         origin_airport="JFK",
         destination_airport="LAX",
     )
