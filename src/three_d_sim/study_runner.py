@@ -7,12 +7,13 @@ import numpy as np
 from src import specs
 from src.emulators import EvTaxisEmulator as AirplanesEmulator
 from src.environments import EnvironmentConfig
-from src.modeling_objects import Airliner, AirplanesState, Uav, ModelConfig
+from src.modeling_objects import Airliner, AirplanesState, Uav
 from src.three_d_sim.airplanes_visualizer_environment import (
     VIEW_TYPE,
     AirplanesVisualizerEnvironment,
     ScreenRecorder,
 )
+from src.three_d_sim import models
 from src.three_d_sim.flight_path_generation import (
     AirlinerFlightPath,
     UavFlightPath,
@@ -36,18 +37,7 @@ def run_scenario(
         airplane_spec=specs.Lh2FueledA320,
         refueling_rate_kW=refueling_rate_kW,
         initial_energy_level_pc=100.0,
-        model_config=ModelConfig(
-            model_subpath="airliner/airbus-a320--1/Airbus_A320__Before_Scale_Up_-meshlabjs-simplified.obj",
-            rotation_matrix=np.array(
-                [
-                    [0, 1, 0],
-                    [0, 0, 1],
-                    [1, 0, 0],
-                ]
-            ),
-            length_m=37.57,
-            # ^ https://aircraft.airbus.com/en/aircraft/a320-the-most-successful-aircraft-family-ever/a320ceo
-        ),
+        model_config=models.a320,
     )
     airliner_fp = AirlinerFlightPath(
         AIRPORT_CODES=["JFK", "PIT", "DEN", "LAX"],
@@ -99,19 +89,7 @@ def run_scenario(
                     initial_energy_level_pc=100.0,
                     refueling_energy_capacity_MJ=uav_refueling_energy_capacity_MJ,
                     initial_refueling_energy_level_pc=100.0,
-                    model_config=ModelConfig(
-                        model_subpath="uav/cessna-208-1.snapshot.2/Cessna_208-meshlab.obj",
-                        rotation_matrix=np.array(
-                            [
-                                [-1, 0, 0],
-                                [0, 1, 0],
-                                [0, 0, 1],
-                            ]
-                        ),
-                        length_m=11.45,
-                        # ^ https://cessna.txtav.com/en/turboprop/caravan
-                        #     https://cessna.txtav.com/-/media/cessna/files/caravan/caravan/caravan_short_productcard.ashx
-                    ),
+                    model_config=models.cessna,
                 )
                 uavs[uav_airport_code][service_side][uav.id] = uav
 
