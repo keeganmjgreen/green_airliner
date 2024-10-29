@@ -13,7 +13,6 @@ from src.three_d_sim.airplanes_visualizer_environment import (
     AirplanesVisualizerEnvironment,
     ScreenRecorder,
 )
-from src.three_d_sim import models
 from src.three_d_sim.flight_path_generation import (
     AirlinerFlightPath,
     UavFlightPath,
@@ -34,10 +33,10 @@ def run_scenario(
     refueling_rate_kW = LH2_REFUELING_RATE_J_PER_MIN / J_PER_WH * MINUTES_PER_HOUR
 
     airliner = Airliner(
-        airplane_spec=specs.Lh2FueledA320,
+        airplane_spec="Lh2FueledA320",
         refueling_rate_kW=refueling_rate_kW,
         initial_energy_level_pc=100.0,
-        model_config=models.a320,
+        model_config="a320",
     )
     airliner_fp = AirlinerFlightPath(
         AIRPORT_CODES=["JFK", "PIT", "DEN", "LAX"],
@@ -84,12 +83,12 @@ def run_scenario(
             for j in range(n_uavs):
                 uav = Uav(
                     id=f"{uav_airport_code}-UAV-{i}",
-                    airplane_spec=specs.At200,
+                    airplane_spec="At200",
                     refueling_rate_kW=refueling_rate_kW,
                     initial_energy_level_pc=100.0,
                     refueling_energy_capacity_MJ=uav_refueling_energy_capacity_MJ,
                     initial_refueling_energy_level_pc=100.0,
-                    model_config=models.cessna,
+                    model_config="cessna",
                 )
                 uavs[uav_airport_code][service_side][uav.id] = uav
 

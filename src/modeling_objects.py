@@ -8,7 +8,8 @@ from typing import Dict, List, Optional, Tuple, Type, Union
 import pandas as pd
 import numpy as np
 
-from feasibility_study.modeling_objects import BaseAirplane as AirplaneSpec
+from src.feasibility_study.modeling_objects import BaseAirplane as AirplaneSpec
+from src.three_d_sim.models import models_lookup
 from src.utils.utils import J_PER_WH, cosd, sind, timedelta_to_minutes
 
 SECONDS_PER_HOUR = 3600
@@ -149,7 +150,7 @@ class Airplane:
     initial_energy_level_pc: float
     energy_level_pc_bounds: Tuple[float, float] = (0.0, 1.0)
     energy_efficiency_pc: float = 100.0
-    model_config: Union[ModelConfig, None] = None
+    model_config: Union[ModelConfig, str, None] = None
 
     energy_capacity_MJ: float
     energy_consumption_rate_MJ_per_km: float
@@ -165,6 +166,9 @@ class Airplane:
         self.location = None
         self.heading = None
         self.waypoints = None
+
+        if type(self.model_config) is str:
+            self.model_config = models_lookup[self.model_config]
 
     def set_heading(self, to_waypoint: Waypoint) -> np.ndarray:
         heading = to_waypoint.LOCATION.xyz_coords - self.location.xyz_coords

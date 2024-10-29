@@ -1,3 +1,4 @@
+from typing import Dict
 import numpy as np
 
 from modeling_objects import ModelConfig
@@ -28,3 +29,9 @@ cessna = ModelConfig(
     # ^ https://cessna.txtav.com/en/turboprop/caravan
     #     https://cessna.txtav.com/-/media/cessna/files/caravan/caravan/caravan_short_productcard.ashx
 )
+
+models = [
+    a320,
+    cessna,
+]
+models_lookup: Dict[str, ModelConfig] = {x.__name__: x for x in models}

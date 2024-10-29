@@ -1,4 +1,5 @@
 import datetime as dt
+from typing import Any, Dict
 
 import numpy as np
 
@@ -80,6 +81,22 @@ class At200(Uav):
     )
     payload_capacity_kg = 1500
     payload_volume_L = 5 * L_PER_CUBIC_M
+
+
+specs = [
+    jet_a1_fuel,
+    lh2_fuel,
+    lion_fuel,
+    lipo_fuel,
+    turbofan,
+    BaseA320,
+    JetFueledA320,
+    Lh2FueledA320,
+    LionFueledA320,
+    LipoFueledA320,
+    At200,
+]
+specs_lookup: Dict[str, Any] = {x.__name__: x for x in specs}
 
 
 KM_PER_MILE = 1.609344
