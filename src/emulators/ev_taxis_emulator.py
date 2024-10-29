@@ -41,10 +41,10 @@ class EvTaxisEmulator(BaseEmulator):
         prev_timestamp = deepcopy(self.current_timestamp)
         super().update_state(timestamp)
 
-        self._update_evs_locations_and_discharging_socs(prev_timestamp)
-        self._update_evs_charging_socs(prev_timestamp)
+        self._update_evs_locations_and_energy_consumption(prev_timestamp)
+        self._update_evs_refueling(prev_timestamp)
 
-    def _update_evs_locations_and_discharging_socs(
+    def _update_evs_locations_and_energy_consumption(
         self, prev_timestamp: dt.datetime
     ) -> None:
         """Update the locations and (discharging) SoCs of EVs that are in motion."""
@@ -75,7 +75,7 @@ class EvTaxisEmulator(BaseEmulator):
                     ev.move_to_location(waypoint.LOCATION)
                     tag = waypoint.LOCATION.TAG
                     if tag is not None:
-                        print(f"{ev.ID} has reached waypoint with location tag {tag}.")
+                        print(f"{ev.id} has reached waypoint with location tag {tag}.")
                         if "-on-airliner-docking-point" in tag:
                             self.current_state.airplanes[
                                 "Airliner"
@@ -102,7 +102,7 @@ class EvTaxisEmulator(BaseEmulator):
             # Clean up by removing waypoints that were marked for removal:
             ev.waypoints = [wp for wp in ev.waypoints if wp is not None]
 
-    def _update_evs_charging_socs(self, prev_timestamp: dt.datetime) -> None:
+    def _update_evs_refueling(self, prev_timestamp: dt.datetime) -> None:
         """Update the SoCs of EVs that are charging (at a charge point's connector at a charging
         site).
         """
@@ -113,13 +113,13 @@ class EvTaxisEmulator(BaseEmulator):
                 uav = self.current_state.airplanes[ev.docked_uav]
 
                 charging_power_kw = min(
-                    ev.CHARGING_POWER_LIMIT_KW,
-                    uav.CHARGING_POWER_LIMIT_KW,
+                    ev.refueling_rate_kW,
+                    uav.refueling_rate_kW,
                 )
                 duration = self.current_timestamp - prev_timestamp
 
-                if airliner.soc < airliner.SOC_BOUNDS[1]:
+                if airliner.energy_level_pc < airliner.energy_level_pc_bounds[1]:
                     airliner.charge_for_duration(charging_power_kw, duration)
                     uav.charge_for_duration(
-                        -charging_power_kw, duration, refueling_soc=True
+                        -charging_power_kw, duration, refueling_energy_level=True
                     )

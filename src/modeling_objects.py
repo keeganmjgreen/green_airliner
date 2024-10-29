@@ -129,8 +129,8 @@ class EvSpec:
 
     energy_consumption_rate_MJ_per_km: float  # 'Fuel economy'.
     energy_capacity_MJ: float
-    CHARGING_POWER_LIMIT_KW: float
-    SOC_BOUNDS: Tuple[float, float] = (0.0, 1.0)
+    refueling_rate_kW: float
+    energy_level_pc_bounds: Tuple[float, float] = (0.0, 1.0)
 
 
 @dataclasses.dataclass
@@ -152,12 +152,12 @@ AirplaneId = str
 
 @dataclasses.dataclass(kw_only=True)
 class Airplane(EvSpec):
-    ID: AirplaneId
-    soc: float  # TODO: Change to energy level?
-    MODEL_CONFIG: Union[ModelConfig, None] = None
+    id: AirplaneId
+    energy_level_pc: float
+    model_config: Union[ModelConfig, None] = None
     location: Union[Location, None] = None
     heading: Union[np.ndarray, None] = None
-    ENERGY_EFFICIENCY: float = 1.0
+    energy_efficiency_pc: float = 1.0
     waypoints: List[Location] = dataclasses.field(default_factory=(lambda: []))
 
     def set_heading(self, to_waypoint: Waypoint) -> np.ndarray:
@@ -214,63 +214,63 @@ class Airplane(EvSpec):
         self.location = new_location
 
     def charge_with_energy(
-        self, delta_energy_MJ: float, refueling_soc: bool = False
+        self, delta_energy_MJ: float, refueling_energy_level: bool = False
     ) -> None:
         if delta_energy_MJ > 0:
             # If charging:
-            delta_energy_MJ *= self.ENERGY_EFFICIENCY
+            delta_energy_MJ *= self.energy_efficiency_pc / 100
             # Less-than-efficient charging requires extra energy to be delivered; magnitude of delta
             #     SoC will be smaller.
         else:
             # If discharging:
-            delta_energy_MJ /= self.ENERGY_EFFICIENCY
+            delta_energy_MJ /= self.energy_efficiency_pc / 100
             # Less-than-efficient discharging requires extra energy to be spent; magnitude of delta
             #     SoC will be larger.
 
-        if not refueling_soc:
-            self.soc += delta_energy_MJ / self.energy_capacity_MJ
-            self.soc = np.clip(a=self.soc, a_min=None, a_max=self.SOC_BOUNDS[1])
+        if not refueling_energy_level:
+            self.energy_level_pc += delta_energy_MJ / self.energy_capacity_MJ * 100
+            self.energy_level_pc = np.clip(a=self.energy_level_pc, a_min=None, a_max=self.energy_level_pc_bounds[1])
         else:
-            self.refueling_soc += delta_energy_MJ / self.energy_capacity_MJ
+            self.refueling_energy_level_pc += delta_energy_MJ / self.energy_capacity_MJ
 
     def charge_for_duration(
         self,
         charging_power_kw: float,
         duration: dt.timedelta,
-        refueling_soc: bool = False,
+        refueling_energy_level: bool = False,
     ) -> None:
         duration_hrs = duration.total_seconds() / SECONDS_PER_HOUR
         self.charge_with_energy(
             delta_energy_MJ=(charging_power_kw * duration_hrs * J_PER_WH / 1000),
-            refueling_soc=refueling_soc,
+            refueling_energy_level=refueling_energy_level,
         )
 
     @property
     def energy_level_MJ(self) -> float:
-        return self.soc * self.energy_capacity_MJ
+        return self.energy_level_pc / 100 * self.energy_capacity_MJ
 
     def __str__(self) -> str:
-        return f"{self.ID}:  SoC = {(self.soc * 100):.2f}%  |  Energy Level = {self.energy_level_MJ:.2f} / {self.energy_capacity_MJ:.2f} MJ"
+        return f"{self.id}:  SoC = {(self.energy_level_pc):.2f}%  |  Energy Level = {self.energy_level_MJ:.2f} / {self.energy_capacity_MJ:.2f} MJ"
 
 
 class Airliner(Airplane):
-    ID = "Airliner"
+    id = "Airliner"
     docked_uav: Union[AirplaneId, None] = None
 
 
 @dataclasses.dataclass(kw_only=True)
 class Uav(Airplane):
     refueling_energy_capacity_MJ: float
-    refueling_soc: float  # TODO: Change to refueling energy level?
+    refueling_energy_level_pc: float
 
     @property
     def refueling_energy_level_MJ(self) -> float:
-        return self.refueling_soc * self.refueling_energy_capacity_MJ
+        return self.refueling_energy_level_pc * self.refueling_energy_capacity_MJ
 
     def __str__(self) -> str:
         return (
             super().__str__()
-            + f"  |  Refueling SoC = {(self.refueling_soc * 100):.2f}%  |  Refueling Energy Level = {self.refueling_energy_level_MJ:.2f} / {self.refueling_energy_capacity_MJ:.2f} MJ"
+            + f"  |  Refueling SoC = {(self.refueling_energy_level_pc * 100):.2f}%  |  Refueling Energy Level = {self.refueling_energy_level_MJ:.2f} / {self.refueling_energy_capacity_MJ:.2f} MJ"
         )
 
 

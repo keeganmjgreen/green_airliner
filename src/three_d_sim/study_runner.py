@@ -20,7 +20,7 @@ from src.three_d_sim.flight_path_generation import (
     provision_uav_from_flight_path,
     viz_airplane_paths,
 )
-from src.utils.utils import J_PER_MJ, KWH_PER_MJ, MINUTES_PER_HOUR, SECONDS_PER_HOUR, _getenv, timedelta_to_minutes
+from src.utils.utils import J_PER_MJ, J_PER_WH, MINUTES_PER_HOUR, SECONDS_PER_HOUR, _getenv, timedelta_to_minutes
 
 from src.feasibility_study.study_params import BaseA320, Lh2FueledA320, at200, lh2_fuel
 
@@ -31,13 +31,13 @@ def run_scenario(
     start_timestamp = dt.datetime(2000, 1, 1, 0, 0)
 
     LH2_REFUELING_RATE_J_PER_MIN = 7e12 / 50
-    charging_power_limit_kw = LH2_REFUELING_RATE_J_PER_MIN / J_PER_MJ * KWH_PER_MJ * MINUTES_PER_HOUR
+    refueling_rate_kW = LH2_REFUELING_RATE_J_PER_MIN / J_PER_WH * MINUTES_PER_HOUR
 
     airliner = Airliner(
         energy_consumption_rate_MJ_per_km=BaseA320.energy_consumption_rate_MJ_per_km,
         energy_capacity_MJ=Lh2FueledA320.energy_capacity_MJ,
-        CHARGING_POWER_LIMIT_KW=charging_power_limit_kw,
-        soc=1,
+        refueling_rate_kW=refueling_rate_kW,
+        energy_level_pc=100.0,
         MODEL_CONFIG=ModelConfig(
             MODEL_SUBPATH="airliner/airbus-a320--1/Airbus_A320__Before_Scale_Up_-meshlabjs-simplified.obj",
             ROTATION_MATRIX=np.array(
@@ -95,14 +95,14 @@ def run_scenario(
             uav_fps[uav_airport_code][service_side] = {}
             for j in range(n_uavs):
                 uav = Uav(
-                    ID=f"{uav_airport_code}-UAV-{i}",
+                    id=f"{uav_airport_code}-UAV-{i}",
                     energy_consumption_rate_MJ_per_km=at200.energy_consumption_rate_MJ_per_km,
                     energy_capacity_MJ=at200.energy_capacity_MJ,
-                    CHARGING_POWER_LIMIT_KW=charging_power_limit_kw,
-                    soc=1,
+                    refueling_rate_kW=refueling_rate_kW,
+                    energy_level_pc=100.0,
                     refueling_energy_capacity_MJ=uav_refueling_energy_capacity_MJ,
-                    refueling_soc=1,
-                    MODEL_CONFIG=ModelConfig(
+                    refueling_energy_level_pc=1,
+                    model_config=ModelConfig(
                         MODEL_SUBPATH="uav/cessna-208-1.snapshot.2/Cessna_208-meshlab.obj",
                         ROTATION_MATRIX=np.array(
                             [
@@ -116,7 +116,7 @@ def run_scenario(
                         #     https://cessna.txtav.com/-/media/cessna/files/caravan/caravan/caravan_short_productcard.ashx
                     ),
                 )
-                uavs[uav_airport_code][service_side][uav.ID] = uav
+                uavs[uav_airport_code][service_side][uav.id] = uav
 
                 AIRLINER_UAV_DOCKING_DISTANCE_KM = 0.0015
 
@@ -154,7 +154,7 @@ def run_scenario(
                     AIRLINER_CLEARANCE_DISTANCE_KM=5,
                     AIRLINER_CLEARANCE_ALTITUDE_KM=(5 + inter_uav_vertical_dist_km * j),
                 )
-                uav_fps[uav_airport_code][service_side][uav.ID] = uav_fp
+                uav_fps[uav_airport_code][service_side][uav.id] = uav_fp
 
                 provision_uav_from_flight_path(uav, j, n_uavs, uav_fp, airliner_fp)
 
@@ -179,7 +179,7 @@ def run_scenario(
     airplanes_emulator = AirplanesEmulator(
         START_TIMESTAMP=start_timestamp,
         START_STATE=AirplanesState(
-            airplanes={airplane.ID: airplane for airplane in airplanes},
+            airplanes={airplane.id: airplane for airplane in airplanes},
         ),
     )
 
@@ -315,7 +315,7 @@ def run_scenario(
             ScreenRecorder(
                 origin=(8, OFFSET_H),
                 size=(640, GRAPH_H),
-                fname=f"{video_dir}/inputs/Airliner-soc-graph.avi",
+                fname=f"{video_dir}/inputs/Airliner-energy-level-graph.avi",
             ),
             ScreenRecorder(
                 origin=(8, OFFSET_H + GRAPH_H),

@@ -269,15 +269,15 @@ class Video(Scene):
         graph_wp = (self.w * viz_h * graph_w) / denom
         graph_scale = graph_wp / graph_w
         graph_hp = graph_h * graph_scale
-        soc_graph = VideoFeed(
-            name="Airliner SoC graph",
-            fpath_lineup=["inputs/Airliner-soc-graph.avi"],
+        energy_level_graph = VideoFeed(
+            name="Airliner energy level graph",
+            fpath_lineup=["inputs/Airliner-energy-level-graph.avi"],
             scale=graph_scale,
             pos=(np.array([self.w - graph_wp, self.h - graph_hp]) / 2),
             scaled_size=(graph_wp, graph_hp),
             show_grid=self.show_grid,
             captions={
-                3: [Caption("Graphs of airliner’s | state of charge (SoC) | and speed over time", 0, -1.6, color=BLACK)],
+                3: [Caption("Graphs of airliner’s | energy level | and speed over time", 0, -1.6, color=BLACK)],
             },
         )
         speed_graph = VideoFeed(
@@ -337,7 +337,7 @@ class Video(Scene):
             show_grid=self.show_grid,
             crop_to_width=uav_crop_to_width,
         )
-        video_feeds = [viz, soc_graph, speed_graph, map_view, uav1_view, uav2_view]
+        video_feeds = [viz, energy_level_graph, speed_graph, map_view, uav1_view, uav2_view]
 
         self.frame_i = 0
 

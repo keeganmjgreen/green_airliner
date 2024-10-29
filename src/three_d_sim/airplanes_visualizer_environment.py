@@ -105,15 +105,15 @@ class AirplanesVisualizerEnvironment(Environment):
 
         self.airplane_vp_objs = {}
         for airplane in airplanes:
-            print(f"Rendering {airplane.ID}...")
+            print(f"Rendering {airplane.id}...")
             if self.VIEW == "map-view":
                 shininess = 0.3
                 color = vp.vector(*([0.8] * 3))
             else:
                 shininess = 0.3
                 color = vp.color.white
-            self.airplane_vp_objs[airplane.ID] = simple_wavefront_obj_to_vp(
-                airplane.MODEL_CONFIG, shininess=shininess, color=color, make_trail=True, retain=3000
+            self.airplane_vp_objs[airplane.id] = simple_wavefront_obj_to_vp(
+                airplane.model_config, shininess=shininess, color=color, make_trail=True, retain=3000
             )
         print("Done rendering airplanes.")
 
@@ -179,10 +179,10 @@ class AirplanesVisualizerEnvironment(Environment):
                 )
 
     def _set_up_graphs(self) -> None:
-        self.airliner_soc_graph = vp.graph(
-            title="Airliner SoC", xtitle="Time [min]", ytitle="SoC", ymin=0, ymax=1, fast=False
+        self.airliner_energy_level_graph = vp.graph(
+            title="Airliner Energy Level", xtitle="Time [min]", ytitle="Energy Level (%)", ymin=0, ymax=1, fast=False
         )
-        self.airliner_soc_gcurve = vp.gcurve()
+        self.airliner_energy_level_gcurve = vp.gcurve()
         self.airliner_speed_graph = vp.graph(
             title="Airliner Speed", xtitle="Time [min]", ytitle="Speed [kmph]", ymin=0, ymax=1e3, fast=False
         )
@@ -221,13 +221,13 @@ class AirplanesVisualizerEnvironment(Environment):
 
         evs_state = self.ev_taxis_emulator_or_interface.current_state.airplanes
         for ev in evs_state.values():
-            self.airplane_vp_objs[ev.ID].pos = vp.vector(
+            self.airplane_vp_objs[ev.id].pos = vp.vector(
                 *ev.location.xyz_coords
-            ) + vp.vec(*ev.MODEL_CONFIG.TRANSLATION_VECTOR)
+            ) + vp.vec(*ev.model_config.TRANSLATION_VECTOR)
             if self.VIEW == "map-view":
-                self.airplane_vp_objs[ev.ID].pos.z *= 10
-                self.airplane_vp_objs[ev.ID].pos.z += 200
-            self.airplane_vp_objs[ev.ID].axis = vp.vector(*ev.heading)
+                self.airplane_vp_objs[ev.id].pos.z *= 10
+                self.airplane_vp_objs[ev.id].pos.z += 200
+            self.airplane_vp_objs[ev.id].axis = vp.vector(*ev.heading)
         if self.VIEW != "map-view":
             heading = evs_state[self.TRACK_AIRPLANE_ID].heading
             heading[2] = 0
@@ -243,9 +243,9 @@ class AirplanesVisualizerEnvironment(Environment):
     def _update_graphs(self) -> None:
         minutes_elapsed = timedelta_to_minutes(self.current_timestamp - self.START_TIMESTAMP)
         evs_state = self.ev_taxis_emulator_or_interface.current_state.airplanes
-        self.airliner_soc_gcurve.plot(
+        self.airliner_energy_level_gcurve.plot(
             minutes_elapsed,
-            evs_state["Airliner"].soc,
+            evs_state["Airliner"].energy_level_pc,
         )
         airliner_waypoints = evs_state["Airliner"].waypoints
         self.airliner_speed_gcurve.plot(
