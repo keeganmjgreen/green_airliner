@@ -1,15 +1,12 @@
 from copy import deepcopy
-from typing import Dict, List, Literal, Optional, Union
+from typing import Dict, Literal, Optional, Union
 
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from src.feasibility_study.study_params import (
-    DISTANCE_KM_LOOKUP,
-    MJ_PER_GJ,
-    BaseAirliner,
-    Uav,
-)
+from src.feasibility_study.modeling_objects import BaseAirliner, Uav
+from src.specs import DISTANCE_KM_LOOKUP
+from src.utils.utils import MJ_PER_GJ
 
 
 def run_study(

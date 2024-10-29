@@ -2,14 +2,8 @@ from typing import Dict, Literal, Optional, Union
 
 import pandas as pd
 
-from src.feasibility_study.study_params import (
-    BaseAirliner,
-    JetFueledA320,
-    Lh2FueledA320,
-    LionFueledA320,
-    Uav,
-    At200,
-)
+from src import specs
+from src.feasibility_study.modeling_objects import BaseAirliner, Uav
 from src.feasibility_study.study_runner import run_study
 from src.modeling_objects import Location
 from src.three_d_sim.flight_path_generation import (
@@ -60,11 +54,11 @@ def generate_optimized_flight_plan(
 
 
 if __name__ == "__main__":
-    airliner = Lh2FueledA320(reserve_energy_thres_MJ=100e3)
+    airliner = specs.Lh2FueledA320(reserve_energy_thres_MJ=100e3)
     airliner.energy_quantity_MJ = airliner.energy_capacity_MJ
     generate_optimized_flight_plan(
         airliner=airliner,
-        uav=At200,
+        uav=specs.At200,
         origin_airport="JFK",
         destination_airport="LAX",
     )

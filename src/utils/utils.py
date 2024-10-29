@@ -15,8 +15,11 @@ MILLISECONDS_PER_SECOND = 1000
 timedelta_to_minutes = lambda timedelta: timedelta.total_seconds() / SECONDS_PER_MINUTE
 
 J_PER_MJ = 1e6
+MJ_PER_GJ = 1000
 J_PER_WH = SECONDS_PER_HOUR
 KWH_PER_MWH = 1000
+
+L_PER_CUBIC_M = 1000
 
 M_PER_KM = 1000
 

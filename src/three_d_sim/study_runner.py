@@ -4,6 +4,7 @@ import subprocess
 
 import numpy as np
 
+from src import specs
 from src.emulators import EvTaxisEmulator as AirplanesEmulator
 from src.environments import EnvironmentConfig
 from src.modeling_objects import Airliner, AirplanesState, Uav, ModelConfig
@@ -22,8 +23,6 @@ from src.three_d_sim.flight_path_generation import (
 )
 from src.utils.utils import J_PER_MJ, J_PER_WH, MINUTES_PER_HOUR, SECONDS_PER_HOUR, _getenv, timedelta_to_minutes
 
-from src.feasibility_study.study_params import BaseA320, Lh2FueledA320, At200, lh2_fuel
-
 
 def run_scenario(
     view: VIEW_TYPE, n_view_columns: int, track_airplane_id: str, preset: str
@@ -34,7 +33,7 @@ def run_scenario(
     refueling_rate_kW = LH2_REFUELING_RATE_J_PER_MIN / J_PER_WH * MINUTES_PER_HOUR
 
     airliner = Airliner(
-        airplane_spec=Lh2FueledA320,
+        airplane_spec=specs.Lh2FueledA320,
         refueling_rate_kW=refueling_rate_kW,
         initial_energy_level_pc=100.0,
         model_config=ModelConfig(
@@ -60,7 +59,7 @@ def run_scenario(
         CLIMB_LEVELING_DISTANCE_KM=10,
         CRUISE_ALTITUDE_KM=np.mean([9.4, 11.6]),
         # ^ https://en.wikipedia.org/wiki/Cruise_%28aeronautics%29
-        CRUISE_SPEED_KMPH=BaseA320.cruise_speed_kmph,
+        CRUISE_SPEED_KMPH=specs.Lh2FueledA320.cruise_speed_kmph,
         TURNING_RADIUS_KM=50,
         DESCENT_LEVELING_DISTANCE_KM=10,
         RATE_OF_DESCENT_MPS=100,
@@ -72,9 +71,9 @@ def run_scenario(
 
     uavs = {}
     uav_fps = {}
-    uav_refueling_energy_capacity_MJ = At200.refueling_energy_capacity_MJ(fuel=lh2_fuel)
+    uav_refueling_energy_capacity_MJ = specs.At200.refueling_energy_capacity_MJ(fuel=specs.lh2_fuel)
     refueling_distance_km = (
-        At200.cruise_speed_kmph
+        specs.At200.cruise_speed_kmph
         / (LH2_REFUELING_RATE_J_PER_MIN * MINUTES_PER_HOUR)
         * (uav_refueling_energy_capacity_MJ * J_PER_MJ)
     )
@@ -95,7 +94,7 @@ def run_scenario(
             for j in range(n_uavs):
                 uav = Uav(
                     id=f"{uav_airport_code}-UAV-{i}",
-                    airplane_spec=At200,
+                    airplane_spec=specs.At200,
                     refueling_rate_kW=refueling_rate_kW,
                     initial_energy_level_pc=100.0,
                     refueling_energy_capacity_MJ=uav_refueling_energy_capacity_MJ,
@@ -129,7 +128,7 @@ def run_scenario(
                     RATE_OF_CLIMB_MPS=35,
                     CLIMB_LEVELING_DISTANCE_KM=0.5,
                     CRUISE_ALTITUDE_KM=(11.5 + inter_uav_vertical_dist_km * j),
-                    CRUISE_SPEED_KMPH=At200.cruise_speed_kmph,
+                    CRUISE_SPEED_KMPH=specs.At200.cruise_speed_kmph,
                     TURNING_RADIUS_KM=airliner_fp.TURNING_RADIUS_KM,
                     DESCENT_LEVELING_DISTANCE_KM=0.5,
                     RATE_OF_DESCENT_MPS=50,

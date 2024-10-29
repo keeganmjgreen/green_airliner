@@ -3,16 +3,12 @@ import datetime as dt
 import numpy as np
 
 from src.feasibility_study.modeling_objects import BaseAirliner, Fuel, Propulsion, Uav
-
-MJ_PER_GJ = 1000
-
-L_PER_CUBIC_M = 1000
+from utils.utils import L_PER_CUBIC_M
 
 jet_a1_fuel = Fuel(
     energy_density_lhv_MJpL=34.7,  # LHV or HHV?
     density_kgpL=0.804,  # At 15C.
 )
-
 
 lh2_fuel = Fuel(
     energy_density_lhv_MJpL=8.491,  # From https://en.wikipedia.org/wiki/Energy_density
@@ -93,5 +89,3 @@ DISTANCE_KM_LOOKUP = {
     ("PIT", "DEN"): 1286 * KM_PER_MILE,
     ("DEN", "LAX"): 860 * KM_PER_MILE,
 }
-duration_str_lookup = {k: (dt.datetime(2000, 1, 1, 0, 0) + dt.timedelta(hours=(v / BaseA320.cruise_speed_kmph))).strftime("%H:%M") for k, v in DISTANCE_KM_LOOKUP.items()}
-(dt.datetime(2000, 1, 1, 0, 0) + dt.timedelta(hours=(sum(DISTANCE_KM_LOOKUP[k] for k in [("JFK", "PIT"), ("PIT", "DEN"), ("DEN", "LAX")]) / BaseA320.cruise_speed_kmph))).strftime("%H:%M")
