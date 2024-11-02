@@ -74,7 +74,7 @@ class At200(Uav):
     fuel_capacity_L = 1256
     """From https://www.aerospace.co.nz/files/dmfile/PAL%202016%20P-750%20XSTOL%20Brochure%20final.pdf300."""
     _fuel_consumption_rate_l_per_h = 184
-    energy_consumption_rate_MJ_per_km=(
+    energy_consumption_rate_MJ_per_km = (
         jet_a1_fuel.energy_density_lhv_MJpL  # TODO: Replace with avgas.
         * _fuel_consumption_rate_l_per_h
         / cruise_speed_kmph
@@ -83,20 +83,14 @@ class At200(Uav):
     payload_volume_L = 5 * L_PER_CUBIC_M
 
 
-specs = [
-    jet_a1_fuel,
-    lh2_fuel,
-    lion_fuel,
-    lipo_fuel,
-    turbofan,
-    BaseA320,
+airplanes = [
     JetFueledA320,
     Lh2FueledA320,
     LionFueledA320,
     LipoFueledA320,
     At200,
 ]
-specs_lookup: Dict[str, Any] = {x.__name__: x for x in specs}
+airplane_lookup: Dict[str, Any] = {x.__name__: x for x in airplanes}
 
 
 KM_PER_MILE = 1.609344

@@ -22,7 +22,7 @@ from src.utils.utils import (
     timedelta_to_minutes,
 )
 
-VIEW_TYPE = Literal["side-view", "tail-view", "map-view"]
+View = Literal["side-view", "tail-view", "map-view"]
 
 theme = _getenv("THEME", default_val="day")
 if theme == "day":
@@ -71,10 +71,9 @@ class ScreenRecorder:
 class AirplanesVisualizerEnvironment(Environment):
     AIRLINER_FLIGHT_PATH: FlightPath
     TRACK_AIRPLANE_ID: str
-    VIEW: VIEW_TYPE
+    VIEW: View
     ZOOM: List[Tuple[float, float]]
     SCENE_SIZE: Tuple[int, int] = (1800, 900)
-    N_VIEW_COLUMNS: int = 1
     MODELS_SCALE_FACTOR: float = 1.0
     CAPTIONS: bool = True
     SCREEN_RECORDERS: List[ScreenRecorder] = dataclasses.field(default_factory=list)
@@ -94,7 +93,6 @@ class AirplanesVisualizerEnvironment(Environment):
         #     "map-view": "Map View",
         # }[self.VIEW]
         vp.scene.width, vp.scene.height = self.SCENE_SIZE
-        vp.scene.width /= self.N_VIEW_COLUMNS
         vp.scene.background = _rgb_to_vp_color(SKY_RGB_COLOR)
         vp.scene.ambient = vp.color.white * 0.5
 
@@ -113,7 +111,7 @@ class AirplanesVisualizerEnvironment(Environment):
                 shininess = 0.3
                 color = vp.color.white
             self.airplane_vp_objs[airplane.id] = simple_wavefront_obj_to_vp(
-                airplane.model_config, shininess=shininess, color=color, make_trail=True, retain=3000
+                airplane.viz_model, shininess=shininess, color=color, make_trail=True, retain=3000
             )
         print("Done rendering airplanes.")
 
@@ -158,7 +156,7 @@ class AirplanesVisualizerEnvironment(Environment):
         # )
 
     def _render_airports(self):
-        airport_locations = self.AIRLINER_FLIGHT_PATH.AIRPORT_LOCATIONS
+        airport_locations = self.AIRLINER_FLIGHT_PATH.airport_locations
         # x_coords = [loc.X_KM for loc in airport_locations]
         # y_coords = [loc.Y_KM for loc in airport_locations]
         # center = vp.vector(
@@ -223,7 +221,7 @@ class AirplanesVisualizerEnvironment(Environment):
         for ev in evs_state.values():
             self.airplane_vp_objs[ev.id].pos = vp.vector(
                 *ev.location.xyz_coords
-            ) + vp.vec(*ev.model_config.TRANSLATION_VECTOR)
+            ) + vp.vec(*ev.viz_model.TRANSLATION_VECTOR)
             if self.VIEW == "map-view":
                 self.airplane_vp_objs[ev.id].pos.z *= 10
                 self.airplane_vp_objs[ev.id].pos.z += 200

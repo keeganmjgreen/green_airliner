@@ -10,7 +10,7 @@ import time
 from copy import deepcopy
 from typing import Optional, Union
 
-from src.emulators import EvTaxisEmulator
+from src.airplanes_simulator import AirplanesSimulator
 from src.modeling_objects import AirplanesState
 from src.utils.utils import get_interpolator_by_elapsed_time, now, timedelta_to_minutes
 
@@ -72,7 +72,7 @@ class BaseEnvironment(EnvironmentConfig):
     """An environment for EV taxis."""
 
     ENVIRONMENT_CONFIG: EnvironmentConfig
-    ev_taxis_emulator_or_interface: EvTaxisEmulator
+    ev_taxis_emulator_or_interface: AirplanesSimulator
 
     # The following attributes are instantiated by `__post_init__`, in part using the
     #     `ENVIRONMENT_CONFIG`, and their type hints overwrite those of the same attributes
@@ -89,7 +89,7 @@ class BaseEnvironment(EnvironmentConfig):
 
         self.START_TIMESTAMP = self.ENVIRONMENT_CONFIG.START_TIMESTAMP
         if self.START_TIMESTAMP is None:
-            self.START_TIMESTAMP = self.ev_taxis_emulator_or_interface.START_TIMESTAMP
+            self.START_TIMESTAMP = self.ev_taxis_emulator_or_interface.start_timestamp
 
         self.SKIP_TIMEDELTA = self.ENVIRONMENT_CONFIG.SKIP_TIMEDELTA
 
@@ -101,10 +101,10 @@ class BaseEnvironment(EnvironmentConfig):
         print(f"{type(self).__name__} running...")
 
     def _get_state(self) -> AirplanesState:
-        """Update and return the EvTaxisEmulator's state."""
+        """Update and return the AirplanesSimulator's state."""
 
         self.ev_taxis_emulator_or_interface.update_state(
-            timestamp=self.current_timestamp
+            time=self.current_timestamp
         )
         return self.ev_taxis_emulator_or_interface.current_state
 

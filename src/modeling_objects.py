@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 
 from src.feasibility_study.modeling_objects import BaseAirplane as AirplaneSpec
+from src.specs import airplane_lookup
 from src.three_d_sim.models import models_lookup
 from src.utils.utils import J_PER_WH, cosd, sind, timedelta_to_minutes
 
@@ -97,13 +98,13 @@ class Waypoint:
             direct_distance_km / self.DIRECT_APPROACH_SPEED_KMPH * dt.timedelta(hours=1)
         )
 
-    def get_direct_arrival_timestamp(
-        self, origin: Location, start_timestamp: dt.datetime
-    ) -> dt.datetime:
+    def get_direct_arrival_time(
+        self, origin: Location, start_time: dt.timedelta
+    ) -> dt.timedelta:
         """Get direct time of arrival."""
 
         direct_arrival_timedelta = self.get_direct_travel_timedelta(origin)
-        return start_timestamp + direct_arrival_timedelta
+        return start_time + direct_arrival_timedelta
 
     def get_direct_en_route_location(
         self, origin: Location, duration_traveled_so_far: dt.datetime
@@ -145,15 +146,15 @@ AirplaneId = str
 @dataclasses.dataclass(kw_only=True)
 class Airplane:
     id: AirplaneId
-    airplane_spec: Type[AirplaneSpec]
+    airplane_spec: Union[Type[AirplaneSpec], str]
     refueling_rate_kW: float
     initial_energy_level_pc: float
     energy_level_pc_bounds: Tuple[float, float] = (0.0, 1.0)
     energy_efficiency_pc: float = 100.0
-    model_config: Union[ModelConfig, str, None] = None
+    viz_model: Union[ModelConfig, str, None] = None
 
-    energy_capacity_MJ: float
-    energy_consumption_rate_MJ_per_km: float
+    energy_capacity_MJ: float = dataclasses.field(init=False)
+    energy_consumption_rate_MJ_per_km: float = dataclasses.field(init=False)
     energy_level_pc: float = dataclasses.field(init=False)
     location: Union[Location, None] = dataclasses.field(init=False)
     heading: Union[np.ndarray, None] = dataclasses.field(init=False)
@@ -167,8 +168,11 @@ class Airplane:
         self.heading = None
         self.waypoints = None
 
-        if type(self.model_config) is str:
-            self.model_config = models_lookup[self.model_config]
+        if type(self.airplane_spec) is str:
+            self.airplane_spec = airplane_lookup
+
+        if type(self.viz_model) is str:
+            self.viz_model = models_lookup[self.viz_model]
 
     def set_heading(self, to_waypoint: Waypoint) -> np.ndarray:
         heading = to_waypoint.LOCATION.xyz_coords - self.location.xyz_coords
