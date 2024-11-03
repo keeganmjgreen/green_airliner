@@ -58,42 +58,42 @@ uavs_flight_path_config:
 ratepoints:
   - elapsed_minutes: 0
     rate: 1
-  - elapsed_minutes: d_airliner["Airliner_ascended_point"]
+  - elapsed_minutes: Airliner_ascended_point
     rate: 1
-  - elapsed_minutes: d_airliner["Airliner_ascended_point"] + 5
+  - elapsed_minutes: Airliner_ascended_point + 5
     rate: 30
   # PIT:
-  - elapsed_minutes: d_airliner["PIT_UAV_0_on_airliner_docking_point"] - 5
+  - elapsed_minutes: PIT_UAV_0_on_airliner_docking_point - 5
     rate: 30
-  - elapsed_minutes: d_airliner["PIT_UAV_0_on_airliner_docking_point"] - 1.5
+  - elapsed_minutes: PIT_UAV_0_on_airliner_docking_point - 1.5
     rate: 1
-  - elapsed_minutes: d_airliner["PIT_UAV_0_on_airliner_undocking_point"] + 1.5
+  - elapsed_minutes: PIT_UAV_0_on_airliner_undocking_point + 1.5
     rate: 1
-  - elapsed_minutes: d_airliner["Airliner_curve_over_PIT_midpoint"]
+  - elapsed_minutes: Airliner_curve_over_PIT_midpoint
     rate: 3
-  - elapsed_minutes: d_airliner["PIT_UAV_1_on_airliner_docking_point"] - 1.5
+  - elapsed_minutes: PIT_UAV_1_on_airliner_docking_point - 1.5
     rate: 2
-  - elapsed_minutes: d_airliner["PIT_UAV_1_on_airliner_undocking_point"] + 1.5
+  - elapsed_minutes: PIT_UAV_1_on_airliner_undocking_point + 1.5
     rate: 2
-  - elapsed_minutes: d_airliner["PIT_UAV_1_on_airliner_undocking_point"] + 10
+  - elapsed_minutes: PIT_UAV_1_on_airliner_undocking_point + 10
     rate: 50
   # DEN:
-  - elapsed_minutes: d_airliner["DEN_UAV_0_on_airliner_docking_point"] - 10
+  - elapsed_minutes: DEN_UAV_0_on_airliner_docking_point - 10
     rate: 50
-  - elapsed_minutes: d_airliner["DEN_UAV_0_on_airliner_docking_point"] - 1.5
+  - elapsed_minutes: DEN_UAV_0_on_airliner_docking_point - 1.5
     rate: 1
-  - elapsed_minutes: d_airliner["DEN_UAV_0_on_airliner_undocking_point"] + 1.5
+  - elapsed_minutes: DEN_UAV_0_on_airliner_undocking_point + 1.5
     rate: 1
-  - elapsed_minutes: d_airliner["Airliner_curve_over_DEN_midpoint"]
+  - elapsed_minutes: Airliner_curve_over_DEN_midpoint
     rate: 3
-  - elapsed_minutes: d_airliner["Airliner_curve_over_DEN_midpoint"] + 40
+  - elapsed_minutes: Airliner_curve_over_DEN_midpoint + 40
     rate: 30
   # LAX:
-  - elapsed_minutes: d_airliner["Airliner_descent_point"] - 5
+  - elapsed_minutes: Airliner_descent_point - 5
     rate: 30
-  - elapsed_minutes: d_airliner["Airliner_descent_point"]
+  - elapsed_minutes: Airliner_descent_point
     rate: 2
-  - elapsed_minutes: d_airliner["Airliner_landed_point"] + 5
+  - elapsed_minutes: Airliner_landed_point + 5
     rate: 2
 viz_config:
   min_frame_duration_s: 0.04
@@ -103,129 +103,129 @@ viz_config:
     airliner_zoompoints:
       - elapsed_minutes: 0
         zoom: 5
-      - elapsed_minutes: d["Airliner_takeoff_point"]
+      - elapsed_minutes: Airliner_takeoff_point
         zoom: 0.5
-      - elapsed_minutes: d["Airliner_ascended_point"]
+      - elapsed_minutes: Airliner_ascended_point
         zoom: 0.5
-      - elapsed_minutes: d["Airliner_ascended_point"] + 0.5
+      - elapsed_minutes: Airliner_ascended_point + 0.5
         zoom: 0.04
       # PIT:
-      - elapsed_minutes: d["PIT_UAV_0_on_airliner_docking_point"] - 1
+      - elapsed_minutes: PIT_UAV_0_on_airliner_docking_point - 1
         zoom: 0.02
-      - elapsed_minutes: d["PIT_UAV_0_on_airliner_docking_point"] - 0.3
+      - elapsed_minutes: PIT_UAV_0_on_airliner_docking_point - 0.3
         zoom: 0.5
-      - elapsed_minutes: d["PIT_UAV_0_on_airliner_undocking_point"] - 0.1
+      - elapsed_minutes: PIT_UAV_0_on_airliner_undocking_point - 0.1
         zoom: 10
-      - elapsed_minutes: d["PIT_UAV_0_on_airliner_undocking_point"] + 0.5
+      - elapsed_minutes: PIT_UAV_0_on_airliner_undocking_point + 0.5
         zoom: 0.5
-      - elapsed_minutes: d_airliner["Airliner_curve_over_PIT_midpoint"] - 5
+      - elapsed_minutes: Airliner_curve_over_PIT_midpoint - 5
         zoom: 0.1
-      - elapsed_minutes: d_airliner["Airliner_curve_over_PIT_midpoint"]
+      - elapsed_minutes: Airliner_curve_over_PIT_midpoint
         zoom: 0.05
-      - elapsed_minutes: d_airliner["Airliner_curve_over_PIT_midpoint"] + 5
+      - elapsed_minutes: Airliner_curve_over_PIT_midpoint + 5
         zoom: 0.1
-      - elapsed_minutes: d["PIT_UAV_1_on_airliner_docking_point"] - 0.3
+      - elapsed_minutes: PIT_UAV_1_on_airliner_docking_point - 0.3
         zoom: 0.5
-      - elapsed_minutes: d["PIT_UAV_1_on_airliner_undocking_point"] - 0.1
+      - elapsed_minutes: PIT_UAV_1_on_airliner_undocking_point - 0.1
         zoom: 10
-      - elapsed_minutes: d["PIT_UAV_1_on_airliner_undocking_point"] + 0.5
+      - elapsed_minutes: PIT_UAV_1_on_airliner_undocking_point + 0.5
         zoom: 0.5
-      - elapsed_minutes: d["PIT_UAV_1_on_airliner_undocking_point"] + 2
+      - elapsed_minutes: PIT_UAV_1_on_airliner_undocking_point + 2
         zoom: 0.02
-      - elapsed_minutes: d["PIT_UAV_1_on_airliner_undocking_point"] + 20
+      - elapsed_minutes: PIT_UAV_1_on_airliner_undocking_point + 20
         zoom: 0.005
       # DEN:
-      - elapsed_minutes: d["DEN_UAV_0_on_airliner_docking_point"] - 5
+      - elapsed_minutes: DEN_UAV_0_on_airliner_docking_point - 5
         zoom: 0.004
-      - elapsed_minutes: d["DEN_UAV_0_on_airliner_docking_point"] - 1
+      - elapsed_minutes: DEN_UAV_0_on_airliner_docking_point - 1
         zoom: 0.02
-      - elapsed_minutes: d["DEN_UAV_0_on_airliner_docking_point"] - 0.3
+      - elapsed_minutes: DEN_UAV_0_on_airliner_docking_point - 0.3
         zoom: 0.5
-      - elapsed_minutes: d["DEN_UAV_0_on_airliner_undocking_point"] - 0.1
+      - elapsed_minutes: DEN_UAV_0_on_airliner_undocking_point - 0.1
         zoom: 10
-      - elapsed_minutes: d["DEN_UAV_0_on_airliner_undocking_point"] + 0.5
+      - elapsed_minutes: DEN_UAV_0_on_airliner_undocking_point + 0.5
         zoom: 0.5
-      - elapsed_minutes: d_airliner["Airliner_curve_over_DEN_midpoint"]
+      - elapsed_minutes: Airliner_curve_over_DEN_midpoint
         zoom: 0.05
-      - elapsed_minutes: d["DEN_UAV_3_on_airliner_docking_point"]
+      - elapsed_minutes: DEN_UAV_3_on_airliner_docking_point
         zoom: 0.5
-      - elapsed_minutes: d["DEN_UAV_4_on_airliner_undocking_point"]
+      - elapsed_minutes: DEN_UAV_4_on_airliner_undocking_point
         zoom: 0.1
-      - elapsed_minutes: d["DEN_UAV_4_on_airliner_undocking_point"] + 1
+      - elapsed_minutes: DEN_UAV_4_on_airliner_undocking_point + 1
         zoom: 0.02
-      - elapsed_minutes: d["DEN_UAV_4_on_airliner_undocking_point"] + 25
+      - elapsed_minutes: DEN_UAV_4_on_airliner_undocking_point + 25
         zoom: 0.002
       # LAX:
-      - elapsed_minutes: d["Airliner_descent_point"] - 50
+      - elapsed_minutes: Airliner_descent_point - 50
         zoom: 0.002
-      - elapsed_minutes: d["Airliner_descent_point"]
+      - elapsed_minutes: Airliner_descent_point
         zoom: 0.04
-      - elapsed_minutes: d["Airliner_landing_point"]
+      - elapsed_minutes: Airliner_landing_point
         zoom: 0.04
-      - elapsed_minutes: d["Airliner_landed_point"] + 1
+      - elapsed_minutes: Airliner_landed_point + 1
         zoom: 0.5
-      - elapsed_minutes: d["Airliner_landed_point"] + 5
+      - elapsed_minutes: Airliner_landed_point + 5
         zoom: 5
     uavs_zoompoints_config:
       to_airport:
         - elapsed_minutes: 0
           zoom: 50
-        - elapsed_minutes: d["takeoff_point"] - 2
+        - elapsed_minutes: takeoff_point - 2
           zoom: 50
-        - elapsed_minutes: d["takeoff_point"] - 1
+        - elapsed_minutes: takeoff_point - 1
           zoom: 1
-        - elapsed_minutes: d["ascended_point"]
+        - elapsed_minutes: ascended_point
           zoom: 1
-        - elapsed_minutes: d["ascended_point"] + 1
+        - elapsed_minutes: ascended_point + 1
           zoom: 5
-        - elapsed_minutes: d["arc_start_point"]
+        - elapsed_minutes: arc_start_point
           zoom: 5
-        - elapsed_minutes: d["descent_to_airliner_point"]
+        - elapsed_minutes: descent_to_airliner_point
           zoom: 0.5
-        - elapsed_minutes: d["on_airliner_docking_point"]
+        - elapsed_minutes: on_airliner_docking_point
           zoom: 5
-        - elapsed_minutes: d["on_airliner_docking_point"] + 0.1
+        - elapsed_minutes: on_airliner_docking_point + 0.1
           zoom: 50
-        - elapsed_minutes: d["on_airliner_undocking_point"] - 0.1
+        - elapsed_minutes: on_airliner_undocking_point - 0.1
           zoom: 50
-        - elapsed_minutes: d["on_airliner_undocking_point"]
+        - elapsed_minutes: on_airliner_undocking_point
           zoom: 5
-        - elapsed_minutes: d["ascended_from_airliner_point"]
+        - elapsed_minutes: ascended_from_airliner_point
           zoom: 0.5
-        - elapsed_minutes: d["descent_point"]
+        - elapsed_minutes: descent_point
           zoom: 0.5
-        - elapsed_minutes: d["landed_point"]
+        - elapsed_minutes: landed_point
           zoom: 5
-        - elapsed_minutes: d["landed_point"] + 2
+        - elapsed_minutes: landed_point + 2
           zoom: 50
       from_airport:
         - elapsed_minutes: 0
           zoom: 50
-        - elapsed_minutes: d["takeoff_point"] - 2
+        - elapsed_minutes: takeoff_point - 2
           zoom: 50
-        - elapsed_minutes: d["takeoff_point"] - 1
+        - elapsed_minutes: takeoff_point - 1
           zoom: 1
-        - elapsed_minutes: d["ascended_point"]
+        - elapsed_minutes: ascended_point
           zoom: 1
-        - elapsed_minutes: d["ascended_point"] + 1
+        - elapsed_minutes: ascended_point + 1
           zoom: 5
-        - elapsed_minutes: d["descent_to_airliner_point"]
+        - elapsed_minutes: descent_to_airliner_point
           zoom: 0.5
-        - elapsed_minutes: d["on_airliner_docking_point"]
+        - elapsed_minutes: on_airliner_docking_point
           zoom: 5
-        - elapsed_minutes: d["on_airliner_docking_point"] + 0.1
+        - elapsed_minutes: on_airliner_docking_point + 0.1
           zoom: 50
-        - elapsed_minutes: d["on_airliner_undocking_point"] - 0.1
+        - elapsed_minutes: on_airliner_undocking_point - 0.1
           zoom: 50
-        - elapsed_minutes: d["on_airliner_undocking_point"]
+        - elapsed_minutes: on_airliner_undocking_point
           zoom: 5
-        - elapsed_minutes: d["ascended_from_airliner_point"]
+        - elapsed_minutes: ascended_from_airliner_point
           zoom: 0.5
-        - elapsed_minutes: d["arc_end_point"]
+        - elapsed_minutes: arc_end_point
           zoom: 0.25
-        - elapsed_minutes: d["landed_point"]
+        - elapsed_minutes: landed_point
           zoom: 5
-        - elapsed_minutes: d["landed_point"] + 2
+        - elapsed_minutes: landed_point + 2
           zoom: 50
   landed_uavs_waiting_time_mins: 30
   map_view_config:
