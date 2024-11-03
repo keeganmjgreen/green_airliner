@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import datetime as dt
+
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 from pydantic import BaseModel
@@ -7,14 +9,34 @@ from pydantic import BaseModel
 import yaml
 
 
-class Ratepoint(BaseModel):
+class Timepoint(BaseModel):
     elapsed_minutes: Union[float, str]
+    elapsed_time: Union[dt.timedelta, None] = None
+
+    def set_elapsed_time(self, reference_times: Dict[str, int]) -> dt.timedelta:
+        self.elapsed_time = dt.timedelta(
+            minutes=eval(str(self.elapsed_minutes), reference_times)
+        )
+
+    @property
+    def value(self) -> float:
+        raise NotImplementedError
+
+
+class Ratepoint(Timepoint):
     rate: float
 
+    @property
+    def value(self) -> float:
+        return self.rate
 
-class Zoompoint(BaseModel):
-    elapsed_minutes: Union[float, str]
+
+class Zoompoint(Timepoint):
     zoom: float
+
+    @property
+    def value(self) -> float:
+        return self.zoom
 
 
 class UavsZoompointsConfig(BaseModel):

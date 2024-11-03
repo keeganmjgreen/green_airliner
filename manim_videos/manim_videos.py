@@ -302,8 +302,8 @@ class Video(Scene):
         uav1_view = VideoFeed(
             name="PIT/DEN-UAV-0 side view",
             fpath_lineup=[
-                "inputs/PIT-UAV-0-side-view.avi",
-                "inputs/DEN-UAV-0-side-view.avi",
+                "inputs/PIT_UAV_0-side-view.avi",
+                "inputs/DEN_UAV_0-side-view.avi",
             ],
             scale=map_scale,
             pos=np.array(

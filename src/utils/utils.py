@@ -4,6 +4,8 @@ from typing import List, Tuple
 import numpy as np
 import scipy as sp
 
+from src.three_d_sim.config_model import Timepoint
+
 MINUTES_PER_HOUR = SECONDS_PER_MINUTE = 60
 SECONDS_PER_HOUR = SECONDS_PER_MINUTE * MINUTES_PER_HOUR
 MILLISECONDS_PER_SECOND = 1000
@@ -29,12 +31,13 @@ sind = lambda angle_deg: np.sin(np.deg2rad(angle_deg))
 cosd = lambda angle_deg: np.cos(np.deg2rad(angle_deg))
 
 
-def get_interpolator_by_elapsed_time(points: List[Tuple[float, float]]):
+def get_interpolator_by_elapsed_time(points: List[Timepoint]):
     def interpolator(elapsed_time: dt.timedelta):
         _interpolator = sp.interpolate.interp1d(
-            *np.array(points).T,
+            x=[p.elapsed_time for p in points],
+            y=[p.value for p in points],
             bounds_error=False,
-            fill_value=(points[0][1], points[-1][1]),
+            fill_value=(points[0].rate, points[-1].rate),
         )
         y = _interpolator(timedelta_to_minutes(elapsed_time))
         return y

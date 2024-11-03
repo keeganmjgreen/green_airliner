@@ -8,7 +8,7 @@ import pandas as pd
 import pyautogui
 import vpython as vp
 
-from src.environments import BaseEnvironment, Environment
+from environments.environment import BaseEnvironment, Environment
 from src.modeling_objects import KM_PER_LAT_LON
 from src.three_d_sim.flight_path_generation import (
     FlightPath,
@@ -82,7 +82,7 @@ class AirplanesVisualizerEnvironment(Environment):
         self.zoom_factor_interpolator = get_interpolator_by_elapsed_time(self.ZOOM)
 
         for screen_recorder in self.SCREEN_RECORDERS:
-            screen_recorder.set_up(fps=int(1 / self.DELAY_TIME_STEP.total_seconds()))
+            screen_recorder.set_up(fps=int(1 / self.delay_time_step.total_seconds()))
 
         # vp.scene.title = {
         #     "tail-view": f"{self.TRACK_AIRPLANE_ID} Tail View",
@@ -153,16 +153,16 @@ class AirplanesVisualizerEnvironment(Environment):
         # )
 
     def _render_airports(self):
-        airport_locations = self.AIRLINER_FLIGHT_PATH.airport_locations
-        # x_coords = [loc.X_KM for loc in airport_locations]
-        # y_coords = [loc.Y_KM for loc in airport_locations]
+        airports = self.AIRLINER_FLIGHT_PATH.airports
+        # x_coords = [loc.X_KM for loc in airports]
+        # y_coords = [loc.Y_KM for loc in airports]
         # center = vp.vector(
         #     *[(max(coords) - min(coords)) / 2 for coords in [x_coords, y_coords]], 0
         # )
-        for loc in airport_locations:
-            cr = vp.shapes.circle(pos=list(loc.xy_coords), radius=AIRPORT_RADIUS_KM)
+        for airport in airports:
+            cr = vp.shapes.circle(pos=list(airport.xy_coords), radius=AIRPORT_RADIUS_KM)
             for i in range(len(cr)):
-                vs = [loc.xy_coords, cr[i - 1], cr[i]]
+                vs = [airport.xy_coords, cr[i - 1], cr[i]]
                 vp.triangle(
                     vs=[
                         vp.vertex(
@@ -191,25 +191,25 @@ class AirplanesVisualizerEnvironment(Environment):
         BaseEnvironment.run(self)
 
         while True:
-            if self.END_TIMESTAMP is not None:
-                if self.current_timestamp >= self.END_TIMESTAMP:
+            if self.end_time is not None:
+                if self.current_time >= self.end_time:
                     break
             self._run_iteration()
 
     def _run_iteration(self) -> None:
         super()._run_iteration()
 
-        if self.current_timestamp >= self.START_TIMESTAMP + self.SKIP_TIMEDELTA:
-            vp.scene.title = str(self.current_timestamp - self.START_TIMESTAMP).split(".")[0]
+        if self.current_time >= self.start_time + self.skip_timedelta:
+            vp.scene.title = str(self.current_time - self.start_time).split(".")[0]
             self._update_airplanes_viz()
             self._update_graphs()
             for screen_recorder in self.SCREEN_RECORDERS:
                 screen_recorder.take_screenshot()
-            vp.rate(1 / self.DELAY_TIME_STEP.total_seconds())
+            vp.rate(1 / self.delay_time_step.total_seconds())
 
     def _update_airplanes_viz(self) -> None:
         zoom_factor = float(self.zoom_factor_interpolator(
-            self.current_timestamp - self.START_TIMESTAMP
+            self.current_time - self.start_time
         ))
         print(f"zoom_factor: {zoom_factor:.2f}")
         vp.scene.range = self.MODELS_SCALE_FACTOR / zoom_factor
@@ -236,7 +236,7 @@ class AirplanesVisualizerEnvironment(Environment):
             vp.scene.caption = "\n" + "\n".join([str(ev) for ev in evs_state.values()])
 
     def _update_graphs(self) -> None:
-        minutes_elapsed = timedelta_to_minutes(self.current_timestamp - self.START_TIMESTAMP)
+        minutes_elapsed = timedelta_to_minutes(self.current_time - self.start_time)
         evs_state = self.ev_taxis_emulator_or_interface.current_state.airplanes
         self.airliner_energy_level_gcurve.plot(
             minutes_elapsed,

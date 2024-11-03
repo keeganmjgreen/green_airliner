@@ -108,7 +108,7 @@ class Waypoint:
         return start_time + direct_arrival_timedelta
 
     def get_direct_en_route_location(
-        self, origin: Location, duration_traveled_so_far: dt.datetime
+        self, origin: Location, duration_traveled_so_far: dt.timedelta
     ) -> Location:
         """Get the en route location after traveling for a specified duration directly from a given
         origin location to the waypoint's location.

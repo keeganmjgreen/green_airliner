@@ -137,7 +137,7 @@
             "args": [
                 "--config-dir", "configs/jfk_to_lax/",
                 "--view", "side-view",
-                "--track-airplane-id", "PIT-UAV-0",
+                "--track-airplane-id", "PIT_UAV_0",
                 "--preset", "record-airplanes-viz",
             ]
         },

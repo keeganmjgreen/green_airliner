@@ -18,7 +18,7 @@ class AirplanesSimulator:
 
     initial_state: AirplanesState
     current_state: AirplanesState = dataclasses.field(init=False)
-    current_time: dt.datetime = dataclasses.field(init=False)
+    current_time: dt.timedelta = dataclasses.field(init=False)
 
     def __post_init__(self):
         self.current_time = dt.timedelta(0)
@@ -38,7 +38,7 @@ class AirplanesSimulator:
         self._update_evs_refueling(prev_time)
 
     def _update_evs_locations_and_energy_consumption(
-        self, prev_time: dt.datetime
+        self, prev_time: dt.timedelta
     ) -> None:
         """Update the locations and (discharging) SoCs of EVs that are in motion."""
 
@@ -66,11 +66,11 @@ class AirplanesSimulator:
                     tag = waypoint.LOCATION.TAG
                     if tag is not None:
                         print(f"{ev.id} has reached waypoint with location tag {tag}.")
-                        if "-on-airliner-docking-point" in tag:
+                        if "_on_airliner_docking_point" in tag:
                             self.current_state.airplanes[
                                 "Airliner"
-                            ].docked_uav = tag.removesuffix("-on-airliner-docking-point")
-                        elif "-on-airliner-undocking-point" in tag:
+                            ].docked_uav = tag.removesuffix("_on_airliner_docking_point")
+                        elif "_on_airliner_undocking_point" in tag:
                             self.current_state.airplanes["Airliner"].docked_uav = None
                     # 'Clear' the waypoint:
                     ev.waypoints[i] = None  # Marked to be removed from waypoints.
@@ -92,7 +92,7 @@ class AirplanesSimulator:
             # Clean up by removing waypoints that were marked for removal:
             ev.waypoints = [wp for wp in ev.waypoints if wp is not None]
 
-    def _update_evs_refueling(self, prev_time: dt.datetime) -> None:
+    def _update_evs_refueling(self, prev_time: dt.timedelta) -> None:
         """Update the SoCs of EVs that are charging (at a charge point's connector at a charging
         site).
         """

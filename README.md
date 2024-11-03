@@ -45,7 +45,7 @@ Airliner:
 UAVs from PIT:
   - First UAV (leading up to PIT flyover):
     
-    `python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=PIT-UAV-0 --preset=record-airplanes-viz`
+    `python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=PIT_UAV_0 --preset=record-airplanes-viz`
     
   - Second UAV (directly after PIT flyover):
     

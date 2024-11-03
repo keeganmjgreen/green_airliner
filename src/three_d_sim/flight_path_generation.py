@@ -418,13 +418,13 @@ def _gen_takeoff_or_landing_waypoints(
     )
 
     if takeoff_or_landing == "takeoff":
-        altitude_transition_waypoints[0].LOCATION.TAG = f"{airplane_id}-takeoff-point"
-        altitude_transition_waypoints[-1].LOCATION.TAG = f"{airplane_id}-ascended-point"
+        altitude_transition_waypoints[0].LOCATION.TAG = f"{airplane_id}_takeoff_point"
+        altitude_transition_waypoints[-1].LOCATION.TAG = f"{airplane_id}_ascended_point"
         waypoints = speed_change_waypoints + altitude_transition_waypoints
     else:
-        altitude_transition_waypoints[0].LOCATION.TAG = f"{airplane_id}-descent-point"
-        altitude_transition_waypoints[-1].LOCATION.TAG = f"{airplane_id}-landing-point"
-        speed_change_waypoints[-1].LOCATION.TAG = f"{airplane_id}-landed-point"
+        altitude_transition_waypoints[0].LOCATION.TAG = f"{airplane_id}_descent_point"
+        altitude_transition_waypoints[-1].LOCATION.TAG = f"{airplane_id}_landing_point"
+        speed_change_waypoints[-1].LOCATION.TAG = f"{airplane_id}_landed_point"
         waypoints = altitude_transition_waypoints + list(
             reversed(speed_change_waypoints)
         )
@@ -453,8 +453,8 @@ def _gen_horizontal_curve_waypoints(
         Waypoint(Location(*point, altitude_km), **waypoint_kwargs)
         for point in curve_points
     ]
-    curve_waypoints[0].LOCATION.TAG = f"{airplane_id}-curve-over-{curr_airport.CODE}-start-point"
-    curve_waypoints[-1].LOCATION.TAG = f"{airplane_id}-curve-over-{curr_airport.CODE}-end-point"
+    curve_waypoints[0].LOCATION.TAG = f"{airplane_id}_curve_over_{curr_airport.CODE}_start_point"
+    curve_waypoints[-1].LOCATION.TAG = f"{airplane_id}_curve_over_{curr_airport.CODE}_end_point"
     return curve_waypoints
 
 
@@ -546,15 +546,15 @@ def _generate_uav_waypoints(
     )
 
     if uav_fp_half == "first-half":
-        uav_arc_waypoints[0].LOCATION.TAG = f"{uav.id}-arc-start-point"
-        uav_arc_waypoints[-1].LOCATION.TAG = f"{uav.id}-arc-end-point"
-        altitude_transition_waypoints[0].LOCATION.TAG = f"{uav.id}-descent-to-airliner-point"
-        altitude_transition_waypoints[-1].LOCATION.TAG = f"{uav.id}-on-airliner-docking-point"
+        uav_arc_waypoints[0].LOCATION.TAG = f"{uav.id}_arc_start_point"
+        uav_arc_waypoints[-1].LOCATION.TAG = f"{uav.id}_arc_end_point"
+        altitude_transition_waypoints[0].LOCATION.TAG = f"{uav.id}_descent_to_airliner_point"
+        altitude_transition_waypoints[-1].LOCATION.TAG = f"{uav.id}_on_airliner_docking_point"
     elif uav_fp_half == "second-half":
-        altitude_transition_waypoints[-1].LOCATION.TAG = f"{uav.id}-on-airliner-undocking-point"
-        altitude_transition_waypoints[0].LOCATION.TAG = f"{uav.id}-ascended-from-airliner-point"
-        uav_arc_waypoints[-1].LOCATION.TAG = f"{uav.id}-arc-start-point"
-        uav_arc_waypoints[0].LOCATION.TAG = f"{uav.id}-arc-end-point"
+        altitude_transition_waypoints[-1].LOCATION.TAG = f"{uav.id}_on_airliner_undocking_point"
+        altitude_transition_waypoints[0].LOCATION.TAG = f"{uav.id}_ascended_from_airliner_point"
+        uav_arc_waypoints[-1].LOCATION.TAG = f"{uav.id}_arc_start_point"
+        uav_arc_waypoints[0].LOCATION.TAG = f"{uav.id}_arc_end_point"
 
     uav_waypoints = takeoff_or_landing_waypoints + uav_arc_waypoints + altitude_transition_waypoints
 
@@ -602,10 +602,10 @@ def provision_uav_from_flight_path(
             wrt_runway=False,
         )
         altitude_transition_waypoints[0].LOCATION.TAG = (
-            f"{uav.id}-on-airliner-undocking-point"
+            f"{uav.id}_on_airliner_undocking_point"
         )
         altitude_transition_waypoints[-1].LOCATION.TAG = (
-            f"{uav.id}-ascended-from-airliner-point"
+            f"{uav.id}_ascended_from_airliner_point"
         )
         uav.waypoints += altitude_transition_waypoints
 
@@ -629,8 +629,8 @@ def provision_uav_from_flight_path(
             flight_path=uav_fp,
             wrt_runway=False,
         )
-        altitude_transition_waypoints[0].LOCATION.TAG = f"{uav.id}-lowering-point"
-        altitude_transition_waypoints[-1].LOCATION.TAG = f"{uav.id}-lowered-point"
+        altitude_transition_waypoints[0].LOCATION.TAG = f"{uav.id}_lowering_point"
+        altitude_transition_waypoints[-1].LOCATION.TAG = f"{uav.id}_lowered_point"
         uav.waypoints += _gen_tmp_speed_change_waypoints(
             start_location=uav.waypoints[-1].LOCATION,
             default_speed_kmph=uav_fp.cruise_speed_kmph,
@@ -681,8 +681,8 @@ def provision_uav_from_flight_path(
             wrt_runway=False,
             inverted=True,
         )
-        altitude_transition_waypoints[0].LOCATION.TAG = f"{uav.id}-descent-to-airliner-point"
-        altitude_transition_waypoints[-1].LOCATION.TAG = f"{uav.id}-on-airliner-docking-point"
+        altitude_transition_waypoints[0].LOCATION.TAG = f"{uav.id}_descent_to_airliner_point"
+        altitude_transition_waypoints[-1].LOCATION.TAG = f"{uav.id}_on_airliner_docking_point"
         uav.waypoints += altitude_transition_waypoints
 
         uav.waypoints += last_waypoints
@@ -712,7 +712,7 @@ def provision_uav_from_flight_path(
             uav_fp_half="second-half",
         )
 
-    uav.waypoints[0].LOCATION.TAG = f"{uav.id}-first-point"
+    uav.waypoints[0].LOCATION.TAG = f"{uav.id}_first_point"
 
 
 def get_uav_on_airliner_point(
@@ -722,7 +722,7 @@ def get_uav_on_airliner_point(
 ) -> Location:
     point = deepcopy(
         uav.get_tagged_waypoint(
-            location_tag=f"{uav.id}-on-airliner-{kind}-point"
+            location_tag=f"{uav.id}_on_airliner_{kind}_point"
         ).LOCATION
     )
     point.ALTITUDE_KM = airliner_fp.cruise_altitude_km
@@ -884,12 +884,12 @@ def delay_uavs(
         for uav in airport_uavs.values():
             uav_travel_duration_to_docking_point = (
                 uav.get_travel_durations_to_tagged_waypoints()[
-                    f"{uav.id}-on-airliner-docking-point"
+                    f"{uav.id}_on_airliner_docking_point"
                 ]
             )
             airliner_travel_duration_to_docking_point = (
                 airliner.get_travel_durations_to_tagged_waypoints()[
-                    f"{uav.id}-on-airliner-docking-point"
+                    f"{uav.id}_on_airliner_docking_point"
                 ]
             )
             assert (
