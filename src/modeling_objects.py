@@ -156,7 +156,7 @@ class Airplane:
         self.energy_level_pc = deepcopy(self.initial_energy_level_pc)
         self.location = None
         self.heading = None
-        self.waypoints = None
+        self.waypoints = []
 
         if type(self.viz_model) is str:
             self.viz_model = models_lookup[self.viz_model]

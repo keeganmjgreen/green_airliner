@@ -1,11 +1,10 @@
 import dataclasses
+import os
 from typing import Optional, Tuple
 
 import cv2
 from manim import *
 from manim.mobject.text import text_mobject
-
-from src.utils.utils import _getenv
 
 
 # ==================================================================================================
@@ -79,13 +78,13 @@ class BaseSlideshowVideo(Scene):
 class Intro(BaseSlideshowVideo):
     def construct(self):
         self.add(ImageMobject("splash-blurred150-dimmed50.png"))
-        self._slides_from_file(f"{_getenv('REPO_DIR')}/manim_videos/intro.md")
+        self._slides_from_file(f"{os.environ['REPO_DIR']}/manim_videos/intro.md")
 
 
 class Conclusion(BaseSlideshowVideo):
     def construct(self):
         self.add(ImageMobject("splash-blurred150-dimmed50.png"))
-        self._slides_from_file(f"{_getenv('REPO_DIR')}/manim_videos/conclusion.md")
+        self._slides_from_file(f"{os.environ['REPO_DIR']}/manim_videos/conclusion.md")
 
 
 # ==================================================================================================

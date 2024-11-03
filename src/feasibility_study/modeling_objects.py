@@ -111,9 +111,10 @@ class Uav(BaseAirplane):
     def energy_capacity_MJ(cls) -> float:
         return cls.fuel_capacity_L * cls.fuel.energy_density_lhv_MJpL
 
-    def refueling_energy_capacity_MJ(self, fuel: Fuel) -> float:
+    @classmethod
+    def refueling_energy_capacity_MJ(cls, fuel: Fuel) -> float:
         return get_energy_capacity_MJ(
-            fuel_capacity_L=self.payload_volume_L,
-            fuel_capacity_kg=self.payload_capacity_kg,
+            fuel_capacity_L=cls.payload_volume_L,
+            fuel_capacity_kg=cls.payload_capacity_kg,
             fuel=fuel,
         )

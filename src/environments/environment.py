@@ -12,7 +12,7 @@ from typing import Optional, Union
 
 from src.airplanes_simulator import AirplanesSimulator
 from src.modeling_objects import AirplanesState
-from src.utils.utils import get_interpolator_by_elapsed_time, now, timedelta_to_minutes
+from src.utils.utils import get_interpolator_by_elapsed_time, timedelta_to_minutes
 
 
 @dataclasses.dataclass(init=False)
@@ -62,7 +62,7 @@ class EnvironmentConfig:
         else:
             assert self.TIME_STEP is not None
         if "START_TIMESTAMP" not in kwargs.keys():
-            self.START_TIMESTAMP = now
+            self.START_TIMESTAMP = ...
         if "END_TIMESTAMP" not in kwargs.keys():
             self.END_TIMESTAMP = None
 

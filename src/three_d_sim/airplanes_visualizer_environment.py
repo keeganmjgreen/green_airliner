@@ -1,4 +1,5 @@
 import dataclasses
+import os
 from typing import List, Literal, Tuple
 
 import cv2
@@ -16,15 +17,11 @@ from src.three_d_sim.flight_path_generation import (
 from src.three_d_sim.models.wavefront_obj_to_vp import (
     simple_wavefront_obj_to_vp,
 )
-from src.utils.utils import (
-    _getenv,
-    get_interpolator_by_elapsed_time,
-    timedelta_to_minutes,
-)
+from src.utils.utils import get_interpolator_by_elapsed_time, timedelta_to_minutes
 
 View = Literal["side-view", "tail-view", "map-view"]
 
-theme = _getenv("THEME", default_val="day")
+theme = os.environ.get("THEME", "day")
 if theme == "day":
     SKY_RGB_COLOR = [187, 222, 251]
     GROUND_RGB_COLOR = [200, 230, 201]

@@ -32,8 +32,20 @@ lipo_fuel = Fuel(
     density_kgpL=(LIPO_ENERGY_DENSITY_MJPL / LIPO_SPECIFIC_ENERGY_MJPKG),
 )
 
+BP_AVGAS_80_SPECIFIC_ENERGY_MJPKG = 44.65  # https://en.wikipedia.org/wiki/Aviation_fuel > Energy content
+AVGAS_DENSITY_KGPL = 0.720  # https://en.wikipedia.org/wiki/Avgas > Properties
+avgas = Fuel(
+    energy_density_lhv_MJpL=(BP_AVGAS_80_SPECIFIC_ENERGY_MJPKG * AVGAS_DENSITY_KGPL),
+    density_kgpL=AVGAS_DENSITY_KGPL,
+)
+
 turbofan = Propulsion(
     efficiency=0.69,
+)
+turboprop = Propulsion(
+    efficiency=0.8,
+    # ^ Approximated from https://en.wikipedia.org/wiki/Turboprop#/media/File:Propulsive_efficiency_for_different_engine_types_and_Mach_numbers.png
+    #     given a mach number of 0.2428 (`At200.cruise_speed_kmph`).
 )
 
 
@@ -79,8 +91,8 @@ class At200(Uav):
         * _fuel_consumption_rate_l_per_h
         / cruise_speed_kmph
     )
-    propulsion = ...
-    fuel = ...
+    propulsion = turboprop
+    fuel = avgas
     payload_capacity_kg = 1500
     payload_volume_L = 5 * L_PER_CUBIC_M
 
