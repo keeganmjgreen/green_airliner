@@ -2,36 +2,37 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
+from pydantic import BaseModel
 
 import yaml
 
 
-class Ratepoint:
+class Ratepoint(BaseModel):
     elapsed_minutes: Union[float, str]
     rate: float
 
 
-class Zoompoint:
+class Zoompoint(BaseModel):
     elapsed_minutes: Union[float, str]
     zoom: float
 
 
-class UavsZoompointsConfig:
+class UavsZoompointsConfig(BaseModel):
     to_airport: List[Zoompoint]
     from_airport: List[Zoompoint]
 
 
-class ZoompointsConfig:
+class ZoompointsConfig(BaseModel):
     airliner_zoompoints: List[Zoompoint]
     uavs_zoompoints_config: UavsZoompointsConfig
 
 
-class MapViewConfig:
+class MapViewConfig(BaseModel):
     models_scale_factor: float
     zoom: float
 
 
-class VizConfig:
+class VizConfig(BaseModel):
     min_frame_duration_s: float
     scene_w: int
     scene_h: int
@@ -44,7 +45,7 @@ class VizConfig:
         return self.scene_w, self.scene_h
 
 
-class SimulationConfig:
+class SimulationConfig(BaseModel):
     airliner_config: Dict[str, Any]
     airliner_flight_path_config: Dict[str, Any]
     n_uavs_per_flyover_airport: Dict[str, Dict[str, int]]
@@ -57,4 +58,4 @@ class SimulationConfig:
     def from_yaml(
         cls, dir: Union[Path, str], fname: str = "simulation_config.yml"
     ) -> SimulationConfig:
-        return yaml.safe_load(Path(dir, fname).read_text())
+        return cls(**yaml.safe_load(Path(dir, fname).read_text()))

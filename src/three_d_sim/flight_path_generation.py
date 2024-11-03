@@ -65,7 +65,9 @@ ALL_AIRPORT_LOCATIONS = get_all_airport_locations(normalize_coords=True)
 
 @dataclasses.dataclass
 class FlightPath:
-    airport_codes: List[AIRPORT_CODE_TYPE]
+    origin_airport_code: AIRPORT_CODE_TYPE
+    flyover_airport_codes: List[AIRPORT_CODE_TYPE]
+    destination_airport_code: AIRPORT_CODE_TYPE
     takeoff_speed_kmph: float
     takeoff_distance_km: float
     takeoff_leveling_distance_km: float
@@ -83,6 +85,10 @@ class FlightPath:
     def __post_init__(self):
         assert self.takeoff_leveling_distance_km < self.takeoff_distance_km
         assert self.landing_leveling_distance_km < self.landing_distance_km
+
+    @property
+    def airport_codes(self) -> List[str]:
+        return [self.origin_airport_code] + self.flyover_airport_codes + [self.destination_airport_code]
 
     @property
     def airport_locations(self) -> List[AirportLocation]:

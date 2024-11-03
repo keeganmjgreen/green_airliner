@@ -37,6 +37,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
+                "--config-dir", "configs/jfk_to_lax/",
                 "--view", "paths",
             ]
         },
@@ -51,6 +52,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
+                "--config-dir", "configs/jfk_to_lax/",
                 "--view", "map-view",
                 "--preset", "record-airplanes-viz",
             ]
@@ -66,6 +68,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
+                "--config-dir", "configs/jfk_to_lax/",
                 "--view", "side-view",
                 "--track-airplane-id", "Airliner",
             ]
@@ -81,6 +84,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
+                "--config-dir", "configs/jfk_to_lax/",
                 "--view", "side-view",
                 "--track-airplane-id", "Airliner",
                 "--preset", "record-airplanes-viz",
@@ -97,6 +101,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
+                "--config-dir", "configs/jfk_to_lax/",
                 "--view", "side-view",
                 "--track-airplane-id", "Airliner",
                 "--preset", "record-graphs",
@@ -113,6 +118,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
+                "--config-dir", "configs/jfk_to_lax/",
                 "--view", "tail-view",
                 "--track-airplane-id", "Airliner",
                 "--preset", "record-airplanes-viz",
@@ -129,21 +135,11 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
+                "--config-dir", "configs/jfk_to_lax/",
                 "--view", "side-view",
                 "--track-airplane-id", "PIT-UAV-0",
                 "--preset", "record-airplanes-viz",
             ]
-        },
-        {
-            "name": "Study Runner - Airliner Multi View",
-            "type": "python",
-            "request": "launch",
-            "program": "src/three_d_sim/multi_view_entrypoint.py",
-            "console": "integratedTerminal",
-            "justMyCode": true,
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}"
-            }
         },
     ]
 }

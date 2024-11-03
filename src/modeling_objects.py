@@ -8,9 +8,10 @@ from typing import Dict, List, Optional, Tuple, Type, Union
 import pandas as pd
 import numpy as np
 
-from src.feasibility_study.modeling_objects import BaseAirplane as AirplaneSpec
+from src.feasibility_study.modeling_objects import BaseAirplane as AirplaneSpec, Fuel
+from src.feasibility_study.modeling_objects import Uav as UavSpec
 from src.specs import airplane_lookup
-from src.three_d_sim.models import models_lookup
+from src.three_d_sim.viz_models import ModelConfig, models_lookup
 from src.utils.utils import J_PER_WH, cosd, sind, timedelta_to_minutes
 
 SECONDS_PER_HOUR = 3600
@@ -126,20 +127,6 @@ class Waypoint:
 # Airplanes
 
 
-@dataclasses.dataclass
-class ModelConfig:
-    model_subpath: str
-    rotation_matrix: Optional[np.ndarray] = None
-    TRANSLATION_VECTOR: Optional[np.ndarray] = None
-    length_m: float = None
-
-    def __post_init__(self):
-        if self.rotation_matrix is None:
-            self.rotation_matrix = np.eye(3)
-        if self.TRANSLATION_VECTOR is None:
-            self.TRANSLATION_VECTOR = np.zeros(3)
-
-
 AirplaneId = str
 
 
@@ -161,15 +148,15 @@ class Airplane:
     waypoints: List[Location] = dataclasses.field(init=False)
 
     def __post_init__(self):
+        if type(self.airplane_spec) is str:
+            self.airplane_spec = airplane_lookup[self.airplane_spec]
+
         self.energy_capacity_MJ = self.airplane_spec.energy_capacity_MJ
         self.energy_consumption_rate_MJ_per_km = self.airplane_spec.energy_consumption_rate_MJ_per_km
         self.energy_level_pc = deepcopy(self.initial_energy_level_pc)
         self.location = None
         self.heading = None
         self.waypoints = None
-
-        if type(self.airplane_spec) is str:
-            self.airplane_spec = airplane_lookup
 
         if type(self.viz_model) is str:
             self.viz_model = models_lookup[self.viz_model]
@@ -267,20 +254,24 @@ class Airplane:
         return f"{self.id}:  SoC = {(self.energy_level_pc):.2f}%  |  Energy Level = {self.energy_level_MJ:.2f} / {self.energy_capacity_MJ:.2f} MJ"
 
 
+@dataclasses.dataclass
 class Airliner(Airplane):
-    id = "Airliner"
+    id: str = "Airliner"
     docked_uav: Union[AirplaneId, None] = None
 
 
 @dataclasses.dataclass(kw_only=True)
 class Uav(Airplane):
-    refueling_energy_capacity_MJ: float
+    airplane_spec: Union[Type[UavSpec], str]
+    payload_fuel: Fuel
     initial_refueling_energy_level_pc: float
 
+    refueling_energy_capacity_MJ: float = dataclasses.field(init=False)
     refueling_energy_level_pc: float = dataclasses.field(init=False)
 
     def __post_init__(self):
         super().__post_init__()
+        self.refueling_energy_capacity_MJ = self.airplane_spec.refueling_energy_capacity_MJ(self.payload_fuel)
         self.refueling_energy_level_pc = deepcopy(self.initial_refueling_energy_level_pc)
 
     @property

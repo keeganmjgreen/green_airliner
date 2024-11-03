@@ -2,7 +2,7 @@ import dataclasses
 
 import numpy as np
 
-from utils.utils import J_PER_WH
+from src.utils.utils import J_PER_WH
 
 
 @dataclasses.dataclass

@@ -4,7 +4,7 @@ from typing import Any, Dict
 import numpy as np
 
 from src.feasibility_study.modeling_objects import BaseAirliner, Fuel, Propulsion, Uav
-from utils.utils import L_PER_CUBIC_M
+from src.utils.utils import L_PER_CUBIC_M
 
 jet_a1_fuel = Fuel(
     energy_density_lhv_MJpL=34.7,  # LHV or HHV?
@@ -79,6 +79,8 @@ class At200(Uav):
         * _fuel_consumption_rate_l_per_h
         / cruise_speed_kmph
     )
+    propulsion = ...
+    fuel = ...
     payload_capacity_kg = 1500
     payload_volume_L = 5 * L_PER_CUBIC_M
 

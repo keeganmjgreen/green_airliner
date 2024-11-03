@@ -3,7 +3,7 @@ import datetime as dt
 import subprocess
 from typing import Dict
 
-from feasibility_study.modeling_objects import Fuel
+from src.feasibility_study.modeling_objects import Fuel
 from src import specs
 from src.airplanes_simulator import AirplanesSimulator
 from src.environments import EnvironmentConfig
@@ -22,7 +22,13 @@ from src.three_d_sim.flight_path_generation import (
     provision_uav_from_flight_path,
     viz_airplane_paths,
 )
-from src.utils.utils import J_PER_MJ, J_PER_WH, SECONDS_PER_HOUR, _getenv, timedelta_to_minutes
+from src.utils.utils import (
+    J_PER_MJ,
+    J_PER_WH,
+    SECONDS_PER_HOUR,
+    _getenv,
+    timedelta_to_minutes,
+)
 
 
 def run_scenario(
@@ -170,16 +176,6 @@ def make_uavs(
 ) -> Dict[str, Dict[str, Dict[str, Uav]]]:
     uavs = {}
     uav_fps = {}
-    uav_refueling_energy_capacity_MJ = specs.At200.refueling_energy_capacity_MJ(fuel)
-    refueling_rate_kW = min(
-        simulation_config.airliner_config["refueling_rate_kW"],
-        simulation_config.uavs_config["refueling_rate_kW"],
-    )
-    refueling_distance_km = (
-        specs.At200.cruise_speed_kmph
-        * (uav_refueling_energy_capacity_MJ * J_PER_MJ / J_PER_WH)
-        / refueling_rate_kW
-    )
     for uav_airport_code, x in simulation_config.n_uavs_per_flyover_airport.items():
         airport_uav_idx = 0
         uavs[uav_airport_code] = {}
@@ -192,11 +188,20 @@ def make_uavs(
                 uav = Uav(
                     id=f"{uav_airport_code}-UAV-{airport_uav_idx}",
                     **simulation_config.uavs_config,
-                    refueling_energy_capacity_MJ=uav_refueling_energy_capacity_MJ,
+                    payload_fuel=fuel,
                 )
                 # Add the UAV to the `uavs` dict:
                 uavs[uav_airport_code][service_side][uav.id] = uav
 
+                refueling_rate_kW = min(
+                    simulation_config.airliner_config["refueling_rate_kW"],
+                    simulation_config.uavs_config["refueling_rate_kW"],
+                )
+                refueling_distance_km = (
+                    uav.airplane_spec.cruise_speed_kmph
+                    * (uav.refueling_energy_capacity_MJ * J_PER_MJ / J_PER_WH)
+                    / refueling_rate_kW
+                )
                 decreasing_towards_airport = (
                     service_side_uav_idx
                     if service_side == "from-airport"
@@ -265,9 +270,9 @@ def parse_cli_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = parse_cli_args()
-    subprocess.Popen(["google-chrome", "--guest", "--start-maximized"])
+    # subprocess.Popen(["google-chrome", "--guest", "--start-maximized"])
     run_scenario(
-        config=SimulationConfig.from_yaml(args.config_dir),
+        simulation_config=SimulationConfig.from_yaml(args.config_dir),
         view=args.view,
         track_airplane_id=args.track_airplane_id,
         preset=args.preset,
