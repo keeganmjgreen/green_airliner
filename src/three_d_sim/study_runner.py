@@ -22,7 +22,7 @@ from src.three_d_sim.flight_path_generation import (
     provision_uav_from_flight_path,
     viz_airplane_paths,
 )
-from src.utils.utils import J_PER_MJ, J_PER_WH, SECONDS_PER_HOUR, timedelta_to_minutes
+from src.utils.utils import MJ_PER_KWH, SECONDS_PER_HOUR, timedelta_to_minutes
 
 
 def run_scenario(
@@ -197,8 +197,9 @@ def make_uavs(
                 )
                 refueling_distance_km = (
                     uav.airplane_spec.cruise_speed_kmph
-                    * (uav.refueling_energy_capacity_MJ * J_PER_MJ / J_PER_WH)
+                    * uav.refueling_energy_capacity_MJ
                     / refueling_rate_kW
+                    / MJ_PER_KWH
                 )
                 decreasing_towards_airport = (
                     service_side_uav_idx

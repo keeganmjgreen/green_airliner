@@ -1,6 +1,6 @@
 airliner_config:
   airplane_spec: Lh2FueledA320
-  refueling_rate_kW: 2333333333  # 7e12/50 J LH2/min * (60 min/h) / (3600 J/Wh)
+  refueling_rate_kW: 2333333  # 7e12/50 J/min LH2 * (60 min/h) / (3600 J/Wh) / (1000 W/kW)
   initial_energy_level_pc: 100.0
   viz_model: a320
 airliner_flight_path_config:
@@ -31,7 +31,7 @@ n_uavs_per_flyover_airport:
     from_airport: 2  # "DEN_UAV_3", "DEN_UAV_4"
 uavs_config:
   airplane_spec: At200
-  refueling_rate_kW: 2333333333  # assumed same as airliner
+  refueling_rate_kW: 2333333  # assumed same as airliner
   initial_energy_level_pc: 100.0
   initial_refueling_energy_level_pc: 100.0
   viz_model: cessna
