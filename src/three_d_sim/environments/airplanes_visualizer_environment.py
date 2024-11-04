@@ -18,6 +18,7 @@ from src.three_d_sim.models.wavefront_obj_to_vp import (
     simple_wavefront_obj_to_vp,
 )
 from src.utils.utils import get_interpolator_by_elapsed_time, timedelta_to_minutes
+from src.three_d_sim.config_model import Zoompoint
 
 View = Literal["side-view", "tail-view", "map-view"]
 
@@ -69,7 +70,7 @@ class AirplanesVisualizerEnvironment(Environment):
     AIRLINER_FLIGHT_PATH: FlightPath
     TRACK_AIRPLANE_ID: str
     VIEW: View
-    ZOOM: List[Tuple[float, float]]
+    zoompoints: List[Zoompoint]
     SCENE_SIZE: Tuple[int, int] = (1800, 900)
     MODELS_SCALE_FACTOR: float = 1.0
     CAPTIONS: bool = True
@@ -78,8 +79,8 @@ class AirplanesVisualizerEnvironment(Environment):
     def __post_init__(self):
         super().__post_init__()
 
-        assert pd.DataFrame(self.ZOOM)[0].is_monotonic_increasing
-        self.zoom_factor_interpolator = get_interpolator_by_elapsed_time(self.ZOOM)
+        assert pd.Series([zp.elapsed_time for zp in self.zoompoints]).is_monotonic_increasing
+        self.zoom_factor_interpolator = get_interpolator_by_elapsed_time(self.zoompoints)
 
         for screen_recorder in self.SCREEN_RECORDERS:
             screen_recorder.set_up(fps=int(1 / self.delay_time_step.total_seconds()))
@@ -199,8 +200,8 @@ class AirplanesVisualizerEnvironment(Environment):
     def _run_iteration(self) -> None:
         super()._run_iteration()
 
-        if self.current_time >= self.start_time + self.skip_timedelta:
-            vp.scene.title = str(self.current_time - self.start_time).split(".")[0]
+        if self.current_time >= self.skip_timedelta:
+            vp.scene.title = str(self.current_time).split(".")[0]
             self._update_airplanes_viz()
             self._update_graphs()
             for screen_recorder in self.SCREEN_RECORDERS:
@@ -208,9 +209,9 @@ class AirplanesVisualizerEnvironment(Environment):
             vp.rate(1 / self.delay_time_step.total_seconds())
 
     def _update_airplanes_viz(self) -> None:
-        zoom_factor = float(self.zoom_factor_interpolator(
-            self.current_time - self.start_time
-        ))
+        zoom_factor = self.zoom_factor_interpolator(
+            self.current_time
+        )
         print(f"zoom_factor: {zoom_factor:.2f}")
         vp.scene.range = self.MODELS_SCALE_FACTOR / zoom_factor
 
@@ -236,7 +237,7 @@ class AirplanesVisualizerEnvironment(Environment):
             vp.scene.caption = "\n" + "\n".join([str(ev) for ev in evs_state.values()])
 
     def _update_graphs(self) -> None:
-        minutes_elapsed = timedelta_to_minutes(self.current_time - self.start_time)
+        minutes_elapsed = timedelta_to_minutes(self.current_time)
         evs_state = self.ev_taxis_emulator_or_interface.current_state.airplanes
         self.airliner_energy_level_gcurve.plot(
             minutes_elapsed,

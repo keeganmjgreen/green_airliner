@@ -34,12 +34,12 @@ cosd = lambda angle_deg: np.cos(np.deg2rad(angle_deg))
 def get_interpolator_by_elapsed_time(points: List[Timepoint]):
     def interpolator(elapsed_time: dt.timedelta):
         _interpolator = sp.interpolate.interp1d(
-            x=[p.elapsed_time for p in points],
+            x=[p.elapsed_time.total_seconds() for p in points],
             y=[p.value for p in points],
             bounds_error=False,
-            fill_value=(points[0].rate, points[-1].rate),
+            fill_value=(points[0].value, points[-1].value),
         )
-        y = _interpolator(timedelta_to_minutes(elapsed_time))
-        return y
+        y = _interpolator(elapsed_time.total_seconds())
+        return float(y)
 
     return interpolator

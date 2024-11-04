@@ -13,7 +13,7 @@ from src.three_d_sim.environments.airplanes_visualizer_environment import (
     AirplanesVisualizerEnvironment,
     ScreenRecorder,
 )
-from src.three_d_sim.config_model import SimulationConfig
+from src.three_d_sim.config_model import SimulationConfig, Zoompoint
 from src.three_d_sim.flight_path_generation import (
     AirlinerFlightPath,
     UavFlightPath,
@@ -72,10 +72,9 @@ def run_scenario(
         assert track_airplane_id is not None
         models_scale_factor = 1
         if track_airplane_id == "Airliner":
-            zoom = [
+            zoompoints = simulation_config.viz_config.zoompoints_config.airliner_zoompoints
+            for zp in zoompoints:
                 zp.set_elapsed_time(airliner_reference_times)
-                for zp in simulation_config.viz_config.zoompoints_config.airliner_zoompoints
-            ]
         else:
             uav_id = track_airplane_id
             uav_airport_code = track_airplane_id[:3]
@@ -88,18 +87,20 @@ def run_scenario(
 
             CORRECTION_MINS = (60 + 47) / SECONDS_PER_HOUR
 
-            if service_side == "to_airport":
-                zoom = [
-                    zp.set_elapsed_time(uav_reference_times)
-                    for zp in simulation_config.viz_config.zoompoints_config.uavs_zoompoints_config.to_airport
-                ]
-                zoom.append((timedelta_to_minutes(airport_last_uav_td) + simulation_config.viz_config.landed_uavs_waiting_time_mins, zoom[-1][1]))
-            else:
-                zoom = [
-                    zp.set_elapsed_time(uav_reference_times)
-                    for zp in simulation_config.viz_config.zoompoints_config.uavs_zoompoints_config.from_airport
-                ]
-                zoom.append((timedelta_to_minutes(airport_last_uav_td) + simulation_config.viz_config.landed_uavs_waiting_time_mins, zoom[-1][1]))
+            uavs_zoompoints_config = simulation_config.viz_config.zoompoints_config.uavs_zoompoints_config
+            zoompoints = {
+                "to_airport": uavs_zoompoints_config.to_airport,
+                "from_airport": uavs_zoompoints_config.from_airport,
+            }[service_side]
+            zoompoints.append(
+                Zoompoint(
+                    elapsed_minutes=(timedelta_to_minutes(airport_last_uav_td) + simulation_config.viz_config.landed_uavs_waiting_time_mins),
+                    zoom=zoompoints[-1].zoom,
+                )
+            )
+            for zp in zoompoints:
+                zp.set_elapsed_time(uav_reference_times)
+
             if uav_airport_code != "PIT":
                 last_pit_uav_id = list(uavs["PIT"]["from_airport"].keys())[-1]
                 skip_timedelta = uavs["PIT"]["from_airport"][last_pit_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{last_pit_uav_id}_landed_point"] + dt.timedelta(minutes=(LANDED_UAVS_WAITING_TIME_MINS - CORRECTION_MINS))
@@ -107,7 +108,9 @@ def run_scenario(
                 # skip_timedelta = uavs["DEN"]["to_airport"][first_den_uav_id].get_elapsed_time_at_tagged_waypoints()[f"{first_den_uav_id}_first_point"] - dt.timedelta(minutes=2)
     else:
         models_scale_factor = simulation_config.viz_config.map_view_config.models_scale_factor
-        zoom = simulation_config.viz_config.map_view_config.zoom
+        zoompoints = [
+            Zoompoint(0, zoom=simulation_config.viz_config.map_view_config.zoom)
+        ]
 
     scene_size = simulation_config.viz_config.scene_size
     captions = True
@@ -141,16 +144,19 @@ def run_scenario(
     else:
         screen_recorders = []
 
+    for rp in simulation_config.ratepoints:
+        rp.set_elapsed_time(airliner_reference_times)
+
     environment = AirplanesVisualizerEnvironment(
-        time_step=[rp.set_elapsed_time() for rp in simulation_config.ratepoints],
-        delay_time_step=simulation_config.viz_config.min_frame_duration_s,
+        time_step=simulation_config.ratepoints,
+        delay_time_step=dt.timedelta(seconds=simulation_config.viz_config.min_frame_duration_s),
         skip_timedelta=skip_timedelta,
-        end_time=dt.timedelta(minutes=zoom[-1][0]),
+        end_time=zoompoints[-1].elapsed_time,
         ev_taxis_emulator_or_interface=airplanes_emulator,
         AIRLINER_FLIGHT_PATH=airliner_fp,
         TRACK_AIRPLANE_ID=track_airplane_id,
         VIEW=view,
-        ZOOM=zoom,
+        zoompoints=zoompoints,
         SCENE_SIZE=scene_size,
         MODELS_SCALE_FACTOR=models_scale_factor,
         CAPTIONS=captions,
