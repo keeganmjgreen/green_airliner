@@ -3,7 +3,7 @@ from __future__ import annotations
 import datetime as dt
 
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Literal, Tuple, Union
 from pydantic import BaseModel
 
 import yaml
@@ -58,6 +58,7 @@ class VizConfig(BaseModel):
     min_frame_duration_s: float
     scene_w: int
     scene_h: int
+    theme: Literal["day", "night"]
     zoompoints_config: ZoompointsConfig
     landed_uavs_waiting_time_mins: float
     map_view_config: MapViewConfig

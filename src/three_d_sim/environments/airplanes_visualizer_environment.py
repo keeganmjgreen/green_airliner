@@ -22,20 +22,33 @@ from src.three_d_sim.config_model import Zoompoint
 
 View = Literal["side-view", "tail-view", "map-view"]
 
+
+Color = Tuple[int, int, int]
+
+
+@dataclasses.dataclass
+class SimulationColorPalette:
+    sky: Color
+    ground: Color
+    airport: Color
+
+
+palette_lookup = {
+    "day": SimulationColorPalette(
+        sky=(187, 222, 251),
+        ground=(200, 230, 201),
+        airport=(189, 189, 189),
+    ),
+    "night": SimulationColorPalette(
+        sky=(26, 35, 126),
+        ground=(27, 94, 32),
+        airport=(117, 117, 117),
+    ),
+}
+
 theme = os.environ.get("THEME", "day")
-if theme == "day":
-    SKY_RGB_COLOR = [187, 222, 251]
-    GROUND_RGB_COLOR = [200, 230, 201]
-    AIRPORT_COLOR = [189] * 3
-elif theme == "night":
-    SKY_RGB_COLOR = [26, 35, 126]
-    GROUND_RGB_COLOR = [27, 94, 32]
-    AIRPORT_COLOR = [117] * 3
 BOUND_KM = 200 * KM_PER_LAT_LON
 AIRPORT_RADIUS_KM = 1
-
-MIN_SOC = 0.0
-MAX_SOC = 1.0
 
 
 _rgb_to_vp_color = lambda rgb: vp.vec(*(np.array(rgb) / 255))
@@ -72,15 +85,20 @@ class AirplanesVisualizerEnvironment(Environment):
     VIEW: View
     zoompoints: List[Zoompoint]
     SCENE_SIZE: Tuple[int, int] = (1800, 900)
+    theme: Literal["day", "night"]
     MODELS_SCALE_FACTOR: float = 1.0
     CAPTIONS: bool = True
     SCREEN_RECORDERS: List[ScreenRecorder] = dataclasses.field(default_factory=list)
+
+    palette: SimulationColorPalette = dataclasses.field(init=False)
 
     def __post_init__(self):
         super().__post_init__()
 
         assert pd.Series([zp.elapsed_time for zp in self.zoompoints]).is_monotonic_increasing
         self.zoom_factor_interpolator = get_interpolator_by_elapsed_time(self.zoompoints)
+
+        self.palette = palette_lookup[self.theme]
 
         for screen_recorder in self.SCREEN_RECORDERS:
             screen_recorder.set_up(fps=int(1 / self.delay_time_step.total_seconds()))
@@ -91,7 +109,7 @@ class AirplanesVisualizerEnvironment(Environment):
         #     "map-view": "Map View",
         # }[self.VIEW]
         vp.scene.width, vp.scene.height = self.SCENE_SIZE
-        vp.scene.background = _rgb_to_vp_color(SKY_RGB_COLOR)
+        vp.scene.background = _rgb_to_vp_color(self.palette.sky)
         vp.scene.ambient = vp.color.white * 0.5
 
         self._render_ground()
@@ -146,7 +164,7 @@ class AirplanesVisualizerEnvironment(Environment):
         #     vs=[
         #         vp.vertex(
         #             pos=vp.vec(*(np.array(xy) * BOUND_KM), -0.1),
-        #             color=_rgb_to_vp_color(GROUND_RGB_COLOR),
+        #             color=_rgb_to_vp_color(self.palette.ground),
         #             shininess=0,
         #         )
         #         for xy in [[1, 1], [-1, 1], [-1, -1], [1, -1]]
@@ -168,7 +186,7 @@ class AirplanesVisualizerEnvironment(Environment):
                     vs=[
                         vp.vertex(
                             pos=vp.vector(*v, -0.01),
-                            color=_rgb_to_vp_color(AIRPORT_COLOR),
+                            color=_rgb_to_vp_color(self.palette.airport),
                         )
                         for v in vs
                     ]

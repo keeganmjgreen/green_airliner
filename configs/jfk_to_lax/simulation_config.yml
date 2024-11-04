@@ -1,6 +1,6 @@
 airliner_config:
   airplane_spec: Lh2FueledA320
-  refueling_rate_kW: 2333333333  # 7e12/50 J LH2/min * (60 min/h) / 3600 J/Wh
+  refueling_rate_kW: 2333333333  # 7e12/50 J LH2/min * (60 min/h) / (3600 J/Wh)
   initial_energy_level_pc: 100.0
   viz_model: a320
 airliner_flight_path_config:
@@ -99,6 +99,7 @@ viz_config:
   min_frame_duration_s: 0.04
   scene_w: 1800
   scene_h: 900
+  theme: night
   zoompoints_config:
     airliner_zoompoints:
       - elapsed_minutes: 0

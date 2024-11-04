@@ -57,7 +57,7 @@ class BaseA320(BaseAirliner):
         2430  # kg/h
         * jet_a1_fuel.specific_energy_lhv_MJpkg
         * turbofan.efficiency
-        * cruise_speed_kmph
+        / cruise_speed_kmph
     )
 
 

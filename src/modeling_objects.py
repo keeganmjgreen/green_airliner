@@ -11,10 +11,8 @@ import numpy as np
 from src.feasibility_study.modeling_objects import BaseAirplane as AirplaneSpec, Fuel
 from src.feasibility_study.modeling_objects import Uav as UavSpec
 from src.specs import airplane_lookup
-from src.three_d_sim.viz_models import ModelConfig, models_lookup
-from src.utils.utils import J_PER_WH, cosd, sind, timedelta_to_minutes
-
-SECONDS_PER_HOUR = 3600
+from src.three_d_sim.viz_models import ModelConfig, model_lookup
+from src.utils.utils import MJ_PER_KWH, cosd, sind, timedelta_to_minutes
 
 
 # ==================================================================================================
@@ -136,7 +134,7 @@ class Airplane:
     airplane_spec: Union[Type[AirplaneSpec], str]
     refueling_rate_kW: float
     initial_energy_level_pc: float
-    energy_level_pc_bounds: Tuple[float, float] = (0.0, 1.0)
+    energy_level_pc_bounds: Tuple[float, float] = (0.0, 100.0)
     energy_efficiency_pc: float = 100.0
     viz_model: Union[ModelConfig, str, None] = None
 
@@ -159,7 +157,7 @@ class Airplane:
         self.waypoints = []
 
         if type(self.viz_model) is str:
-            self.viz_model = models_lookup[self.viz_model]
+            self.viz_model = model_lookup[self.viz_model]
 
     def set_heading(self, to_waypoint: Waypoint) -> np.ndarray:
         heading = to_waypoint.LOCATION.xyz_coords - self.location.xyz_coords
@@ -232,7 +230,7 @@ class Airplane:
             self.energy_level_pc += delta_energy_MJ / self.energy_capacity_MJ * 100
             self.energy_level_pc = np.clip(a=self.energy_level_pc, a_min=None, a_max=self.energy_level_pc_bounds[1])
         else:
-            self.refueling_energy_level_pc += delta_energy_MJ / self.energy_capacity_MJ
+            self.refueling_energy_level_pc += delta_energy_MJ / self.refueling_energy_capacity_MJ * 100
 
     def charge_for_duration(
         self,
@@ -240,9 +238,9 @@ class Airplane:
         duration: dt.timedelta,
         refueling_energy_level: bool = False,
     ) -> None:
-        duration_hrs = duration.total_seconds() / SECONDS_PER_HOUR
+        duration_h = duration / dt.timedelta(hours=1)
         self.charge_with_energy(
-            delta_energy_MJ=(charging_power_kw * duration_hrs * J_PER_WH / 1000),
+            delta_energy_MJ=(charging_power_kw * duration_h * MJ_PER_KWH),
             refueling_energy_level=refueling_energy_level,
         )
 
@@ -276,12 +274,12 @@ class Uav(Airplane):
 
     @property
     def refueling_energy_level_MJ(self) -> float:
-        return self.refueling_energy_level_pc * self.refueling_energy_capacity_MJ
+        return self.refueling_energy_level_pc / 100 * self.refueling_energy_capacity_MJ
 
     def __str__(self) -> str:
         return (
             super().__str__()
-            + f"  |  Refueling SoC = {(self.refueling_energy_level_pc * 100):.2f}%  |  Refueling Energy Level = {self.refueling_energy_level_MJ:.2f} / {self.refueling_energy_capacity_MJ:.2f} MJ"
+            + f"  |  Refueling SoC = {self.refueling_energy_level_pc:.2f}%  |  Refueling Energy Level = {self.refueling_energy_level_MJ:.2f} / {self.refueling_energy_capacity_MJ:.2f} MJ"
         )
 
 

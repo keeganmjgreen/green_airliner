@@ -158,6 +158,7 @@ def run_scenario(
         VIEW=view,
         zoompoints=zoompoints,
         SCENE_SIZE=scene_size,
+        theme=simulation_config.viz_config.theme,
         MODELS_SCALE_FACTOR=models_scale_factor,
         CAPTIONS=captions,
         SCREEN_RECORDERS=screen_recorders,

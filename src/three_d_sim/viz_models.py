@@ -45,7 +45,7 @@ cessna = ModelConfig(
     #     https://cessna.txtav.com/-/media/cessna/files/caravan/caravan/caravan_short_productcard.ashx
 )
 
-models_lookup = {
+model_lookup = {
     "a320": a320,
     "cessna": cessna,
 }
