@@ -302,7 +302,7 @@ def parse_cli_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = parse_cli_args()
-    # subprocess.Popen(["google-chrome", "--guest", "--start-maximized"])
+    subprocess.Popen(["google-chrome", "--guest", "--start-maximized"])
     run_scenario(
         simulation_config=SimulationConfig.from_yaml(args.config_dir),
         view=args.view,
