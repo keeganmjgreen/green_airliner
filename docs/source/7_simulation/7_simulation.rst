@@ -22,7 +22,7 @@ Video
         padding-top: 25px;
         height: 0;
     }
-    .responsive-video-container iframe {
+    .responsive-video-container embed {
         position: absolute;
         top: 0;
         left: 0;
@@ -31,7 +31,7 @@ Video
     }
     </style>
     <div class="responsive-video-container">
-        <iframe src="https://www.youtube.com/embed/5WDB9vRs0N4" allowfullscreen></iframe>
+        <embed src="https://www.youtube.com/embed/5WDB9vRs0N4" allowfullscreen></embed>
     </div>
 
 https://www.youtube.com/embed/5WDB9vRs0N4
