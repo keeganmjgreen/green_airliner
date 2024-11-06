@@ -210,15 +210,15 @@
                 },
                 "type": "object"
             },
-            "title": "N Uavs Per Flyover Airport",
+            "title": "Number of UAVs per Flyover Airport",
             "type": "object"
         },
         "uavs_config": {
-            "title": "Uavs Config",
+            "title": "UAVs Config",
             "type": "object"
         },
         "uavs_flight_path_config": {
-            "title": "Uavs Flight Path Config",
+            "title": "UAVs Flight Path Config",
             "type": "object"
         },
         "ratepoints": {
@@ -229,7 +229,8 @@
             "type": "array"
         },
         "viz_config": {
-            "$ref": "#/$defs/VizConfig"
+            "$ref": "#/$defs/VizConfig",
+            "title": "Vizualization Config"
         }
     },
     "required": [

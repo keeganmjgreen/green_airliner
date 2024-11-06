@@ -5,12 +5,16 @@ import datetime as dt
 import json
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Tuple, Union
-from pydantic import BaseModel
 
 import yaml
+from pydantic import BaseModel, ConfigDict, Field
 
 
-class Timepoint(BaseModel):
+class Model(BaseModel):
+    model_config = ConfigDict(use_attribute_docstrings=True)
+
+
+class Timepoint(Model):
     elapsed_minutes: Union[float, str]
     elapsed_time: Union[dt.timedelta, None] = None
 
@@ -40,23 +44,23 @@ class Zoompoint(Timepoint):
         return self.zoom
 
 
-class UavsZoompointsConfig(BaseModel):
+class UavsZoompointsConfig(Model):
     to_airport: List[Zoompoint]
     from_airport: List[Zoompoint]
 
 
-class ZoompointsConfig(BaseModel):
+class ZoompointsConfig(Model):
     airliner_zoompoints: List[Zoompoint]
     uavs_zoompoints_config: UavsZoompointsConfig
 
 
-class MapViewConfig(BaseModel):
+class MapViewConfig(Model):
     map_texture_fpath: str
     models_scale_factor: float
     zoom: float
 
 
-class VizConfig(BaseModel):
+class VizConfig(Model):
     min_frame_duration_s: float
     scene_w: int
     scene_h: int
@@ -71,14 +75,16 @@ class VizConfig(BaseModel):
         return self.scene_w, self.scene_h
 
 
-class SimulationConfig(BaseModel):
+class SimulationConfig(Model):
     airliner_config: Dict[str, Any]
     airliner_flight_path_config: Dict[str, Any]
-    n_uavs_per_flyover_airport: Dict[str, Dict[str, int]]
-    uavs_config: Dict[str, Any]
-    uavs_flight_path_config: Dict[str, Any]
+    n_uavs_per_flyover_airport: Dict[str, Dict[str, int]] = Field(
+        title="Number of UAVs per Flyover Airport"
+    )
+    uavs_config: Dict[str, Any] = Field(title="UAVs Config")
+    uavs_flight_path_config: Dict[str, Any] = Field(title="UAVs Flight Path Config")
     ratepoints: List[Ratepoint]
-    viz_config: VizConfig
+    viz_config: VizConfig = Field(title="Vizualization Config")
 
     @classmethod
     def from_yaml(
