@@ -22,7 +22,7 @@ from src.three_d_sim.flight_path_generation import (
     provision_uav_from_flight_path,
     viz_airplane_paths,
 )
-from src.utils.utils import MJ_PER_KWH, SECONDS_PER_HOUR, timedelta_to_minutes
+from src.utils.utils import MJ_PER_KWH, timedelta_to_minutes
 
 
 def run_scenario(
@@ -104,8 +104,6 @@ def run_scenario(
                 f"{airport_last_uav_id}_landed_point"
             ]
 
-            CORRECTION_MINS = (60 + 47) / SECONDS_PER_HOUR
-
             uavs_zoompoints_config = (
                 simulation_config.viz_config.zoompoints_config.uavs_zoompoints_config
             )
@@ -136,10 +134,7 @@ def run_scenario(
                 skip_timedelta = previous_uav.get_elapsed_time_at_tagged_waypoints()[
                     f"{previous_uav.id}_landed_point"
                 ] + dt.timedelta(
-                    minutes=(
-                        simulation_config.viz_config.landed_uavs_waiting_time_mins
-                        - CORRECTION_MINS
-                    )
+                    minutes=(simulation_config.viz_config.landed_uavs_waiting_time_mins)
                 )
     else:
         models_scale_factor = (
