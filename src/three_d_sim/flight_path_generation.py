@@ -105,6 +105,10 @@ class AirlinerFlightPath(FlightPath):
         self.destination_airport = ALL_AIRPORT_LOCATIONS[self.destination_airport]
 
     @property
+    def flyover_airport_codes(self) -> List[AIRPORT_CODE_TYPE]:
+        return [a.CODE for a in self.flyover_airports]
+
+    @property
     def airports(self) -> List[AirportLocation]:
         return [self.origin_airport] + self.flyover_airports + [self.destination_airport]
 

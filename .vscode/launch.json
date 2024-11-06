@@ -125,7 +125,7 @@
             ]
         },
         {
-            "name": "Study Runner - PIT UAV 0 Side View, record-airplanes-viz",
+            "name": "Study Runner - DEN UAV 0 Side View, record-airplanes-viz",
             "type": "python",
             "request": "launch",
             "program": "src/three_d_sim/study_runner.py",
@@ -137,7 +137,7 @@
             "args": [
                 "--config-dir", "configs/jfk_to_lax/",
                 "--view", "side-view",
-                "--track-airplane-id", "PIT_UAV_0",
+                "--track-airplane-id", "DEN_UAV_0",
                 "--preset", "record-airplanes-viz",
             ]
         },
