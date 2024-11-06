@@ -6,6 +6,7 @@ dependencies:
       - furo==2024.5.6
       - geopandas==1.0.1
       - ipykernel==6.29.5
+      - json-schema-for-humnans==1.0.2
       - kaleido==0.2.1
       - manim==0.18.1
       - manimpango==0.5.0
