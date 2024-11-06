@@ -23,6 +23,7 @@ dependencies:
       - pywavefront==1.3.3
       - shapely==2.0.4
       - sphinx==7.3.7
+      - sphinx-jsonschema
       - sphinxawesome-theme==5.2.0
       - sqlalchemy==2.0.31
       - vpython==7.6.5
