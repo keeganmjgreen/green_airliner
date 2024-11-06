@@ -50,6 +50,7 @@ class ZoompointsConfig(BaseModel):
 
 
 class MapViewConfig(BaseModel):
+    map_texture_fpath: str
     models_scale_factor: float
     zoom: float
 
@@ -61,6 +62,7 @@ class VizConfig(BaseModel):
     theme: Literal["day", "night"]
     zoompoints_config: ZoompointsConfig
     landed_uavs_waiting_time_mins: float
+    map_texture_fpath: str
     map_view_config: MapViewConfig
 
     @property

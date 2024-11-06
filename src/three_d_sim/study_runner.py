@@ -187,15 +187,20 @@ def run_scenario(
         skip_timedelta=skip_timedelta,
         end_time=zoompoints[-1].elapsed_time,
         ev_taxis_emulator_or_interface=airplanes_emulator,
-        AIRLINER_FLIGHT_PATH=airliner_fp,
-        TRACK_AIRPLANE_ID=track_airplane_id,
-        VIEW=view,
+        airliner_flight_path=airliner_fp,
+        track_airplane_id=track_airplane_id,
+        view=view,
+        map_texture_fpath=(
+            simulation_config.viz_config.map_view_config.map_texture_fpath
+            if view == "map-view"
+            else simulation_config.viz_config.map_texture_fpath
+        ),
         zoompoints=zoompoints,
-        SCENE_SIZE=scene_size,
+        scene_size=scene_size,
         theme=simulation_config.viz_config.theme,
-        MODELS_SCALE_FACTOR=models_scale_factor,
-        CAPTIONS=captions,
-        SCREEN_RECORDERS=screen_recorders,
+        models_scale_factor=models_scale_factor,
+        captions=captions,
+        screen_recorders=screen_recorders,
     )
     environment.run()
     for screen_recorder in screen_recorders:
