@@ -1,0 +1,246 @@
+{
+    "$defs": {
+        "MapViewConfig": {
+            "properties": {
+                "map_texture_fpath": {
+                    "title": "Map Texture Fpath",
+                    "type": "string"
+                },
+                "models_scale_factor": {
+                    "title": "Models Scale Factor",
+                    "type": "number"
+                },
+                "zoom": {
+                    "title": "Zoom",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "map_texture_fpath",
+                "models_scale_factor",
+                "zoom"
+            ],
+            "title": "MapViewConfig",
+            "type": "object"
+        },
+        "Ratepoint": {
+            "properties": {
+                "elapsed_minutes": {
+                    "anyOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ],
+                    "title": "Elapsed Minutes"
+                },
+                "elapsed_time": {
+                    "anyOf": [
+                        {
+                            "format": "duration",
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Elapsed Time"
+                },
+                "rate": {
+                    "title": "Rate",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "elapsed_minutes",
+                "rate"
+            ],
+            "title": "Ratepoint",
+            "type": "object"
+        },
+        "UavsZoompointsConfig": {
+            "properties": {
+                "to_airport": {
+                    "items": {
+                        "$ref": "#/$defs/Zoompoint"
+                    },
+                    "title": "To Airport",
+                    "type": "array"
+                },
+                "from_airport": {
+                    "items": {
+                        "$ref": "#/$defs/Zoompoint"
+                    },
+                    "title": "From Airport",
+                    "type": "array"
+                }
+            },
+            "required": [
+                "to_airport",
+                "from_airport"
+            ],
+            "title": "UavsZoompointsConfig",
+            "type": "object"
+        },
+        "VizConfig": {
+            "properties": {
+                "min_frame_duration_s": {
+                    "title": "Min Frame Duration S",
+                    "type": "number"
+                },
+                "scene_w": {
+                    "title": "Scene W",
+                    "type": "integer"
+                },
+                "scene_h": {
+                    "title": "Scene H",
+                    "type": "integer"
+                },
+                "theme": {
+                    "enum": [
+                        "day",
+                        "night"
+                    ],
+                    "title": "Theme",
+                    "type": "string"
+                },
+                "zoompoints_config": {
+                    "$ref": "#/$defs/ZoompointsConfig"
+                },
+                "landed_uavs_waiting_time_mins": {
+                    "title": "Landed Uavs Waiting Time Mins",
+                    "type": "number"
+                },
+                "map_texture_fpath": {
+                    "title": "Map Texture Fpath",
+                    "type": "string"
+                },
+                "map_view_config": {
+                    "$ref": "#/$defs/MapViewConfig"
+                }
+            },
+            "required": [
+                "min_frame_duration_s",
+                "scene_w",
+                "scene_h",
+                "theme",
+                "zoompoints_config",
+                "landed_uavs_waiting_time_mins",
+                "map_texture_fpath",
+                "map_view_config"
+            ],
+            "title": "VizConfig",
+            "type": "object"
+        },
+        "Zoompoint": {
+            "properties": {
+                "elapsed_minutes": {
+                    "anyOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ],
+                    "title": "Elapsed Minutes"
+                },
+                "elapsed_time": {
+                    "anyOf": [
+                        {
+                            "format": "duration",
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Elapsed Time"
+                },
+                "zoom": {
+                    "title": "Zoom",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "elapsed_minutes",
+                "zoom"
+            ],
+            "title": "Zoompoint",
+            "type": "object"
+        },
+        "ZoompointsConfig": {
+            "properties": {
+                "airliner_zoompoints": {
+                    "items": {
+                        "$ref": "#/$defs/Zoompoint"
+                    },
+                    "title": "Airliner Zoompoints",
+                    "type": "array"
+                },
+                "uavs_zoompoints_config": {
+                    "$ref": "#/$defs/UavsZoompointsConfig"
+                }
+            },
+            "required": [
+                "airliner_zoompoints",
+                "uavs_zoompoints_config"
+            ],
+            "title": "ZoompointsConfig",
+            "type": "object"
+        }
+    },
+    "properties": {
+        "airliner_config": {
+            "title": "Airliner Config",
+            "type": "object"
+        },
+        "airliner_flight_path_config": {
+            "title": "Airliner Flight Path Config",
+            "type": "object"
+        },
+        "n_uavs_per_flyover_airport": {
+            "additionalProperties": {
+                "additionalProperties": {
+                    "type": "integer"
+                },
+                "type": "object"
+            },
+            "title": "N Uavs Per Flyover Airport",
+            "type": "object"
+        },
+        "uavs_config": {
+            "title": "Uavs Config",
+            "type": "object"
+        },
+        "uavs_flight_path_config": {
+            "title": "Uavs Flight Path Config",
+            "type": "object"
+        },
+        "ratepoints": {
+            "items": {
+                "$ref": "#/$defs/Ratepoint"
+            },
+            "title": "Ratepoints",
+            "type": "array"
+        },
+        "viz_config": {
+            "$ref": "#/$defs/VizConfig"
+        }
+    },
+    "required": [
+        "airliner_config",
+        "airliner_flight_path_config",
+        "n_uavs_per_flyover_airport",
+        "uavs_config",
+        "uavs_flight_path_config",
+        "ratepoints",
+        "viz_config"
+    ],
+    "title": "SimulationConfig",
+    "type": "object"
+}

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime as dt
 
+import json
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Tuple, Union
 from pydantic import BaseModel
@@ -84,3 +85,11 @@ class SimulationConfig(BaseModel):
         cls, dir: Union[Path, str], fname: str = "simulation_config.yml"
     ) -> SimulationConfig:
         return cls(**yaml.safe_load(Path(dir, fname).read_text()))
+
+
+simulation_config_schema = SimulationConfig.model_json_schema()
+json.dump(
+    simulation_config_schema,
+    Path("configs/simulation_config_json_schema.json").open("w"),
+    indent=4,
+)
