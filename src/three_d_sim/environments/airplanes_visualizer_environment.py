@@ -96,7 +96,7 @@ class AirplanesVisualizerEnvironment(Environment):
     def __post_init__(self):
         super().__post_init__()
 
-        assert pd.Series([zp.elapsed_time for zp in self.zoompoints]).is_monotonic_increasing
+        assert pd.Series([zp.elapsed_mins for zp in self.zoompoints]).is_monotonic_increasing
         self.zoom_factor_interpolator = get_interpolator_by_elapsed_time(self.zoompoints)
 
         self.palette = palette_lookup[self.theme]
@@ -223,7 +223,7 @@ class AirplanesVisualizerEnvironment(Environment):
 
     def _update_airplanes_viz(self) -> None:
         zoom_factor = self.zoom_factor_interpolator(
-            self.current_time
+            timedelta_to_minutes(self.current_time)
         )
         print(f"zoom_factor: {zoom_factor:.2f}")
         vp.scene.range = self.models_scale_factor / zoom_factor

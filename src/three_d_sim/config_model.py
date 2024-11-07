@@ -15,13 +15,10 @@ class Model(BaseModel):
 
 
 class Timepoint(Model):
-    elapsed_minutes: Union[float, str]
-    elapsed_time: Union[dt.timedelta, None] = None
+    elapsed_mins: Union[float, str]
 
-    def set_elapsed_time(self, reference_times: Dict[str, int]) -> dt.timedelta:
-        self.elapsed_time = dt.timedelta(
-            minutes=eval(str(self.elapsed_minutes), reference_times)
-        )
+    def evaluate_elapsed_mins(self, reference_times: Dict[str, int]) -> dt.timedelta:
+        self.elapsed_mins = eval(str(self.elapsed_mins), reference_times)
 
     @property
     def value(self) -> float:

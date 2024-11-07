@@ -7,7 +7,6 @@ Notes:
 import dataclasses
 import datetime as dt
 import time
-from copy import deepcopy
 from typing import Optional, Union
 
 from src.airplanes_simulator import AirplanesSimulator
@@ -38,9 +37,7 @@ class BaseEnvironment:
     def _get_state(self) -> AirplanesState:
         """Update and return the AirplanesSimulator's state."""
 
-        self.ev_taxis_emulator_or_interface.update_state(
-            time=self.current_time
-        )
+        self.ev_taxis_emulator_or_interface.update_state(time=self.current_time)
         return self.ev_taxis_emulator_or_interface.current_state
 
     @property
@@ -71,15 +68,15 @@ class Environment(BaseEnvironment):
 
     def _run_iteration(self) -> None:
         # NOTE: Set a breakpoint here to debug iterations.
-        print(f"{timedelta_to_minutes(self.current_time):.2f} minutes elapsed", end=";  ")
+        print(
+            f"{timedelta_to_minutes(self.current_time):.2f} minutes elapsed", end=";  "
+        )
         self._get_state()
         if self.time_step is not None:
             time_step_interpolator = get_interpolator_by_elapsed_time(self.time_step)
             time_step = dt.timedelta(
                 seconds=float(
-                    time_step_interpolator(
-                        self.current_time
-                    )
+                    time_step_interpolator(timedelta_to_minutes(self.current_time))
                 )
             )
             print(f"time_step: {time_step.total_seconds():.2f}", end=";  ")

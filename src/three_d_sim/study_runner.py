@@ -78,7 +78,7 @@ def run_scenario(
                 simulation_config.viz_config.zoompoints_config.airliner_zoompoints
             )
             for zp in zoompoints:
-                zp.set_elapsed_time(airliner_reference_times)
+                zp.evaluate_elapsed_mins(airliner_reference_times)
         else:
             uav_id = track_airplane_id
             uav_airport_code = track_airplane_id[:3]
@@ -113,7 +113,7 @@ def run_scenario(
             }[service_side]
             zoompoints.append(
                 Zoompoint(
-                    elapsed_minutes=(
+                    elapsed_mins=(
                         timedelta_to_minutes(airport_last_uav_td)
                         + simulation_config.viz_config.landed_uavs_waiting_time_mins
                     ),
@@ -121,7 +121,7 @@ def run_scenario(
                 )
             )
             for zp in zoompoints:
-                zp.set_elapsed_time(uav_reference_times)
+                zp.evaluate_elapsed_mins(uav_reference_times)
 
             if uav_airport_code != airliner_fp.flyover_airports[0].CODE:
                 previous_airport = airliner_fp.flyover_airports[
@@ -177,7 +177,7 @@ def run_scenario(
         screen_recorders = []
 
     for rp in simulation_config.ratepoints:
-        rp.set_elapsed_time(airliner_reference_times)
+        rp.evaluate_elapsed_mins(airliner_reference_times)
 
     environment = AirplanesVisualizerEnvironment(
         time_step=simulation_config.ratepoints,
@@ -185,7 +185,7 @@ def run_scenario(
             seconds=simulation_config.viz_config.min_frame_duration_s
         ),
         skip_timedelta=skip_timedelta,
-        end_time=zoompoints[-1].elapsed_time,
+        end_time=zoompoints[-1].elapsed_mins,
         ev_taxis_emulator_or_interface=airplanes_emulator,
         airliner_flight_path=airliner_fp,
         track_airplane_id=track_airplane_id,
