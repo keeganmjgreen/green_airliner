@@ -1,5 +1,126 @@
 {
     "$defs": {
+        "AirlinerConfig": {
+            "description": "Configuration of the airliner.",
+            "properties": {
+                "airplane_spec": {
+                    "title": "Airplane Spec",
+                    "type": "string"
+                },
+                "refueling_rate_kW": {
+                    "title": "Refueling Rate Kw",
+                    "type": "number"
+                },
+                "initial_energy_level_pc": {
+                    "title": "Initial Energy Level Pc",
+                    "type": "number"
+                },
+                "viz_model": {
+                    "title": "Viz Model",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "airplane_spec",
+                "refueling_rate_kW",
+                "initial_energy_level_pc",
+                "viz_model"
+            ],
+            "title": "AirlinerConfig",
+            "type": "object"
+        },
+        "AirlinerFlightPathConfig": {
+            "description": "Configuration of the airliner's flight path.",
+            "properties": {
+                "takeoff_speed_kmph": {
+                    "title": "Takeoff Speed Kmph",
+                    "type": "number"
+                },
+                "takeoff_distance_km": {
+                    "title": "Takeoff Distance Km",
+                    "type": "number"
+                },
+                "takeoff_leveling_distance_km": {
+                    "title": "Takeoff Leveling Distance Km",
+                    "type": "number"
+                },
+                "rate_of_climb_mps": {
+                    "title": "Rate Of Climb Mps",
+                    "type": "number"
+                },
+                "climb_leveling_distance_km": {
+                    "title": "Climb Leveling Distance Km",
+                    "type": "number"
+                },
+                "descent_leveling_distance_km": {
+                    "title": "Descent Leveling Distance Km",
+                    "type": "number"
+                },
+                "rate_of_descent_mps": {
+                    "title": "Rate Of Descent Mps",
+                    "type": "number"
+                },
+                "landing_leveling_distance_km": {
+                    "title": "Landing Leveling Distance Km",
+                    "type": "number"
+                },
+                "landing_distance_km": {
+                    "title": "Landing Distance Km",
+                    "type": "number"
+                },
+                "landing_speed_kmph": {
+                    "title": "Landing Speed Kmph",
+                    "type": "number"
+                },
+                "origin_airport": {
+                    "title": "Origin Airport",
+                    "type": "string"
+                },
+                "flyover_airports": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "title": "Flyover Airports",
+                    "type": "array"
+                },
+                "destination_airport": {
+                    "title": "Destination Airport",
+                    "type": "string"
+                },
+                "cruise_altitude_km": {
+                    "title": "Cruise Altitude Km",
+                    "type": "number"
+                },
+                "turning_radius_km": {
+                    "title": "Turning Radius Km",
+                    "type": "number"
+                },
+                "speed_change_distance_km": {
+                    "title": "Speed Change Distance Km",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "takeoff_speed_kmph",
+                "takeoff_distance_km",
+                "takeoff_leveling_distance_km",
+                "rate_of_climb_mps",
+                "climb_leveling_distance_km",
+                "descent_leveling_distance_km",
+                "rate_of_descent_mps",
+                "landing_leveling_distance_km",
+                "landing_distance_km",
+                "landing_speed_kmph",
+                "origin_airport",
+                "flyover_airports",
+                "destination_airport",
+                "cruise_altitude_km",
+                "turning_radius_km",
+                "speed_change_distance_km"
+            ],
+            "title": "AirlinerFlightPathConfig",
+            "type": "object"
+        },
         "MapViewConfig": {
             "properties": {
                 "map_texture_fpath": {
@@ -21,6 +142,24 @@
                 "zoom"
             ],
             "title": "MapViewConfig",
+            "type": "object"
+        },
+        "NUavsAtFlyOverAirport": {
+            "properties": {
+                "to_airport": {
+                    "title": "To Airport",
+                    "type": "integer"
+                },
+                "from_airport": {
+                    "title": "From Airport",
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "to_airport",
+                "from_airport"
+            ],
+            "title": "NUavsAtFlyOverAirport",
             "type": "object"
         },
         "Ratepoint": {
@@ -48,6 +187,144 @@
             "title": "Ratepoint",
             "type": "object"
         },
+        "UavsConfig": {
+            "description": "Configuration of the UAVs (all of which are assumed to be the same).",
+            "properties": {
+                "airplane_spec": {
+                    "title": "Airplane Spec",
+                    "type": "string"
+                },
+                "refueling_rate_kW": {
+                    "title": "Refueling Rate Kw",
+                    "type": "number"
+                },
+                "initial_energy_level_pc": {
+                    "title": "Initial Energy Level Pc",
+                    "type": "number"
+                },
+                "initial_refueling_energy_level_pc": {
+                    "title": "Initial Refueling Energy Level Pc",
+                    "type": "number"
+                },
+                "viz_model": {
+                    "title": "Viz Model",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "airplane_spec",
+                "refueling_rate_kW",
+                "initial_energy_level_pc",
+                "initial_refueling_energy_level_pc",
+                "viz_model"
+            ],
+            "title": "UavsConfig",
+            "type": "object"
+        },
+        "UavsFlightPathConfig": {
+            "description": "Configuration of the UAVs' flight paths (all of which are assumed to follow the same\nparameters).",
+            "properties": {
+                "takeoff_speed_kmph": {
+                    "title": "Takeoff Speed Kmph",
+                    "type": "number"
+                },
+                "takeoff_distance_km": {
+                    "title": "Takeoff Distance Km",
+                    "type": "number"
+                },
+                "takeoff_leveling_distance_km": {
+                    "title": "Takeoff Leveling Distance Km",
+                    "type": "number"
+                },
+                "rate_of_climb_mps": {
+                    "title": "Rate Of Climb Mps",
+                    "type": "number"
+                },
+                "climb_leveling_distance_km": {
+                    "title": "Climb Leveling Distance Km",
+                    "type": "number"
+                },
+                "descent_leveling_distance_km": {
+                    "title": "Descent Leveling Distance Km",
+                    "type": "number"
+                },
+                "rate_of_descent_mps": {
+                    "title": "Rate Of Descent Mps",
+                    "type": "number"
+                },
+                "landing_leveling_distance_km": {
+                    "title": "Landing Leveling Distance Km",
+                    "type": "number"
+                },
+                "landing_distance_km": {
+                    "title": "Landing Distance Km",
+                    "type": "number"
+                },
+                "landing_speed_kmph": {
+                    "title": "Landing Speed Kmph",
+                    "type": "number"
+                },
+                "default_cruise_altitude_km": {
+                    "title": "Default Cruise Altitude Km",
+                    "type": "number"
+                },
+                "arc_radius_km": {
+                    "title": "Arc Radius Km",
+                    "type": "number"
+                },
+                "airliner_uav_docking_distance_km": {
+                    "title": "Airliner Uav Docking Distance Km",
+                    "type": "number"
+                },
+                "smallest_undocking_distance_from_airport_km": {
+                    "title": "Smallest Undocking Distance From Airport Km",
+                    "type": "number"
+                },
+                "inter_uav_clearance_km": {
+                    "title": "Inter Uav Clearance Km",
+                    "type": "number"
+                },
+                "airliner_clearance_speed_kmph": {
+                    "title": "Airliner Clearance Speed Kmph",
+                    "type": "number"
+                },
+                "airliner_clearance_distance_km": {
+                    "title": "Airliner Clearance Distance Km",
+                    "type": "number"
+                },
+                "default_airliner_clearance_altitude_km": {
+                    "title": "Default Airliner Clearance Altitude Km",
+                    "type": "number"
+                },
+                "inter_uav_vertical_dist_km": {
+                    "title": "Inter Uav Vertical Dist Km",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "takeoff_speed_kmph",
+                "takeoff_distance_km",
+                "takeoff_leveling_distance_km",
+                "rate_of_climb_mps",
+                "climb_leveling_distance_km",
+                "descent_leveling_distance_km",
+                "rate_of_descent_mps",
+                "landing_leveling_distance_km",
+                "landing_distance_km",
+                "landing_speed_kmph",
+                "default_cruise_altitude_km",
+                "arc_radius_km",
+                "airliner_uav_docking_distance_km",
+                "smallest_undocking_distance_from_airport_km",
+                "inter_uav_clearance_km",
+                "airliner_clearance_speed_kmph",
+                "airliner_clearance_distance_km",
+                "default_airliner_clearance_altitude_km",
+                "inter_uav_vertical_dist_km"
+            ],
+            "title": "UavsFlightPathConfig",
+            "type": "object"
+        },
         "UavsZoompointsConfig": {
             "properties": {
                 "to_airport": {
@@ -73,20 +350,25 @@
             "type": "object"
         },
         "VizConfig": {
+            "description": "Configuration to use when visualizing the airliner and UAVs while the simulation runs.",
             "properties": {
-                "min_frame_duration_s": {
-                    "title": "Min Frame Duration S",
-                    "type": "number"
+                "max_frame_rate_fps": {
+                    "description": "Maximum frame rate (in frames per second) at which to render the visualization. If updating a\nframe takes too long, the actual frame rate will be less.",
+                    "title": "Max Frame Rate Fps",
+                    "type": "integer"
                 },
                 "scene_w": {
+                    "description": "Width (in pixels) of the viewport in which the visualization is rendered.",
                     "title": "Scene W",
                     "type": "integer"
                 },
                 "scene_h": {
+                    "description": "Height (in pixels) of the viewport in which the visualization is rendered.",
                     "title": "Scene H",
                     "type": "integer"
                 },
                 "theme": {
+                    "description": "Color theme to use for the sky and (if no `map_texture_fpath` is specified) the ground.",
                     "enum": [
                         "day",
                         "night"
@@ -98,6 +380,7 @@
                     "$ref": "#/$defs/ZoompointsConfig"
                 },
                 "landed_uavs_waiting_time_mins": {
+                    "description": "When tracking a UAV, how long (in minutes) to wait after a flyover airport's last UAV lands\nbefore ending that UAV's visualization () ",
                     "title": "Landed Uavs Waiting Time Mins",
                     "type": "number"
                 },
@@ -110,7 +393,7 @@
                 }
             },
             "required": [
-                "min_frame_duration_s",
+                "max_frame_rate_fps",
                 "scene_w",
                 "scene_h",
                 "theme",
@@ -168,32 +451,27 @@
             "type": "object"
         }
     },
+    "description": "Configuration for the mid-air refueling simulation.",
     "properties": {
         "airliner_config": {
-            "title": "Airliner Config",
-            "type": "object"
+            "$ref": "#/$defs/AirlinerConfig"
         },
         "airliner_flight_path_config": {
-            "title": "Airliner Flight Path Config",
-            "type": "object"
+            "$ref": "#/$defs/AirlinerFlightPathConfig"
         },
         "n_uavs_per_flyover_airport": {
             "additionalProperties": {
-                "additionalProperties": {
-                    "type": "integer"
-                },
-                "type": "object"
+                "$ref": "#/$defs/NUavsAtFlyOverAirport"
             },
-            "title": "Number of UAVs per Flyover Airport",
+            "description": "Number of UAVs at each flyover airport.",
+            "title": "N Uavs Per Flyover Airport",
             "type": "object"
         },
         "uavs_config": {
-            "title": "UAVs Config",
-            "type": "object"
+            "$ref": "#/$defs/UavsConfig"
         },
         "uavs_flight_path_config": {
-            "title": "UAVs Flight Path Config",
-            "type": "object"
+            "$ref": "#/$defs/UavsFlightPathConfig"
         },
         "ratepoints": {
             "items": {
@@ -201,6 +479,11 @@
             },
             "title": "Ratepoints",
             "type": "array"
+        },
+        "viz": {
+            "default": true,
+            "title": "Viz",
+            "type": "boolean"
         },
         "viz_config": {
             "$ref": "#/$defs/VizConfig",

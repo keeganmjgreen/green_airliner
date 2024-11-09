@@ -10,7 +10,7 @@ cd ~/Dropbox/Documents/Projects/electric_airline/docs/
 
 python ../src/three_d_sim/config_model.py
 rm -r build/html/
-generate-schema-doc ../configs/simulation_config_json_schema.json source/_static/simulation_config_json_schema.html
+generate-schema-doc --config expand_buttons=true --config show_breadcrumbs=false --config with_footer=false ../configs/simulation_config_json_schema.json source/_static/simulation_config_json_schema.html
 
 make html
 # make latexpdf

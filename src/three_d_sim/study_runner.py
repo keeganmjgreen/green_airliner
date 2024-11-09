@@ -181,9 +181,7 @@ def run_scenario(
 
     environment = AirplanesVisualizerEnvironment(
         time_step=simulation_config.ratepoints,
-        delay_time_step=dt.timedelta(
-            seconds=simulation_config.viz_config.min_frame_duration_s
-        ),
+        max_frame_rate_fps=simulation_config.viz_config.max_frame_rate_fps,
         skip_timedelta=skip_timedelta,
         end_time=zoompoints[-1].elapsed_mins,
         ev_taxis_emulator_or_interface=airplanes_emulator,

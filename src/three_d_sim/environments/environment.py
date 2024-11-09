@@ -24,7 +24,6 @@ class BaseEnvironment:
     #     `ENVIRONMENT_CONFIG`, and their type hints overwrite those of the same attributes
     #     inherited from ``EnvironmentConfig``:
     time_step: dt.timedelta
-    delay_time_step: Union[dt.timedelta, None]
     skip_timedelta: dt.timedelta
     end_time: Optional[dt.timedelta]
 
@@ -59,12 +58,6 @@ class Environment(BaseEnvironment):
             self._run_iteration()
             if self.time_step is None:
                 break
-            if self.delay_time_step is not None:
-                iteration_time_elapsed = time.time() - iteration_start_time
-                sleep_time = max(
-                    self.delay_time_step.total_seconds() - iteration_time_elapsed, 0
-                )
-                time.sleep(sleep_time)
 
     def _run_iteration(self) -> None:
         # NOTE: Set a breakpoint here to debug iterations.

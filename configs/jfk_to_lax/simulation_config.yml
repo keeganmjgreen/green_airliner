@@ -96,7 +96,7 @@ ratepoints:
   - elapsed_mins: Airliner_landed_point + 5
     rate: 2
 viz_config:
-  min_frame_duration_s: 0.04
+  max_frame_rate_fps: 25
   scene_w: 1800
   scene_h: 900
   theme: night

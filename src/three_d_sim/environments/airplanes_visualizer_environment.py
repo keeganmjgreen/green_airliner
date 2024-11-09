@@ -102,7 +102,7 @@ class AirplanesVisualizerEnvironment(Environment):
         self.palette = palette_lookup[self.theme]
 
         for screen_recorder in self.screen_recorders:
-            screen_recorder.set_up(fps=int(1 / self.delay_time_step.total_seconds()))
+            screen_recorder.set_up(fps=int(self.max_frame_rate_fps))
 
         # vp.scene.title = {
         #     "tail-view": f"{self.track_airplane_id} Tail View",
@@ -219,7 +219,7 @@ class AirplanesVisualizerEnvironment(Environment):
             self._update_graphs()
             for screen_recorder in self.screen_recorders:
                 screen_recorder.take_screenshot()
-            vp.rate(1 / self.delay_time_step.total_seconds())
+            vp.rate(self.max_frame_rate_fps)
 
     def _update_airplanes_viz(self) -> None:
         zoom_factor = self.zoom_factor_interpolator(
