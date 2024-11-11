@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import datetime as dt
-
+from enum import Enum
 import json
 from pathlib import Path
 from typing import Dict, List, Literal, Tuple, Union
@@ -9,7 +9,10 @@ from typing import Dict, List, Literal, Tuple, Union
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
-AIRPORT_CODE_TYPE = str
+
+from src.specs import airliner_lookup
+from src.three_d_sim.flight_path_generation import AIRPORT_CODE_TYPE
+from src.three_d_sim.viz_models import airliner_model_lookup, uav_model_lookup
 
 
 class Model(BaseModel):
@@ -18,71 +21,261 @@ class Model(BaseModel):
 
 class AirlinerConfig(Model):
     """Configuration of the airliner."""
-    airplane_spec: str
-    refueling_rate_kW: float
-    initial_energy_level_pc: float
-    viz_model: str
+
+    airplane_spec_name: Enum(
+        "AirlinerSpecName", {k: k for k in airliner_lookup.keys()}
+    ) = Field(title="Airplane Spec Name")
+    """Which airplane spec to use for the airliner. Must be one of those listed below. `specs.py` \
+    acts as a registry for these and, if a different airliner is desired, a new spec can be added \
+    there.
+    """
+    refueling_rate_kW: float = Field(title="Refueling Rate (kW)")
+    """The maximum rate (in kilowatts / joules per second) at which the airliner can be refueled \
+    (by a UAV). Can represent refueling at a rate of `x` joules of fuel per second, or recharging \
+    at a rate of `x` kilowatts of electricity.
+    """
+    initial_energy_level_pc: float = Field(title="Initial Energy Level (%)")
+    """The amount of energy (alternately, the corresponding amount of fuel) that the airliner \
+    starts with before takeoff from its origin airport. Expressed as a percentage (0-100) of the \
+    airliner's energy capacity.
+    """
+    viz_model_name: Enum(
+        "AirlinerVizModelName", {k: k for k in airliner_model_lookup.keys()}
+    ) = Field(title="Viz Model Name")
+    """Which 3D model to use for the airliner, when `viz` is set to true. Must be one of those \
+    listed below. `viz_models.py` acts as a registry for these and, if a different 3D model is \
+    desired, a new one can be added there.
+    """
 
 
 class FlightPathConfig(Model):
-    takeoff_speed_kmph: float
-    takeoff_distance_km: float
-    takeoff_leveling_distance_km: float
-    rate_of_climb_mps: float
-    climb_leveling_distance_km: float
-    descent_leveling_distance_km: float
-    rate_of_descent_mps: float
-    landing_leveling_distance_km: float
-    landing_distance_km: float
-    landing_speed_kmph: float
+    takeoff_speed_kmph: float = Field(title="Takeoff Speed (km/h)")
+    """The speed (in kilometers per hour) required for the airplane to take off."""
+    takeoff_distance_km: float = Field(title="Takeoff Distance (km)")
+    """The distance (in kilometers) for the airplane to accelerate from a standstill until \
+    reaching the takeoff speed.
+    """
+    takeoff_leveling_distance_km: float = Field(title="Takeoff Leveling Distance (km)")
+    """See diagram."""
+    rate_of_climb_mps: float = Field(title="Rate of Climb (m/s)")
+    """The speed (in meters per second) at which the airliner climbs between takeoff and cruise. \
+    This is only the vertical component of the aiplane's velocity.
+    """
+    climb_leveling_distance_km: float = Field(title="Climb Leveling Distance (km)")
+    """See diagram. Affects how long the airplane takes of level off between climb and cruise."""
+    descent_leveling_distance_km: float = Field(title="")
+    """See diagram."""
+    rate_of_descent_mps: float = Field(title="Rate of Descent (m/s)")
+    """The speed (in meters per second) at which the airliner descends between cruise and landing. \
+    This is only the vertical component of the airplane's velocity.
+    """
+    landing_leveling_distance_km: float = Field(title="Landing Leveling Distance (km)")
+    """See diagram. Affects how long the airplane takes to land."""
+    landing_distance_km: float = Field(title="Landing Distance (km)")
+    """The distance (in kilometers) for the airplane to decelerate from landing speed to a \
+    standstill.
+    """
+    landing_speed_kmph: float = Field(title="Landing Speed (km/h)")
+    """The speed (in kilometers per hour) at which the airplane lands."""
+
+
+fp_config_fields = list(FlightPathConfig.model_fields.keys())
+doc = (
+    "Many fields are explained in the diagram. "
+    f" Fields `{fp_config_fields[0]}` through `{fp_config_fields[-1]}` are shared between the "
+    "`airliner_flight_path_config` and the `uavs_flight_path_config` and are described as applying "
+    'to an "airplane" rather than to an "airliner" or "UAV" specifically. Fields after that differ.'
+)
 
 
 class AirlinerFlightPathConfig(FlightPathConfig):
     """Configuration of the airliner's flight path."""
-    origin_airport: AIRPORT_CODE_TYPE
-    flyover_airports: List[AIRPORT_CODE_TYPE]
-    destination_airport: AIRPORT_CODE_TYPE
-    cruise_altitude_km: float
-    turning_radius_km: float
-    speed_change_distance_km: float
+
+    origin_airport_code: AIRPORT_CODE_TYPE = Field(title="Origin Airport Code")
+    """The three-letter IATA airport code of the origin airport from which the airliner departs."""
+    flyover_airport_codes: List[AIRPORT_CODE_TYPE] = Field(
+        title="Flyover Airport Codes"
+    )
+    """The codes of the airports over which the airliner flies to be mid-air refueled by those \
+    airports' UAVs.
+    """
+    destination_airport_code: AIRPORT_CODE_TYPE = Field(
+        title="Destination Airport Code"
+    )
+    """The code of the destination airport at which the airliner will land."""
+    cruise_altitude_km: float = Field(title="Cruise Altitude (km)")
+    """The altitude (in kilometers) of the airliner while in the cruise phase of flight."""
+    turning_radius_km: float = Field(title="Turning Radius (km)")
+    """The radius (in kilometers) of the arc followed by the airliner over each flyover airport."""
+    speed_change_distance_km: float = Field(title="Speed Change Distance (km)")
+    """The distance (in kilometers) over which the airliner slows down for refueling (from its \
+    cruise speed to the UAVs' cruise speed) or speeds up again after refueling.
+    """
+
+
+AirlinerFlightPathConfig.__doc__ = AirlinerFlightPathConfig.__doc__.strip() + " " + doc
 
 
 class UavsFlightPathConfig(FlightPathConfig):
     """Configuration of the UAVs' flight paths (all of which are assumed to follow the same
-    parameters).
+    parameters). \
+    A UAV is described as having a "service side". The service side is "to-airport" for UAVs that \
+    refuel the airliner just **before** it flies over a given airport, and "from-airport" for UAVs \
+    that refuel the airliner just **after** it flies over it.
     """
-    takeoff_speed_kmph: float
-    takeoff_distance_km: float
-    takeoff_leveling_distance_km: float
-    rate_of_climb_mps: float
-    climb_leveling_distance_km: float
-    default_cruise_altitude_km: float
-    arc_radius_km: float
-    airliner_uav_docking_distance_km: float
-    smallest_undocking_distance_from_airport_km: float
-    inter_uav_clearance_km: float
-    airliner_clearance_speed_kmph: float
-    airliner_clearance_distance_km: float
-    default_airliner_clearance_altitude_km: float
-    inter_uav_vertical_dist_km: float
+
+    smallest_cruise_altitude_km: float = Field(title="Default Cruise Altitude (km)")
+    """The minimum cruise altitude (in kilometers) among the UAVs. Among the UAVs with \
+    "to-airport" service, and among the UAVs with "from-airport" service, this is the actual \
+    cruise altitude of the UAV that refuels the airliner first. Subsequent UAVs must cruise at \
+    higher altitudes (differing by the `inter_uav_vertical_distance_km`) to stay out of each \
+    other's flight paths.
+    """
+    arc_radius_km: float = Field(title="Arc Radius (km)")
+    """The radius (in kilometers) of the arc followed by every UAV in the following cases. For the \
+    "to-airport" UAVs, this is the arc followed by the UAV after departing from the airport, when \
+    turning around to fly with and refuel the airliner. For the "from-airport" UAVs, this is the \
+    arc followed by the UAV after refueling and ascending from the airliner, when turning around \
+    to return to the airport.
+    """
+    airliner_uav_docking_distance_km: float = Field(
+        title="Airliner-UAV Docking Distance (km)"
+    )
+    """The distance (in kilometers) between the airliner and UAV when docked for refueling. \
+    Evident when `viz` is set to true, this is not the distance between the top of the airliner's \
+    fueselage and the bottom of the UAV, but the distance between their respective 3D models' \
+    origins. This means that if either the airliner's or UAV's 3D models are changed, then the \
+    `airliner_uav_docking_distance_km` may need to be changed accordingly.
+    """
+    smallest_undocking_distance_from_airport_km: float = Field(
+        title="Smallest (Un)Docking Distance From Airport (km)"
+    )
+    """For the "to-airport" UAVs, this is the minimum distance (in kilometers) from the airport at \
+    which the UAV will **undock** from the airliner after refueling. For the "from-airport" UAVs, \
+    this is the minimum distance from the airport at which the UAV will **dock** with the airliner \
+    for refueling. For the UAVs that refuel the airliner closest to a given flyover airport, this \
+    is their actual (un)docking distance. For UAVs farther from the airport, their distance is \
+    obviously greater.
+    """
+    inter_uav_clearance_km: float = Field(title="Inter-UAV Clearance (km)")
+    """Among the "to-airport" UAVs at a given flyover airport, and among the "from-airport" UAVs \
+    at a given flyover airport, this is the distance between one UAV undocking with the airliner \
+    and a subsequent UAV docking with it.
+    """
+    airliner_clearance_speed_kmph: float = Field(
+        title="Airliner Clearance Speed (km/h)"
+    )
+    """After the airliner is refueled once, it must remain at the UAVs' cruise speed for any \
+    further refuelings at the same flyover airport. Therefore, after undocking and ascending above \
+    the airliner, every UAV must temporarily slow down to this `airliner_clearance_speed_kmph` in \
+    order to 'fall behind' it, to allow the UAV to then descend below the airliner's cruise \
+    altitude on its way back to the airport, to allow further UAVs to safely refuel the airliner.
+    """
+    airliner_clearance_distance_km: float = Field(
+        title="Airliner Clearance Distance (km)"
+    )
+    """See `airliner_clearance_speed_kmph`. The `airliner_clearance_distance_km` is the distance \
+    (in kilometers) by which every UAV will 'fall behind' the airliner after undocking."""
+    smallest_airliner_clearance_altitude_km: float = Field(
+        title="Default Airliner Clearance Altitude (km)"
+    )
+    """See `airliner_clearance_speed_kmph`. The `smallest_airliner_clearance_altitude_km` is the \
+    minimum altitude (in kilometers) at which the UAVs will fly after descending below the \
+    airliner's cruise altitude on its way back to the airport. Among the UAVs with "to-airport" \
+    service, and among the UAVs with "from-airport" service, this is the actual airliner clearance \
+    altitude of the UAV that refuels the airliner first. Subsequent UAVs must have higher airliner \
+    clearance altitudes (differing by the `inter_uav_vertical_distance_km`) to stay out of each \
+    other's flight paths.
+    """
+    inter_uav_vertical_distance_km: float = Field(
+        title="Inter-UAV Vertical Distance (km)"
+    )
+    """See `smallest_cruise_altitude_km` and `smallest_airliner_clearance_altitude_km`."""
+
+
+UavsFlightPathConfig.__doc__ = UavsFlightPathConfig.__doc__.strip() + " " + doc
 
 
 class NUavsAtFlyOverAirport(Model):
-    to_airport: int
-    from_airport: int
+    """The number of UAVs at a specific airport."""
+    to_airport: int = Field(title="To Airport")
+    """The number of UAVs to refuel the airliner just before flying over the airport."""
+    from_airport: int = Field(title="From Airport")
+    """The number of UAVs to refuel the airliner just after flying over the airport."""
 
 
 class UavsConfig(Model):
     """Configuration of the UAVs (all of which are assumed to be the same)."""
-    airplane_spec: str
-    refueling_rate_kW: float
-    initial_energy_level_pc: float
-    initial_refueling_energy_level_pc: float
-    viz_model: str
+
+    airplane_spec_name: str = Field(title="Airplane Spec Name")
+    """Which airplane spec to use for every UAV. Must be one of those listed below. `specs.py` \
+    acts as a registry for these and, if a different UAV is desired, a new spec can be added there.
+    """
+    refueling_rate_kW: float = Field(title="Refueling Rate (kW)")
+    """The maximum rate (in kilowatts / joules per second) at which every UAV can refuel the \
+    airliner. Can represent refueling at a rate of `x` joules of fuel per second, or recharging at \
+    a rate of `x` kilowatts of electricity.
+    """
+    initial_energy_level_pc: float = Field(title="Initial Energy Level (%)")
+    """The amount of energy/fuel that every UAV starts with for **its own use** before takeoff \
+    from its airport. Expressed as a percentage (0-100) of the UAV's own energy capacity (based on \
+    its own fuel tank space).
+    """
+    initial_refueling_energy_level_pc: float = Field(title="Initial Refueling Energy Level (%)")
+    """The amount of energy (alternately, the corresponding amount of fuel) for **refueling the \
+    airliner** that every UAV starts with before takeoff from its airport. Expressed as a \
+    percentage (0-100) of the UAV's refueling energy capacity (based on its cargo space).
+    """
+    viz_model_name: Enum(
+        "UavVizModelName", {k: k for k in uav_model_lookup.keys()}
+    ) = Field(title="Viz Model Name")
+    """Which 3D model to use for every UAV, when `viz` is set to true. Must be one of those listed \
+    below. `viz_models.py` acts as a registry for these and, if a different 3D model is desired, a \
+    new one can be added there.
+    """
 
 
 class Timepoint(Model):
     elapsed_mins: Union[float, str]
+    """Minutes into the simulation. Can be either a number or a string containing an algebraic \
+    expression with number(s), one of the below-listed variables, and add/subtract operations. In \
+    other words, it can be in any of the following formats:
+
+    `{number}`
+    `{variable}`
+    `{number} +/- {number}`
+    `{variable} +/- {number}`
+
+    Valid variables are as follows:
+
+    The following variables are specific to the airliner and can be used regardless of whether the \
+    airliner is the airplane being tracked.
+    `Airliner_takeoff_point`
+    `Airliner_ascended_point`
+    `{UAV ID}_on_airliner_docking_point`
+    `{UAV ID}_on_airliner_undocking_point`
+    `Airliner_curve_over_{flyover airport code}_midpoint`
+    `Airliner_descent_point`
+    `Airliner_landing_point`
+    `Airliner_landed_point`
+
+    The following variables are specific to UAVs and can only be used when a UAV is the airplane \
+    being tracked; the following variables refer to that UAV.
+    `first_point`
+    `takeoff_point`
+    `ascended_point`
+    `arc_start_point`
+    `arc_end_point`
+    `descent_to_airliner_point`
+    `on_airliner_docking_point`
+    `on_airliner_undocking_point`
+    `ascended_from_airliner_point`
+    `lowering_point`
+    `lowered_point`
+    `descent_point`
+    `landing_point`
+    `landed_point`
+    """
 
     def evaluate_elapsed_mins(self, reference_times: Dict[str, int]) -> dt.timedelta:
         self.elapsed_mins = eval(str(self.elapsed_mins), reference_times)
@@ -94,6 +287,7 @@ class Timepoint(Model):
 
 class Ratepoint(Timepoint):
     rate: float
+    """The rate at which to advance the simulation at `elapsed_mins`."""
 
     @property
     def value(self) -> float:
@@ -102,6 +296,7 @@ class Ratepoint(Timepoint):
 
 class Zoompoint(Timepoint):
     zoom: float
+    """The zoom level of the visualization at `elapsed_mins`."""
 
     @property
     def value(self) -> float:
@@ -125,41 +320,51 @@ class MapViewConfig(Model):
 
 
 class VizConfig(Model):
-    """Configuration to use when visualizing the airliner and UAVs while the simulation runs."""
-    max_frame_rate_fps: int
-    """Maximum frame rate (in frames per second) at which to render the visualization. If updating a
-    frame takes too long, the actual frame rate will be less.
+    """Configuration to use when `viz` is set to true."""
+
+    max_frame_rate_fps: int = Field(title="Max Frame Rate (frames/second)")
+    """Maximum frame rate (in frames per second) at which to render the visualization. If updating \
+    a frame takes too long, the actual frame rate will be less.
     """
-    scene_w: int
+    scene_width: int = Field(title="Scene Width")
     """Width (in pixels) of the viewport in which the visualization is rendered."""
-    scene_h: int
+    scene_height: int = Field(title="Scene Height")
     """Height (in pixels) of the viewport in which the visualization is rendered."""
-    theme: Literal["day", "night"]
+    theme: Literal["day", "night"] = Field(title="Theme")
     """Color theme to use for the sky and (if no `map_texture_fpath` is specified) the ground."""
-    zoompoints_config: ZoompointsConfig
-    landed_uavs_waiting_time_mins: float
-    """When tracking a UAV, how long (in minutes) to wait after a flyover airport's last UAV lands
-    before ending that UAV's visualization () 
+    zoompoints_config: ZoompointsConfig = Field(title="Zoompoints Config")
+    landed_uavs_waiting_time_mins: float = Field(title="Landed UAVs Waiting Time (Mins)")
+    """When tracking a UAV, how long (in minutes) to wait after a flyover airport's last UAV lands \
+    before ending that UAV's visualization / starting the next UAV's visualization (dependong on \
+    which UAV is the airplane being tracked).
     """
     map_texture_fpath: str
     map_view_config: MapViewConfig
 
     @property
     def scene_size(self) -> Tuple[int, int]:
-        return self.scene_w, self.scene_h
+        return self.scene_width, self.scene_height
 
 
 class SimulationConfig(Model):
     """Configuration for the mid-air refueling simulation."""
-    airliner_config: AirlinerConfig
-    airliner_flight_path_config: AirlinerFlightPathConfig
-    n_uavs_per_flyover_airport: Dict[AIRPORT_CODE_TYPE, NUavsAtFlyOverAirport]
-    """Number of UAVs at each flyover airport."""
-    uavs_config: UavsConfig
-    uavs_flight_path_config: UavsFlightPathConfig
-    ratepoints: List[Ratepoint]
-    viz: bool = True
-    viz_config: VizConfig = Field(title="Vizualization Config")
+
+    airliner_config: AirlinerConfig = Field(title="Airliner Config")
+    airliner_flight_path_config: AirlinerFlightPathConfig = Field(
+        title="Airliner Flight Path Config"
+    )
+    n_uavs_per_flyover_airport: Dict[AIRPORT_CODE_TYPE, NUavsAtFlyOverAirport] = Field(
+        title="# UAVs Per Flyover Airport"
+    )
+    """The number of UAVs at each flyover airport."""
+    uavs_config: UavsConfig = Field(title="UAVs Config")
+    uavs_flight_path_config: UavsFlightPathConfig = Field(
+        title="UAVs Flight Path Config"
+    )
+    ratepoints: List[Ratepoint] = Field(title="Ratepoints")
+    viz: bool = Field(title="Viz", default=True)
+    """Whether to visualize the airliner and UAVs in-browser while the simulation runs."""
+    viz_config: VizConfig = Field(title="Viz Config")
 
     @classmethod
     def from_yaml(
@@ -172,6 +377,6 @@ if __name__ == "__main__":
     simulation_config_schema = SimulationConfig.model_json_schema()
     json.dump(
         simulation_config_schema,
-        Path("../configs/simulation_config_json_schema.json").open("w"),
+        Path("configs/simulation_config_json_schema.json").open("w"),
         indent=4,
     )

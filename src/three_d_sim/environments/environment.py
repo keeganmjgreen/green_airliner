@@ -7,11 +7,28 @@ Notes:
 import dataclasses
 import datetime as dt
 import time
-from typing import Optional, Union
+from typing import List, Optional
+
+import scipy as sp
 
 from src.airplanes_simulator import AirplanesSimulator
 from src.modeling_objects import AirplanesState
-from src.utils.utils import get_interpolator_by_elapsed_time, timedelta_to_minutes
+from src.utils.utils import timedelta_to_minutes
+from three_d_sim.config_model import Ratepoint, Timepoint
+
+
+def get_interpolator_by_elapsed_time(points: List[Timepoint]):
+    def interpolator(elapsed_mins: float):
+        _interpolator = sp.interpolate.interp1d(
+            x=[p.elapsed_mins for p in points],
+            y=[p.value for p in points],
+            bounds_error=False,
+            fill_value=(points[0].value, points[-1].value),
+        )
+        y = _interpolator(elapsed_mins)
+        return float(y)
+
+    return interpolator
 
 
 @dataclasses.dataclass
@@ -23,7 +40,7 @@ class BaseEnvironment:
     # The following attributes are instantiated by `__post_init__`, in part using the
     #     `ENVIRONMENT_CONFIG`, and their type hints overwrite those of the same attributes
     #     inherited from ``EnvironmentConfig``:
-    time_step: dt.timedelta
+    ratepoints: List[Ratepoint]
     skip_timedelta: dt.timedelta
     end_time: Optional[dt.timedelta]
 
@@ -56,7 +73,7 @@ class Environment(BaseEnvironment):
                     break
             iteration_start_time = time.time()
             self._run_iteration()
-            if self.time_step is None:
+            if self.ratepoints is None:
                 break
 
     def _run_iteration(self) -> None:
@@ -65,8 +82,8 @@ class Environment(BaseEnvironment):
             f"{timedelta_to_minutes(self.current_time):.2f} minutes elapsed", end=";  "
         )
         self._get_state()
-        if self.time_step is not None:
-            time_step_interpolator = get_interpolator_by_elapsed_time(self.time_step)
+        if self.ratepoints is not None:
+            time_step_interpolator = get_interpolator_by_elapsed_time(self.ratepoints)
             time_step = dt.timedelta(
                 seconds=float(
                     time_step_interpolator(timedelta_to_minutes(self.current_time))

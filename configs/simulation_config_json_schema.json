@@ -3,100 +3,120 @@
         "AirlinerConfig": {
             "description": "Configuration of the airliner.",
             "properties": {
-                "airplane_spec": {
-                    "title": "Airplane Spec",
-                    "type": "string"
+                "airplane_spec_name": {
+                    "$ref": "#/$defs/AirlinerSpecName",
+                    "description": "Which airplane spec to use for the airliner. Must be one of those listed below. `specs.py`     acts as a registry for these and, if a different airliner is desired, a new spec can be added     there.\n    ",
+                    "title": "Airplane Spec Name"
                 },
                 "refueling_rate_kW": {
-                    "title": "Refueling Rate Kw",
+                    "description": "The maximum rate (in kilowatts / joules per second) at which the airliner can be refueled     (by a UAV). Can represent refueling at a rate of `x` joules of fuel per second, or recharging     at a rate of `x` kilowatts of electricity.\n    ",
+                    "title": "Refueling Rate (kW)",
                     "type": "number"
                 },
                 "initial_energy_level_pc": {
-                    "title": "Initial Energy Level Pc",
+                    "description": "The amount of energy (alternately, the corresponding amount of fuel) that the airliner     starts with before takeoff from its origin airport. Expressed as a percentage (0-100) of the     airliner's energy capacity.\n    ",
+                    "title": "Initial Energy Level (%)",
                     "type": "number"
                 },
-                "viz_model": {
-                    "title": "Viz Model",
-                    "type": "string"
+                "viz_model_name": {
+                    "$ref": "#/$defs/AirlinerVizModelName",
+                    "description": "Which 3D model to use for the airliner, when `viz` is set to true. Must be one of those     listed below. `viz_models.py` acts as a registry for these and, if a different 3D model is     desired, a new one can be added there.\n    ",
+                    "title": "Viz Model Name"
                 }
             },
             "required": [
-                "airplane_spec",
+                "airplane_spec_name",
                 "refueling_rate_kW",
                 "initial_energy_level_pc",
-                "viz_model"
+                "viz_model_name"
             ],
             "title": "AirlinerConfig",
             "type": "object"
         },
         "AirlinerFlightPathConfig": {
-            "description": "Configuration of the airliner's flight path.",
+            "description": "Configuration of the airliner's flight path. Many fields are explained in the diagram.  Fields `takeoff_speed_kmph` through `landing_speed_kmph` are shared between the `airliner_flight_path_config` and the `uavs_flight_path_config` and are described as applying to an \"airplane\" rather than to an \"airliner\" or \"UAV\" specifically. Fields after that differ.",
             "properties": {
                 "takeoff_speed_kmph": {
-                    "title": "Takeoff Speed Kmph",
+                    "description": "The speed (in kilometers per hour) required for the airplane to take off.",
+                    "title": "Takeoff Speed (km/h)",
                     "type": "number"
                 },
                 "takeoff_distance_km": {
-                    "title": "Takeoff Distance Km",
+                    "description": "The distance (in kilometers) for the airplane to accelerate from a standstill until     reaching the takeoff speed.\n    ",
+                    "title": "Takeoff Distance (km)",
                     "type": "number"
                 },
                 "takeoff_leveling_distance_km": {
-                    "title": "Takeoff Leveling Distance Km",
+                    "description": "See diagram.",
+                    "title": "Takeoff Leveling Distance (km)",
                     "type": "number"
                 },
                 "rate_of_climb_mps": {
-                    "title": "Rate Of Climb Mps",
+                    "description": "The speed (in meters per second) at which the airliner climbs between takeoff and cruise.     This is only the vertical component of the aiplane's velocity.\n    ",
+                    "title": "Rate of Climb (m/s)",
                     "type": "number"
                 },
                 "climb_leveling_distance_km": {
-                    "title": "Climb Leveling Distance Km",
+                    "description": "See diagram. Affects how long the airplane takes of level off between climb and cruise.",
+                    "title": "Climb Leveling Distance (km)",
                     "type": "number"
                 },
                 "descent_leveling_distance_km": {
-                    "title": "Descent Leveling Distance Km",
+                    "description": "See diagram.",
+                    "title": "",
                     "type": "number"
                 },
                 "rate_of_descent_mps": {
-                    "title": "Rate Of Descent Mps",
+                    "description": "The speed (in meters per second) at which the airliner descends between cruise and landing.     This is only the vertical component of the airplane's velocity.\n    ",
+                    "title": "Rate of Descent (m/s)",
                     "type": "number"
                 },
                 "landing_leveling_distance_km": {
-                    "title": "Landing Leveling Distance Km",
+                    "description": "See diagram. Affects how long the airplane takes to land.",
+                    "title": "Landing Leveling Distance (km)",
                     "type": "number"
                 },
                 "landing_distance_km": {
-                    "title": "Landing Distance Km",
+                    "description": "The distance (in kilometers) for the airplane to decelerate from landing speed to a     standstill.\n    ",
+                    "title": "Landing Distance (km)",
                     "type": "number"
                 },
                 "landing_speed_kmph": {
-                    "title": "Landing Speed Kmph",
+                    "description": "The speed (in kilometers per hour) at which the airplane lands.",
+                    "title": "Landing Speed (km/h)",
                     "type": "number"
                 },
-                "origin_airport": {
-                    "title": "Origin Airport",
+                "origin_airport_code": {
+                    "description": "The three-letter IATA airport code of the origin airport from which the airliner departs.",
+                    "title": "Origin Airport Code",
                     "type": "string"
                 },
-                "flyover_airports": {
+                "flyover_airport_codes": {
+                    "description": "The codes of the airports over which the airliner flies to be mid-air refueled by those     airports' UAVs.\n    ",
                     "items": {
                         "type": "string"
                     },
-                    "title": "Flyover Airports",
+                    "title": "Flyover Airport Codes",
                     "type": "array"
                 },
-                "destination_airport": {
-                    "title": "Destination Airport",
+                "destination_airport_code": {
+                    "description": "The code of the destination airport at which the airliner will land.",
+                    "title": "Destination Airport Code",
                     "type": "string"
                 },
                 "cruise_altitude_km": {
-                    "title": "Cruise Altitude Km",
+                    "description": "The altitude (in kilometers) of the airliner while in the cruise phase of flight.",
+                    "title": "Cruise Altitude (km)",
                     "type": "number"
                 },
                 "turning_radius_km": {
-                    "title": "Turning Radius Km",
+                    "description": "The radius (in kilometers) of the arc followed by the airliner over each flyover airport.",
+                    "title": "Turning Radius (km)",
                     "type": "number"
                 },
                 "speed_change_distance_km": {
-                    "title": "Speed Change Distance Km",
+                    "description": "The distance (in kilometers) over which the airliner slows down for refueling (from its     cruise speed to the UAVs' cruise speed) or speeds up again after refueling.\n    ",
+                    "title": "Speed Change Distance (km)",
                     "type": "number"
                 }
             },
@@ -111,15 +131,33 @@
                 "landing_leveling_distance_km",
                 "landing_distance_km",
                 "landing_speed_kmph",
-                "origin_airport",
-                "flyover_airports",
-                "destination_airport",
+                "origin_airport_code",
+                "flyover_airport_codes",
+                "destination_airport_code",
                 "cruise_altitude_km",
                 "turning_radius_km",
                 "speed_change_distance_km"
             ],
             "title": "AirlinerFlightPathConfig",
             "type": "object"
+        },
+        "AirlinerSpecName": {
+            "enum": [
+                "JetFueledA320",
+                "Lh2FueledA320",
+                "LionFueledA320",
+                "LipoFueledA320"
+            ],
+            "title": "AirlinerSpecName",
+            "type": "string"
+        },
+        "AirlinerVizModelName": {
+            "const": "a320",
+            "enum": [
+                "a320"
+            ],
+            "title": "AirlinerVizModelName",
+            "type": "string"
         },
         "MapViewConfig": {
             "properties": {
@@ -145,12 +183,15 @@
             "type": "object"
         },
         "NUavsAtFlyOverAirport": {
+            "description": "The number of UAVs at a specific airport.",
             "properties": {
                 "to_airport": {
+                    "description": "The number of UAVs to refuel the airliner just before flying over the airport.",
                     "title": "To Airport",
                     "type": "integer"
                 },
                 "from_airport": {
+                    "description": "The number of UAVs to refuel the airliner just after flying over the airport.",
                     "title": "From Airport",
                     "type": "integer"
                 }
@@ -173,9 +214,11 @@
                             "type": "string"
                         }
                     ],
+                    "description": "Minutes into the simulation. Can be either a number or a string containing an algebraic     expression with number(s), one of the below-listed variables, and add/subtract operations. In     other words, it can be in any of the following formats:\n\n`{number}`\n`{variable}`\n`{number} +/- {number}`\n`{variable} +/- {number}`\n\nValid variables are as follows:\n\nThe following variables are specific to the airliner and can be used regardless of whether the     airliner is the airplane being tracked.\n`Airliner_takeoff_point`\n`Airliner_ascended_point`\n`{UAV ID}_on_airliner_docking_point`\n`{UAV ID}_on_airliner_undocking_point`\n`Airliner_curve_over_{flyover airport code}_midpoint`\n`Airliner_descent_point`\n`Airliner_landing_point`\n`Airliner_landed_point`\n\nThe following variables are specific to UAVs and can only be used when a UAV is the airplane     being tracked; the following variables refer to that UAV.\n`first_point`\n`takeoff_point`\n`ascended_point`\n`arc_start_point`\n`arc_end_point`\n`descent_to_airliner_point`\n`on_airliner_docking_point`\n`on_airliner_undocking_point`\n`ascended_from_airliner_point`\n`lowering_point`\n`lowered_point`\n`descent_point`\n`landing_point`\n`landed_point`",
                     "title": "Elapsed Mins"
                 },
                 "rate": {
+                    "description": "The rate at which to advance the simulation at `elapsed_mins`.",
                     "title": "Rate",
                     "type": "number"
                 }
@@ -187,117 +230,149 @@
             "title": "Ratepoint",
             "type": "object"
         },
+        "UavVizModelName": {
+            "const": "cessna",
+            "enum": [
+                "cessna"
+            ],
+            "title": "UavVizModelName",
+            "type": "string"
+        },
         "UavsConfig": {
             "description": "Configuration of the UAVs (all of which are assumed to be the same).",
             "properties": {
-                "airplane_spec": {
-                    "title": "Airplane Spec",
+                "airplane_spec_name": {
+                    "description": "Which airplane spec to use for every UAV. Must be one of those listed below. `specs.py`     acts as a registry for these and, if a different UAV is desired, a new spec can be added there.\n    ",
+                    "title": "Airplane Spec Name",
                     "type": "string"
                 },
                 "refueling_rate_kW": {
-                    "title": "Refueling Rate Kw",
+                    "description": "The maximum rate (in kilowatts / joules per second) at which every UAV can refuel the     airliner. Can represent refueling at a rate of `x` joules of fuel per second, or recharging at     a rate of `x` kilowatts of electricity.\n    ",
+                    "title": "Refueling Rate (kW)",
                     "type": "number"
                 },
                 "initial_energy_level_pc": {
-                    "title": "Initial Energy Level Pc",
+                    "description": "The amount of energy/fuel that every UAV starts with for **its own use** before takeoff     from its airport. Expressed as a percentage (0-100) of the UAV's own energy capacity (based on     its own fuel tank space).\n    ",
+                    "title": "Initial Energy Level (%)",
                     "type": "number"
                 },
                 "initial_refueling_energy_level_pc": {
-                    "title": "Initial Refueling Energy Level Pc",
+                    "description": "The amount of energy (alternately, the corresponding amount of fuel) for **refueling the     airliner** that every UAV starts with before takeoff from its airport. Expressed as a     percentage (0-100) of the UAV's refueling energy capacity (based on its cargo space).\n    ",
+                    "title": "Initial Refueling Energy Level (%)",
                     "type": "number"
                 },
-                "viz_model": {
-                    "title": "Viz Model",
-                    "type": "string"
+                "viz_model_name": {
+                    "$ref": "#/$defs/UavVizModelName",
+                    "description": "Which 3D model to use for every UAV, when `viz` is set to true. Must be one of those listed     below. `viz_models.py` acts as a registry for these and, if a different 3D model is desired, a     new one can be added there.\n    ",
+                    "title": "Viz Model Name"
                 }
             },
             "required": [
-                "airplane_spec",
+                "airplane_spec_name",
                 "refueling_rate_kW",
                 "initial_energy_level_pc",
                 "initial_refueling_energy_level_pc",
-                "viz_model"
+                "viz_model_name"
             ],
             "title": "UavsConfig",
             "type": "object"
         },
         "UavsFlightPathConfig": {
-            "description": "Configuration of the UAVs' flight paths (all of which are assumed to follow the same\nparameters).",
+            "description": "Configuration of the UAVs' flight paths (all of which are assumed to follow the same\nparameters).     A UAV is described as having a \"service side\". The service side is \"to-airport\" for UAVs that     refuel the airliner just **before** it flies over a given airport, and \"from-airport\" for UAVs     that refuel the airliner just **after** it flies over it. Many fields are explained in the diagram.  Fields `takeoff_speed_kmph` through `landing_speed_kmph` are shared between the `airliner_flight_path_config` and the `uavs_flight_path_config` and are described as applying to an \"airplane\" rather than to an \"airliner\" or \"UAV\" specifically. Fields after that differ.",
             "properties": {
                 "takeoff_speed_kmph": {
-                    "title": "Takeoff Speed Kmph",
+                    "description": "The speed (in kilometers per hour) required for the airplane to take off.",
+                    "title": "Takeoff Speed (km/h)",
                     "type": "number"
                 },
                 "takeoff_distance_km": {
-                    "title": "Takeoff Distance Km",
+                    "description": "The distance (in kilometers) for the airplane to accelerate from a standstill until     reaching the takeoff speed.\n    ",
+                    "title": "Takeoff Distance (km)",
                     "type": "number"
                 },
                 "takeoff_leveling_distance_km": {
-                    "title": "Takeoff Leveling Distance Km",
+                    "description": "See diagram.",
+                    "title": "Takeoff Leveling Distance (km)",
                     "type": "number"
                 },
                 "rate_of_climb_mps": {
-                    "title": "Rate Of Climb Mps",
+                    "description": "The speed (in meters per second) at which the airliner climbs between takeoff and cruise.     This is only the vertical component of the aiplane's velocity.\n    ",
+                    "title": "Rate of Climb (m/s)",
                     "type": "number"
                 },
                 "climb_leveling_distance_km": {
-                    "title": "Climb Leveling Distance Km",
+                    "description": "See diagram. Affects how long the airplane takes of level off between climb and cruise.",
+                    "title": "Climb Leveling Distance (km)",
                     "type": "number"
                 },
                 "descent_leveling_distance_km": {
-                    "title": "Descent Leveling Distance Km",
+                    "description": "See diagram.",
+                    "title": "",
                     "type": "number"
                 },
                 "rate_of_descent_mps": {
-                    "title": "Rate Of Descent Mps",
+                    "description": "The speed (in meters per second) at which the airliner descends between cruise and landing.     This is only the vertical component of the airplane's velocity.\n    ",
+                    "title": "Rate of Descent (m/s)",
                     "type": "number"
                 },
                 "landing_leveling_distance_km": {
-                    "title": "Landing Leveling Distance Km",
+                    "description": "See diagram. Affects how long the airplane takes to land.",
+                    "title": "Landing Leveling Distance (km)",
                     "type": "number"
                 },
                 "landing_distance_km": {
-                    "title": "Landing Distance Km",
+                    "description": "The distance (in kilometers) for the airplane to decelerate from landing speed to a     standstill.\n    ",
+                    "title": "Landing Distance (km)",
                     "type": "number"
                 },
                 "landing_speed_kmph": {
-                    "title": "Landing Speed Kmph",
+                    "description": "The speed (in kilometers per hour) at which the airplane lands.",
+                    "title": "Landing Speed (km/h)",
                     "type": "number"
                 },
-                "default_cruise_altitude_km": {
-                    "title": "Default Cruise Altitude Km",
+                "smallest_cruise_altitude_km": {
+                    "description": "The minimum cruise altitude (in kilometers) among the UAVs. Among the UAVs with     \"to-airport\" service, and among the UAVs with \"from-airport\" service, this is the actual     cruise altitude of the UAV that refuels the airliner first. Subsequent UAVs must cruise at     higher altitudes (differing by the `inter_uav_vertical_distance_km`) to stay out of each     other's flight paths.\n    ",
+                    "title": "Default Cruise Altitude (km)",
                     "type": "number"
                 },
                 "arc_radius_km": {
-                    "title": "Arc Radius Km",
+                    "description": "The radius (in kilometers) of the arc followed by every UAV in the following cases. For the     \"to-airport\" UAVs, this is the arc followed by the UAV after departing from the airport, when     turning around to fly with and refuel the airliner. For the \"from-airport\" UAVs, this is the     arc followed by the UAV after refueling and ascending from the airliner, when turning around     to return to the airport.\n    ",
+                    "title": "Arc Radius (km)",
                     "type": "number"
                 },
                 "airliner_uav_docking_distance_km": {
-                    "title": "Airliner Uav Docking Distance Km",
+                    "description": "The distance (in kilometers) between the airliner and UAV when docked for refueling.     Evident when `viz` is set to true, this is not the distance between the top of the airliner's     fueselage and the bottom of the UAV, but the distance between their respective 3D models'     origins. This means that if either the airliner's or UAV's 3D models are changed, then the     `airliner_uav_docking_distance_km` may need to be changed accordingly.\n    ",
+                    "title": "Airliner-UAV Docking Distance (km)",
                     "type": "number"
                 },
                 "smallest_undocking_distance_from_airport_km": {
-                    "title": "Smallest Undocking Distance From Airport Km",
+                    "description": "For the \"to-airport\" UAVs, this is the minimum distance (in kilometers) from the airport at     which the UAV will **undock** from the airliner after refueling. For the \"from-airport\" UAVs,     this is the minimum distance from the airport at which the UAV will **dock** with the airliner     for refueling. For the UAVs that refuel the airliner closest to a given flyover airport, this     is their actual (un)docking distance. For UAVs farther from the airport, their distance is     obviously greater.\n    ",
+                    "title": "Smallest (Un)Docking Distance From Airport (km)",
                     "type": "number"
                 },
                 "inter_uav_clearance_km": {
-                    "title": "Inter Uav Clearance Km",
+                    "description": "Among the \"to-airport\" UAVs at a given flyover airport, and among the \"from-airport\" UAVs     at a given flyover airport, this is the distance between one UAV undocking with the airliner     and a subsequent UAV docking with it.\n    ",
+                    "title": "Inter-UAV Clearance (km)",
                     "type": "number"
                 },
                 "airliner_clearance_speed_kmph": {
-                    "title": "Airliner Clearance Speed Kmph",
+                    "description": "After the airliner is refueled once, it must remain at the UAVs' cruise speed for any     further refuelings at the same flyover airport. Therefore, after undocking and ascending above     the airliner, every UAV must temporarily slow down to this `airliner_clearance_speed_kmph` in     order to 'fall behind' it, to allow the UAV to then descend below the airliner's cruise     altitude on its way back to the airport, to allow further UAVs to safely refuel the airliner.\n    ",
+                    "title": "Airliner Clearance Speed (km/h)",
                     "type": "number"
                 },
                 "airliner_clearance_distance_km": {
-                    "title": "Airliner Clearance Distance Km",
+                    "description": "See `airliner_clearance_speed_kmph`. The `airliner_clearance_distance_km` is the distance     (in kilometers) by which every UAV will 'fall behind' the airliner after undocking.",
+                    "title": "Airliner Clearance Distance (km)",
                     "type": "number"
                 },
-                "default_airliner_clearance_altitude_km": {
-                    "title": "Default Airliner Clearance Altitude Km",
+                "smallest_airliner_clearance_altitude_km": {
+                    "description": "See `airliner_clearance_speed_kmph`. The `smallest_airliner_clearance_altitude_km` is the     minimum altitude (in kilometers) at which the UAVs will fly after descending below the     airliner's cruise altitude on its way back to the airport. Among the UAVs with \"to-airport\"     service, and among the UAVs with \"from-airport\" service, this is the actual airliner clearance     altitude of the UAV that refuels the airliner first. Subsequent UAVs must have higher airliner     clearance altitudes (differing by the `inter_uav_vertical_distance_km`) to stay out of each     other's flight paths.\n    ",
+                    "title": "Default Airliner Clearance Altitude (km)",
                     "type": "number"
                 },
-                "inter_uav_vertical_dist_km": {
-                    "title": "Inter Uav Vertical Dist Km",
+                "inter_uav_vertical_distance_km": {
+                    "description": "See `smallest_cruise_altitude_km` and `smallest_airliner_clearance_altitude_km`.",
+                    "title": "Inter-UAV Vertical Distance (km)",
                     "type": "number"
                 }
             },
@@ -312,15 +387,15 @@
                 "landing_leveling_distance_km",
                 "landing_distance_km",
                 "landing_speed_kmph",
-                "default_cruise_altitude_km",
+                "smallest_cruise_altitude_km",
                 "arc_radius_km",
                 "airliner_uav_docking_distance_km",
                 "smallest_undocking_distance_from_airport_km",
                 "inter_uav_clearance_km",
                 "airliner_clearance_speed_kmph",
                 "airliner_clearance_distance_km",
-                "default_airliner_clearance_altitude_km",
-                "inter_uav_vertical_dist_km"
+                "smallest_airliner_clearance_altitude_km",
+                "inter_uav_vertical_distance_km"
             ],
             "title": "UavsFlightPathConfig",
             "type": "object"
@@ -350,21 +425,21 @@
             "type": "object"
         },
         "VizConfig": {
-            "description": "Configuration to use when visualizing the airliner and UAVs while the simulation runs.",
+            "description": "Configuration to use when `viz` is set to true.",
             "properties": {
                 "max_frame_rate_fps": {
-                    "description": "Maximum frame rate (in frames per second) at which to render the visualization. If updating a\nframe takes too long, the actual frame rate will be less.",
-                    "title": "Max Frame Rate Fps",
+                    "description": "Maximum frame rate (in frames per second) at which to render the visualization. If updating     a frame takes too long, the actual frame rate will be less.\n    ",
+                    "title": "Max Frame Rate (frames/second)",
                     "type": "integer"
                 },
-                "scene_w": {
+                "scene_width": {
                     "description": "Width (in pixels) of the viewport in which the visualization is rendered.",
-                    "title": "Scene W",
+                    "title": "Scene Width",
                     "type": "integer"
                 },
-                "scene_h": {
+                "scene_height": {
                     "description": "Height (in pixels) of the viewport in which the visualization is rendered.",
-                    "title": "Scene H",
+                    "title": "Scene Height",
                     "type": "integer"
                 },
                 "theme": {
@@ -377,11 +452,12 @@
                     "type": "string"
                 },
                 "zoompoints_config": {
-                    "$ref": "#/$defs/ZoompointsConfig"
+                    "$ref": "#/$defs/ZoompointsConfig",
+                    "title": "Zoompoints Config"
                 },
                 "landed_uavs_waiting_time_mins": {
-                    "description": "When tracking a UAV, how long (in minutes) to wait after a flyover airport's last UAV lands\nbefore ending that UAV's visualization () ",
-                    "title": "Landed Uavs Waiting Time Mins",
+                    "description": "When tracking a UAV, how long (in minutes) to wait after a flyover airport's last UAV lands     before ending that UAV's visualization / starting the next UAV's visualization (dependong on     which UAV is the airplane being tracked).\n    ",
+                    "title": "Landed UAVs Waiting Time (Mins)",
                     "type": "number"
                 },
                 "map_texture_fpath": {
@@ -394,8 +470,8 @@
             },
             "required": [
                 "max_frame_rate_fps",
-                "scene_w",
-                "scene_h",
+                "scene_width",
+                "scene_height",
                 "theme",
                 "zoompoints_config",
                 "landed_uavs_waiting_time_mins",
@@ -416,9 +492,11 @@
                             "type": "string"
                         }
                     ],
+                    "description": "Minutes into the simulation. Can be either a number or a string containing an algebraic     expression with number(s), one of the below-listed variables, and add/subtract operations. In     other words, it can be in any of the following formats:\n\n`{number}`\n`{variable}`\n`{number} +/- {number}`\n`{variable} +/- {number}`\n\nValid variables are as follows:\n\nThe following variables are specific to the airliner and can be used regardless of whether the     airliner is the airplane being tracked.\n`Airliner_takeoff_point`\n`Airliner_ascended_point`\n`{UAV ID}_on_airliner_docking_point`\n`{UAV ID}_on_airliner_undocking_point`\n`Airliner_curve_over_{flyover airport code}_midpoint`\n`Airliner_descent_point`\n`Airliner_landing_point`\n`Airliner_landed_point`\n\nThe following variables are specific to UAVs and can only be used when a UAV is the airplane     being tracked; the following variables refer to that UAV.\n`first_point`\n`takeoff_point`\n`ascended_point`\n`arc_start_point`\n`arc_end_point`\n`descent_to_airliner_point`\n`on_airliner_docking_point`\n`on_airliner_undocking_point`\n`ascended_from_airliner_point`\n`lowering_point`\n`lowered_point`\n`descent_point`\n`landing_point`\n`landed_point`",
                     "title": "Elapsed Mins"
                 },
                 "zoom": {
+                    "description": "The zoom level of the visualization at `elapsed_mins`.",
                     "title": "Zoom",
                     "type": "number"
                 }
@@ -454,24 +532,28 @@
     "description": "Configuration for the mid-air refueling simulation.",
     "properties": {
         "airliner_config": {
-            "$ref": "#/$defs/AirlinerConfig"
+            "$ref": "#/$defs/AirlinerConfig",
+            "title": "Airliner Config"
         },
         "airliner_flight_path_config": {
-            "$ref": "#/$defs/AirlinerFlightPathConfig"
+            "$ref": "#/$defs/AirlinerFlightPathConfig",
+            "title": "Airliner Flight Path Config"
         },
         "n_uavs_per_flyover_airport": {
             "additionalProperties": {
                 "$ref": "#/$defs/NUavsAtFlyOverAirport"
             },
-            "description": "Number of UAVs at each flyover airport.",
-            "title": "N Uavs Per Flyover Airport",
+            "description": "The number of UAVs at each flyover airport.",
+            "title": "# UAVs Per Flyover Airport",
             "type": "object"
         },
         "uavs_config": {
-            "$ref": "#/$defs/UavsConfig"
+            "$ref": "#/$defs/UavsConfig",
+            "title": "UAVs Config"
         },
         "uavs_flight_path_config": {
-            "$ref": "#/$defs/UavsFlightPathConfig"
+            "$ref": "#/$defs/UavsFlightPathConfig",
+            "title": "UAVs Flight Path Config"
         },
         "ratepoints": {
             "items": {
@@ -482,12 +564,13 @@
         },
         "viz": {
             "default": true,
+            "description": "Whether to visualize the airliner and UAVs in-browser while the simulation runs.",
             "title": "Viz",
             "type": "boolean"
         },
         "viz_config": {
             "$ref": "#/$defs/VizConfig",
-            "title": "Vizualization Config"
+            "title": "Viz Config"
         }
     },
     "required": [

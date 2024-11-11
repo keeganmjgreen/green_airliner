@@ -2,9 +2,6 @@ import datetime as dt
 from typing import List
 
 import numpy as np
-import scipy as sp
-
-from src.three_d_sim.config_model import Timepoint
 
 J_PER_MJ = 1e6
 J_PER_WH = 3600
@@ -21,17 +18,3 @@ timedelta_to_minutes = lambda timedelta: timedelta / dt.timedelta(minutes=1)
 
 sind = lambda angle_deg: np.sin(np.deg2rad(angle_deg))
 cosd = lambda angle_deg: np.cos(np.deg2rad(angle_deg))
-
-
-def get_interpolator_by_elapsed_time(points: List[Timepoint]):
-    def interpolator(elapsed_mins: float):
-        _interpolator = sp.interpolate.interp1d(
-            x=[p.elapsed_mins for p in points],
-            y=[p.value for p in points],
-            bounds_error=False,
-            fill_value=(points[0].value, points[-1].value),
-        )
-        y = _interpolator(elapsed_mins)
-        return float(y)
-
-    return interpolator

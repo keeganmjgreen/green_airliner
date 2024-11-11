@@ -1,5 +1,5 @@
 import datetime as dt
-from typing import Any, Dict
+from typing import Any, Dict, Type
 
 import numpy as np
 
@@ -97,14 +97,17 @@ class At200(Uav):
     payload_volume_L = 5 * L_PER_CUBIC_M
 
 
-airplanes = [
+airliners = [
     JetFueledA320,
     Lh2FueledA320,
     LionFueledA320,
     LipoFueledA320,
+]
+uavs = [
     At200,
 ]
-airplane_lookup: Dict[str, Any] = {x.__name__: x for x in airplanes}
+airliner_lookup: Dict[str, Type[BaseAirliner]] = {x.__name__: x for x in airliners}
+uav_lookup: Dict[str, Type[Uav]] = {x.__name__: x for x in uavs}
 
 
 KM_PER_MILE = 1.609344

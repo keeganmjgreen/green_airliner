@@ -10,8 +10,8 @@ import numpy as np
 
 from src.feasibility_study.modeling_objects import BaseAirplane as AirplaneSpec, Fuel
 from src.feasibility_study.modeling_objects import Uav as UavSpec
-from src.specs import airplane_lookup
-from src.three_d_sim.viz_models import ModelConfig, model_lookup
+from src.specs import airliner_lookup, uav_lookup
+from src.three_d_sim.viz_models import ModelConfig, airliner_model_lookup, uav_model_lookup
 from src.utils.utils import MJ_PER_KWH, cosd, sind, timedelta_to_minutes
 
 
@@ -146,18 +146,12 @@ class Airplane:
     waypoints: List[Location] = dataclasses.field(init=False)
 
     def __post_init__(self):
-        if type(self.airplane_spec) is str:
-            self.airplane_spec = airplane_lookup[self.airplane_spec]
-
         self.energy_capacity_MJ = self.airplane_spec.energy_capacity_MJ
         self.energy_consumption_rate_MJ_per_km = self.airplane_spec.energy_consumption_rate_MJ_per_km
         self.energy_level_pc = deepcopy(self.initial_energy_level_pc)
         self.location = None
         self.heading = None
         self.waypoints = []
-
-        if type(self.viz_model) is str:
-            self.viz_model = model_lookup[self.viz_model]
 
     def set_heading(self, to_waypoint: Waypoint) -> np.ndarray:
         heading = to_waypoint.LOCATION.xyz_coords - self.location.xyz_coords
@@ -257,6 +251,15 @@ class Airliner(Airplane):
     id: str = "Airliner"
     docked_uav: Union[AirplaneId, None] = None
 
+    def __post_init__(self):
+        super().__post_init__()
+
+        if type(self.airplane_spec) is str:
+            self.airplane_spec = airliner_lookup[self.airplane_spec]
+
+        if type(self.viz_model) is str:
+            self.viz_model = airliner_model_lookup[self.viz_model]
+
 
 @dataclasses.dataclass(kw_only=True)
 class Uav(Airplane):
@@ -269,6 +272,13 @@ class Uav(Airplane):
 
     def __post_init__(self):
         super().__post_init__()
+
+        if type(self.airplane_spec) is str:
+            self.airplane_spec = uav_lookup[self.airplane_spec]
+
+        if type(self.viz_model) is str:
+            self.viz_model = uav_model_lookup[self.viz_model]
+
         self.refueling_energy_capacity_MJ = self.airplane_spec.refueling_energy_capacity_MJ(self.payload_fuel)
         self.refueling_energy_level_pc = deepcopy(self.initial_refueling_energy_level_pc)
 

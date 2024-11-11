@@ -54,7 +54,7 @@ uavs_flight_path_config:
   airliner_clearance_speed_kmph: 200
   airliner_clearance_distance_km: 5
   default_airliner_clearance_altitude_km: 5
-  inter_uav_vertical_dist_km: 1
+  inter_uav_vertical_distance_km: 1
 ratepoints:
   - elapsed_mins: 0
     rate: 1

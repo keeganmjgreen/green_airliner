@@ -177,7 +177,7 @@ def run_scenario(
         screen_recorders = []
 
     for rp in simulation_config.ratepoints:
-        rp.evaluate_elapsed_mins(airliner_reference_times)
+        rp.evaluate_elapsed_mins(airliner_reference_times + uav_reference_times)
 
     environment = AirplanesVisualizerEnvironment(
         time_step=simulation_config.ratepoints,
@@ -256,7 +256,7 @@ def make_uavs(
                     },
                     cruise_altitude_km=(
                         uavs_fp_config["default_cruise_altitude_km"]
-                        + uavs_fp_config["inter_uav_vertical_dist_km"]
+                        + uavs_fp_config["inter_uav_vertical_distance_km"]
                         * service_side_uav_idx
                     ),
                     cruise_speed_kmph=uav.airplane_spec.cruise_speed_kmph,
@@ -277,7 +277,7 @@ def make_uavs(
                     ),
                     airliner_clearance_altitude_km=(
                         uavs_fp_config["default_airliner_clearance_altitude_km"]
-                        + uavs_fp_config["inter_uav_vertical_dist_km"]
+                        + uavs_fp_config["inter_uav_vertical_distance_km"]
                         * service_side_uav_idx
                     ),
                 )
