@@ -1,14 +1,14 @@
 airliner_config:
-  airplane_spec: Lh2FueledA320
+  airplane_spec_name: Lh2FueledA320
   refueling_rate_kW: 2333333  # 7e12/50 J/min LH2 * (60 min/h) / (3600 J/Wh) / (1000 W/kW)
   initial_energy_level_pc: 100.0
-  viz_model: a320
+  viz_model_name: a320
 airliner_flight_path_config:
-  origin_airport: JFK
-  flyover_airports:
+  origin_airport_code: JFK
+  flyover_airport_codes:
     - PIT
     - DEN
-  destination_airport: LAX
+  destination_airport_code: LAX
   takeoff_speed_kmph: 262.5  # mean(240, 285) from https://en.wikipedia.org/wiki/Takeoff
   takeoff_distance_km: 1
   takeoff_leveling_distance_km: 0.1
@@ -30,18 +30,18 @@ n_uavs_per_flyover_airport:
     to_airport: 3  # "DEN_UAV_0", "DEN_UAV_1", "DEN_UAV_2"
     from_airport: 2  # "DEN_UAV_3", "DEN_UAV_4"
 uavs_config:
-  airplane_spec: At200
+  airplane_spec_name: At200
   refueling_rate_kW: 2333333  # assumed same as airliner
   initial_energy_level_pc: 100.0
   initial_refueling_energy_level_pc: 100.0
-  viz_model: cessna
+  viz_model_name: cessna
 uavs_flight_path_config:
   takeoff_speed_kmph: 100  # https://en.wikipedia.org/wiki/Takeoff
   takeoff_distance_km: 1
   takeoff_leveling_distance_km: 0.1
   rate_of_climb_mps: 35
   climb_leveling_distance_km: 0.5
-  default_cruise_altitude_km: 11.5
+  smallest_cruise_altitude_km: 11.5
   descent_leveling_distance_km: 0.5
   rate_of_descent_mps: 50
   landing_leveling_distance_km: 0.1
@@ -53,52 +53,53 @@ uavs_flight_path_config:
   inter_uav_clearance_km: 15
   airliner_clearance_speed_kmph: 200
   airliner_clearance_distance_km: 5
-  default_airliner_clearance_altitude_km: 5
+  smallest_airliner_clearance_altitude_km: 5
   inter_uav_vertical_distance_km: 1
 ratepoints:
   - elapsed_mins: 0
-    rate: 1
+    time_step_s: 1
   - elapsed_mins: Airliner_ascended_point
-    rate: 1
+    time_step_s: 1
   - elapsed_mins: Airliner_ascended_point + 5
-    rate: 30
+    time_step_s: 30
   # PIT:
   - elapsed_mins: PIT_UAV_0_on_airliner_docking_point - 5
-    rate: 30
+    time_step_s: 30
   - elapsed_mins: PIT_UAV_0_on_airliner_docking_point - 1.5
-    rate: 1
+    time_step_s: 1
   - elapsed_mins: PIT_UAV_0_on_airliner_undocking_point + 1.5
-    rate: 1
+    time_step_s: 1
   - elapsed_mins: Airliner_curve_over_PIT_midpoint
-    rate: 3
+    time_step_s: 3
   - elapsed_mins: PIT_UAV_1_on_airliner_docking_point - 1.5
-    rate: 2
+    time_step_s: 2
   - elapsed_mins: PIT_UAV_1_on_airliner_undocking_point + 1.5
-    rate: 2
+    time_step_s: 2
   - elapsed_mins: PIT_UAV_1_on_airliner_undocking_point + 10
-    rate: 50
+    time_step_s: 50
   # DEN:
   - elapsed_mins: DEN_UAV_0_on_airliner_docking_point - 10
-    rate: 50
+    time_step_s: 50
   - elapsed_mins: DEN_UAV_0_on_airliner_docking_point - 1.5
-    rate: 1
+    time_step_s: 1
   - elapsed_mins: DEN_UAV_0_on_airliner_undocking_point + 1.5
-    rate: 1
+    time_step_s: 1
   - elapsed_mins: Airliner_curve_over_DEN_midpoint
-    rate: 3
+    time_step_s: 3
   - elapsed_mins: Airliner_curve_over_DEN_midpoint + 40
-    rate: 30
+    time_step_s: 30
   # LAX:
   - elapsed_mins: Airliner_descent_point - 5
-    rate: 30
+    time_step_s: 30
   - elapsed_mins: Airliner_descent_point
-    rate: 2
+    time_step_s: 2
   - elapsed_mins: Airliner_landed_point + 5
-    rate: 2
+    time_step_s: 2
 viz_config:
+  time_step_multiplier: 1
   max_frame_rate_fps: 25
-  scene_w: 1800
-  scene_h: 900
+  scene_width: 1800
+  scene_height: 900
   theme: night
   zoompoints_config:
     airliner_zoompoints:

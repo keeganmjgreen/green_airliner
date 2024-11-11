@@ -85,6 +85,7 @@ class AirplanesVisualizerEnvironment(Environment):
     view: View
     map_texture_fpath: str
     zoompoints: List[Zoompoint]
+    max_frame_rate_fps: float
     scene_size: Tuple[int, int] = (1800, 900)
     theme: Literal["day", "night"]
     models_scale_factor: float = 1.0

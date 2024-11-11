@@ -5,15 +5,20 @@ import datetime as dt
 from copy import deepcopy
 from typing import Dict, List, Optional, Tuple, Type, Union
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
-from src.feasibility_study.modeling_objects import BaseAirplane as AirplaneSpec, Fuel
+from src.feasibility_study.modeling_objects import BaseAirliner as AirlinerSpec
+from src.feasibility_study.modeling_objects import BaseAirplane as AirplaneSpec
+from src.feasibility_study.modeling_objects import Fuel
 from src.feasibility_study.modeling_objects import Uav as UavSpec
 from src.specs import airliner_lookup, uav_lookup
-from src.three_d_sim.viz_models import ModelConfig, airliner_model_lookup, uav_model_lookup
+from src.three_d_sim.viz_models import (
+    ModelConfig,
+    airliner_model_lookup,
+    uav_model_lookup,
+)
 from src.utils.utils import MJ_PER_KWH, cosd, sind, timedelta_to_minutes
-
 
 # ==================================================================================================
 # Geographical objects
@@ -246,19 +251,20 @@ class Airplane:
         return f"{self.id}:  SoC = {(self.energy_level_pc):.2f}%  |  Energy Level = {self.energy_level_MJ:.2f} / {self.energy_capacity_MJ:.2f} MJ"
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(kw_only=True)
 class Airliner(Airplane):
     id: str = "Airliner"
+    airplane_spec: Union[Type[AirlinerSpec], str]
     docked_uav: Union[AirplaneId, None] = None
 
     def __post_init__(self):
+        if not isinstance(self.airplane_spec, AirlinerSpec):
+            self.airplane_spec = airliner_lookup[self.airplane_spec.name]
+
+        if type(self.viz_model) is not ModelConfig:
+            self.viz_model = airliner_model_lookup[self.viz_model.name]
+
         super().__post_init__()
-
-        if type(self.airplane_spec) is str:
-            self.airplane_spec = airliner_lookup[self.airplane_spec]
-
-        if type(self.viz_model) is str:
-            self.viz_model = airliner_model_lookup[self.viz_model]
 
 
 @dataclasses.dataclass(kw_only=True)
@@ -271,16 +277,16 @@ class Uav(Airplane):
     refueling_energy_level_pc: float = dataclasses.field(init=False)
 
     def __post_init__(self):
-        super().__post_init__()
-
-        if type(self.airplane_spec) is str:
+        if not isinstance(self.airplane_spec, UavSpec):
             self.airplane_spec = uav_lookup[self.airplane_spec]
 
-        if type(self.viz_model) is str:
-            self.viz_model = uav_model_lookup[self.viz_model]
+        if type(self.viz_model) is not ModelConfig:
+            self.viz_model = uav_model_lookup[self.viz_model.name]
 
         self.refueling_energy_capacity_MJ = self.airplane_spec.refueling_energy_capacity_MJ(self.payload_fuel)
         self.refueling_energy_level_pc = deepcopy(self.initial_refueling_energy_level_pc)
+
+        super().__post_init__()
 
     @property
     def refueling_energy_level_MJ(self) -> float:

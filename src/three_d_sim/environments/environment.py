@@ -14,7 +14,7 @@ import scipy as sp
 from src.airplanes_simulator import AirplanesSimulator
 from src.modeling_objects import AirplanesState
 from src.utils.utils import timedelta_to_minutes
-from three_d_sim.config_model import Ratepoint, Timepoint
+from src.three_d_sim.config_model import Ratepoint, Timepoint
 
 
 def get_interpolator_by_elapsed_time(points: List[Timepoint]):
@@ -41,8 +41,9 @@ class BaseEnvironment:
     #     `ENVIRONMENT_CONFIG`, and their type hints overwrite those of the same attributes
     #     inherited from ``EnvironmentConfig``:
     ratepoints: List[Ratepoint]
-    skip_timedelta: dt.timedelta
-    end_time: Optional[dt.timedelta]
+    time_step_multiplier: float = 1.0
+    skip_timedelta: dt.timedelta = dt.timedelta(0)
+    end_time: Optional[dt.timedelta] = None
 
     def __post_init__(self):
         self.current_time = dt.timedelta(0)
@@ -55,11 +56,6 @@ class BaseEnvironment:
 
         self.ev_taxis_emulator_or_interface.update_state(time=self.current_time)
         return self.ev_taxis_emulator_or_interface.current_state
-
-    @property
-    def reward(self) -> float:
-        """For, e.g., training an agent (like ``SocThresholdsAgent``)."""
-        return self.ev_taxis_emulator_or_interface.total_revenue
 
 
 @dataclasses.dataclass
@@ -78,16 +74,10 @@ class Environment(BaseEnvironment):
 
     def _run_iteration(self) -> None:
         # NOTE: Set a breakpoint here to debug iterations.
-        print(
-            f"{timedelta_to_minutes(self.current_time):.2f} minutes elapsed", end=";  "
-        )
+        print(f"{timedelta_to_minutes(self.current_time):.2f} minutes elapsed")
         self._get_state()
         if self.ratepoints is not None:
-            time_step_interpolator = get_interpolator_by_elapsed_time(self.ratepoints)
-            time_step = dt.timedelta(
-                seconds=float(
-                    time_step_interpolator(timedelta_to_minutes(self.current_time))
-                )
-            )
-            print(f"time_step: {time_step.total_seconds():.2f}", end=";  ")
-            self.current_time += time_step
+            ratepoints_interpolator = get_interpolator_by_elapsed_time(self.ratepoints)
+            time_step_s = ratepoints_interpolator(timedelta_to_minutes(self.current_time))
+            print(f"{time_step_s = }")
+            self.current_time += dt.timedelta(seconds=(time_step_s * self.time_step_multiplier))

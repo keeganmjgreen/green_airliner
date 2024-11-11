@@ -19,12 +19,16 @@ class Model(BaseModel):
     model_config = ConfigDict(use_attribute_docstrings=True)
 
 
+AirlinerSpecName = Enum("AirlinerSpecName", {k: k for k in airliner_lookup.keys()})
+AirlinerVizModelName = Enum(
+    "AirlinerVizModelName", {k: k for k in airliner_model_lookup.keys()}
+)
+
+
 class AirlinerConfig(Model):
     """Configuration of the airliner."""
 
-    airplane_spec_name: Enum(
-        "AirlinerSpecName", {k: k for k in airliner_lookup.keys()}
-    ) = Field(title="Airplane Spec Name")
+    airplane_spec_name: AirlinerSpecName = Field(title="Airplane Spec Name")
     """Which airplane spec to use for the airliner. Must be one of those listed below. `specs.py` \
     acts as a registry for these and, if a different airliner is desired, a new spec can be added \
     there.
@@ -39,9 +43,7 @@ class AirlinerConfig(Model):
     starts with before takeoff from its origin airport. Expressed as a percentage (0-100) of the \
     airliner's energy capacity.
     """
-    viz_model_name: Enum(
-        "AirlinerVizModelName", {k: k for k in airliner_model_lookup.keys()}
-    ) = Field(title="Viz Model Name")
+    viz_model_name: AirlinerVizModelName = Field(title="Viz Model Name")
     """Which 3D model to use for the airliner, when `viz` is set to true. Must be one of those \
     listed below. `viz_models.py` acts as a registry for these and, if a different 3D model is \
     desired, a new one can be added there.
@@ -198,6 +200,7 @@ UavsFlightPathConfig.__doc__ = UavsFlightPathConfig.__doc__.strip() + " " + doc
 
 class NUavsAtFlyOverAirport(Model):
     """The number of UAVs at a specific airport."""
+
     to_airport: int = Field(title="To Airport")
     """The number of UAVs to refuel the airliner just before flying over the airport."""
     from_airport: int = Field(title="From Airport")
@@ -221,14 +224,16 @@ class UavsConfig(Model):
     from its airport. Expressed as a percentage (0-100) of the UAV's own energy capacity (based on \
     its own fuel tank space).
     """
-    initial_refueling_energy_level_pc: float = Field(title="Initial Refueling Energy Level (%)")
+    initial_refueling_energy_level_pc: float = Field(
+        title="Initial Refueling Energy Level (%)"
+    )
     """The amount of energy (alternately, the corresponding amount of fuel) for **refueling the \
     airliner** that every UAV starts with before takeoff from its airport. Expressed as a \
     percentage (0-100) of the UAV's refueling energy capacity (based on its cargo space).
     """
-    viz_model_name: Enum(
-        "UavVizModelName", {k: k for k in uav_model_lookup.keys()}
-    ) = Field(title="Viz Model Name")
+    viz_model_name: Enum("UavVizModelName", {k: k for k in uav_model_lookup.keys()}) = (
+        Field(title="Viz Model Name")
+    )
     """Which 3D model to use for every UAV, when `viz` is set to true. Must be one of those listed \
     below. `viz_models.py` acts as a registry for these and, if a different 3D model is desired, a \
     new one can be added there.
@@ -286,12 +291,11 @@ class Timepoint(Model):
 
 
 class Ratepoint(Timepoint):
-    rate: float
-    """The rate at which to advance the simulation at `elapsed_mins`."""
+    time_step_s: float
 
     @property
     def value(self) -> float:
-        return self.rate
+        return self.time_step_s
 
 
 class Zoompoint(Timepoint):
@@ -322,6 +326,7 @@ class MapViewConfig(Model):
 class VizConfig(Model):
     """Configuration to use when `viz` is set to true."""
 
+    time_step_multiplier: float = Field(title="Time Step Multiplier", default=1.0)
     max_frame_rate_fps: int = Field(title="Max Frame Rate (frames/second)")
     """Maximum frame rate (in frames per second) at which to render the visualization. If updating \
     a frame takes too long, the actual frame rate will be less.
@@ -333,7 +338,9 @@ class VizConfig(Model):
     theme: Literal["day", "night"] = Field(title="Theme")
     """Color theme to use for the sky and (if no `map_texture_fpath` is specified) the ground."""
     zoompoints_config: ZoompointsConfig = Field(title="Zoompoints Config")
-    landed_uavs_waiting_time_mins: float = Field(title="Landed UAVs Waiting Time (Mins)")
+    landed_uavs_waiting_time_mins: float = Field(
+        title="Landed UAVs Waiting Time (Mins)"
+    )
     """When tracking a UAV, how long (in minutes) to wait after a flyover airport's last UAV lands \
     before ending that UAV's visualization / starting the next UAV's visualization (dependong on \
     which UAV is the airplane being tracked).

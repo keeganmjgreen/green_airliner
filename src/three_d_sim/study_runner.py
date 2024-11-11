@@ -28,10 +28,32 @@ from src.utils.utils import MJ_PER_KWH, timedelta_to_minutes
 def run_scenario(
     simulation_config: SimulationConfig, view: View, track_airplane_id: str, preset: str
 ) -> None:
-    airliner = Airliner(**simulation_config.airliner_config)
+    airliner_config = simulation_config.airliner_config
+    airliner = Airliner(
+        airplane_spec=airliner_config.airplane_spec_name,
+        refueling_rate_kW=airliner_config.refueling_rate_kW,
+        initial_energy_level_pc=airliner_config.initial_energy_level_pc,
+        viz_model=airliner_config.viz_model_name,
+    )
+    airliner_fp_config = simulation_config.airliner_flight_path_config
     airliner_fp = AirlinerFlightPath(
-        **simulation_config.airliner_flight_path_config,
+        origin_airport=airliner_fp_config.origin_airport_code,
+        flyover_airports=airliner_fp_config.flyover_airport_codes,
+        destination_airport=airliner_fp_config.destination_airport_code,
+        takeoff_speed_kmph=airliner_fp_config.takeoff_speed_kmph,
+        takeoff_distance_km=airliner_fp_config.takeoff_distance_km,
+        takeoff_leveling_distance_km=airliner_fp_config.takeoff_leveling_distance_km,
+        rate_of_climb_mps=airliner_fp_config.rate_of_climb_mps,
+        climb_leveling_distance_km=airliner_fp_config.climb_leveling_distance_km,
+        cruise_altitude_km=airliner_fp_config.cruise_altitude_km,
         cruise_speed_kmph=airliner.airplane_spec.cruise_speed_kmph,
+        speed_change_distance_km=airliner_fp_config.speed_change_distance_km,
+        turning_radius_km=airliner_fp_config.turning_radius_km,
+        descent_leveling_distance_km=airliner_fp_config.descent_leveling_distance_km,
+        rate_of_descent_mps=airliner_fp_config.rate_of_descent_mps,
+        landing_leveling_distance_km=airliner_fp_config.landing_leveling_distance_km,
+        landing_distance_km=airliner_fp_config.landing_distance_km,
+        landing_speed_kmph=airliner_fp_config.landing_speed_kmph,
     )
 
     uavs, uav_fps = make_uavs(
@@ -176,14 +198,17 @@ def run_scenario(
     else:
         screen_recorders = []
 
+    reference_times = airliner_reference_times
+    if "uav_reference_times" in locals():
+        reference_times.update(uav_reference_times)
     for rp in simulation_config.ratepoints:
-        rp.evaluate_elapsed_mins(airliner_reference_times + uav_reference_times)
+        rp.evaluate_elapsed_mins(reference_times)
 
     environment = AirplanesVisualizerEnvironment(
-        time_step=simulation_config.ratepoints,
+        ratepoints=simulation_config.ratepoints,
         max_frame_rate_fps=simulation_config.viz_config.max_frame_rate_fps,
         skip_timedelta=skip_timedelta,
-        end_time=zoompoints[-1].elapsed_mins,
+        end_time=dt.timedelta(minutes=zoompoints[-1].elapsed_mins),
         ev_taxis_emulator_or_interface=airplanes_emulator,
         airliner_flight_path=airliner_fp,
         track_airplane_id=track_airplane_id,
@@ -217,22 +242,27 @@ def make_uavs(
         airport_uav_idx = 0
         uavs[uav_airport_code] = {}
         uav_fps[uav_airport_code] = {}
-        for service_side, n_uavs in x.items():
+        for service_side, n_uavs in x.dict().items():
             uavs[uav_airport_code][service_side] = {}
             uav_fps[uav_airport_code][service_side] = {}
             for service_side_uav_idx in range(n_uavs):
                 # Instantiate the UAV:
+                uavs_config = simulation_config.uavs_config
                 uav = Uav(
                     id=f"{uav_airport_code}_UAV_{airport_uav_idx}",
-                    **simulation_config.uavs_config,
+                    airplane_spec=uavs_config.airplane_spec_name,
+                    refueling_rate_kW=uavs_config.refueling_rate_kW,
+                    initial_energy_level_pc=uavs_config.initial_energy_level_pc,
+                    viz_model=uavs_config.viz_model_name,
                     payload_fuel=fuel,
+                    initial_refueling_energy_level_pc=uavs_config.initial_refueling_energy_level_pc,
                 )
                 # Add the UAV to the `uavs` dict:
                 uavs[uav_airport_code][service_side][uav.id] = uav
 
                 refueling_rate_kW = min(
-                    simulation_config.airliner_config["refueling_rate_kW"],
-                    simulation_config.uavs_config["refueling_rate_kW"],
+                    simulation_config.airliner_config.refueling_rate_kW,
+                    simulation_config.uavs_config.refueling_rate_kW,
                 )
                 refueling_distance_km = (
                     uav.airplane_spec.cruise_speed_kmph
@@ -249,35 +279,44 @@ def make_uavs(
                 # Instantiate the UAV Flight Path:
                 uav_fp = UavFlightPath(
                     home_airport=uav_airport_code,
-                    **{
-                        k: v
-                        for k, v in simulation_config.uavs_flight_path_config.items()
-                        if k in [f.name for f in dataclasses.fields(UavFlightPath)]
-                    },
+                    takeoff_speed_kmph=uavs_fp_config.takeoff_speed_kmph,
+                    takeoff_distance_km=uavs_fp_config.takeoff_distance_km,
+                    takeoff_leveling_distance_km=uavs_fp_config.takeoff_leveling_distance_km,
+                    rate_of_climb_mps=uavs_fp_config.rate_of_climb_mps,
+                    climb_leveling_distance_km=uavs_fp_config.climb_leveling_distance_km,
                     cruise_altitude_km=(
-                        uavs_fp_config["default_cruise_altitude_km"]
-                        + uavs_fp_config["inter_uav_vertical_distance_km"]
+                        uavs_fp_config.smallest_cruise_altitude_km
+                        + uavs_fp_config.inter_uav_vertical_distance_km
                         * service_side_uav_idx
                     ),
                     cruise_speed_kmph=uav.airplane_spec.cruise_speed_kmph,
                     turning_radius_km=airliner_fp.turning_radius_km,
+                    descent_leveling_distance_km=uavs_fp_config.descent_leveling_distance_km,
+                    rate_of_descent_mps=uavs_fp_config.rate_of_descent_mps,
+                    landing_leveling_distance_km=uavs_fp_config.landing_leveling_distance_km,
+                    landing_distance_km=uavs_fp_config.landing_distance_km,
+                    landing_speed_kmph=uavs_fp_config.landing_speed_kmph,
+
+                    arc_radius_km=uavs_fp_config.arc_radius_km,
                     refueling_altitude_km=(
                         airliner_fp.cruise_altitude_km
-                        + uavs_fp_config["airliner_uav_docking_distance_km"]
+                        + uavs_fp_config.airliner_uav_docking_distance_km
                     ),
                     refueling_distance_km=refueling_distance_km,
                     service_side=service_side,
                     undocking_distance_from_airport_km=(
-                        uavs_fp_config["smallest_undocking_distance_from_airport_km"]
+                        uavs_fp_config.smallest_undocking_distance_from_airport_km
                         + (
                             refueling_distance_km
-                            + uavs_fp_config["inter_uav_clearance_km"]
+                            + uavs_fp_config.inter_uav_clearance_km
                         )
                         * decreasing_towards_airport
                     ),
+                    airliner_clearance_speed_kmph=uavs_fp_config.airliner_clearance_speed_kmph,
+                    airliner_clearance_distance_km=uavs_fp_config.airliner_clearance_distance_km,
                     airliner_clearance_altitude_km=(
-                        uavs_fp_config["default_airliner_clearance_altitude_km"]
-                        + uavs_fp_config["inter_uav_vertical_distance_km"]
+                        uavs_fp_config.smallest_airliner_clearance_altitude_km
+                        + uavs_fp_config.inter_uav_vertical_distance_km
                         * service_side_uav_idx
                     ),
                 )
