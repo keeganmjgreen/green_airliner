@@ -322,9 +322,10 @@ class UavsZoompointsConfig(Model):
 class ZoompointsConfig(Model):
     """The zoom level of the visualization does not need to be constant. A non-constant zoom level \
     is achieved by specifying zoompoints: the zoom level at different times in the simulation. \
-    Each zoompoint specifies a `zoom` level at a specified number of minutes elapsed. Between \
-    zoompoints, linear interpolation is used to smoothly transition from one zoom level to the \
-    next. A constant zoom can be set by specifying a single zoompoint.
+    This allows the zoom to be controlled in a reproduceable way. Each zoompoint specifies a \
+    `zoom` level at a specified number of minutes elapsed. Between zoompoints, linear \
+    interpolation is used to smoothly transition from one zoom level to the next. A constant zoom \
+    can be set by specifying a single zoompoint.
     """
 
     airliner_zoompoints: List[Zoompoint] = Field(title="Airliner Zoompoints")
@@ -408,10 +409,14 @@ class SimulationConfig(Model):
     ratepoints: List[Ratepoint] = Field(title="Ratepoints")
     """The rate at which the simulation advances does not need to be constant. A non-constant rate \
     is achieved by specifying ratepoints: the rate at which to advance the simulation at different \
-    times in the simulation. Each ratepoint specifies a `time_step_s` with which to advance the \
-    simulation at a specified number of minutes elapsed. Between ratepoints, linear interpolation \
-    is used to smoothly transition from one rate to the next. A constant rate can be set by \
-    specifying a single ratepoint.
+    times in the simulation. This is most useful when `vis_enabled` is true for speeding up \
+    mundane parts of the visualization in a reproduceable way, such as when the airliner is \
+    between flyover airports, and slowing down parts of the visualization that are of greater \
+    interest or require a finer simulation resolution, such as when the airliner is being \
+    refueled. Each ratepoint specifies a `time_step_s` with which to advance the simulation at a \
+    specified number of minutes elapsed. Between ratepoints, linear interpolation is used to \
+    smoothly transition from one rate to the next. A constant rate can be set by specifying a \
+    single ratepoint.
     """
     viz_enabled: bool = Field(title="Viz Enabled", default=True)
     """Whether to visualize the airliner and UAVs in-browser while the simulation runs. Requires \
