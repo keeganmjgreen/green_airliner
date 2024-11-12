@@ -230,8 +230,6 @@ viz_config:
         - elapsed_mins: landed_point + 2
           zoom: 50
   landed_uavs_waiting_time_mins: 30
-  # NOTE: For some reason, `map_texture_fpath`s must be added to vpython's textures folder (e.g.,
-  #     `~/miniconda3/envs/<conda-env-name>/lib/<python-version>/site-packages/vpython/vpython_data/`).
   map_texture_fpath: Miller_projection_SW-tessellated-vert_distortion_removed-cropped_to_pm_200deg_around_jfk_lax_centroid-fixed-gridlines_removed-waifu2x-2x.jpg
   map_view_config:
     map_texture_fpath: Miller_projection_SW-tessellated-vert_distortion_removed-cropped_to_pm_200deg_around_jfk_lax_centroid-fixed-waifu2x.jpg
