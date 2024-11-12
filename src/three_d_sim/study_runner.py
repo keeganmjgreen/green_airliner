@@ -214,9 +214,9 @@ def run_scenario(
         track_airplane_id=track_airplane_id,
         view=view,
         map_texture_fpath=(
-            simulation_config.viz_config.map_view_config.map_texture_fpath
+            simulation_config.viz_config.map_view_config.map_texture_filename
             if view == "map-view"
-            else simulation_config.viz_config.map_texture_fpath
+            else simulation_config.viz_config.map_texture_filename
         ),
         zoompoints=zoompoints,
         scene_size=scene_size,

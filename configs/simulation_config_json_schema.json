@@ -20,7 +20,7 @@
                 },
                 "viz_model_name": {
                     "$ref": "#/$defs/AirlinerVizModelName",
-                    "description": "Which 3D model to use for the airliner, when `viz` is set to true. Must be one of those     listed below. `viz_models.py` acts as a registry for these and, if a different 3D model is     desired, a new one can be added there.\n    ",
+                    "description": "Which 3D model to use for the airliner, when `viz_enabled` is set to true. Must be one of     those listed below. `viz_models.py` acts as a registry for these and, if a different 3D model     is desired, a new one can be added there.\n    ",
                     "title": "Viz Model Name"
                 }
             },
@@ -161,21 +161,31 @@
         },
         "MapViewConfig": {
             "properties": {
-                "map_texture_fpath": {
-                    "title": "Map Texture Fpath",
-                    "type": "string"
+                "map_texture_filename": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Name of the texture image file (e.g., a `.jpg` file) to use as the map view's background.     For some reason, this file must be added to `vpython`'s textures folder (e.g.,     `~/miniconda3/envs/<conda-env-name>/lib/<python-version>/site-packages/vpython/vpython_data/`).\n    ",
+                    "title": "Map Texture Filename"
                 },
                 "models_scale_factor": {
+                    "description": "Scale factor for the 3D models (how much to enlarge them to still be visible in the map     view).\n    ",
                     "title": "Models Scale Factor",
                     "type": "number"
                 },
                 "zoom": {
+                    "description": "An override zoom level to use exclusively for the map view.",
                     "title": "Zoom",
                     "type": "number"
                 }
             },
             "required": [
-                "map_texture_fpath",
                 "models_scale_factor",
                 "zoom"
             ],
@@ -217,18 +227,26 @@
                     "description": "Minutes into the simulation. Can be either a number or a string containing an algebraic     expression with number(s), one of the below-listed variables, and add/subtract operations. In     other words, it can be in any of the following formats:\n\n`{number}`\n`{variable}`\n`{number} +/- {number}`\n`{variable} +/- {number}`\n\nValid variables are as follows:\n\nThe following variables are specific to the airliner and can be used regardless of whether the     airliner is the airplane being tracked.\n`Airliner_takeoff_point`\n`Airliner_ascended_point`\n`{UAV ID}_on_airliner_docking_point`\n`{UAV ID}_on_airliner_undocking_point`\n`Airliner_curve_over_{flyover airport code}_midpoint`\n`Airliner_descent_point`\n`Airliner_landing_point`\n`Airliner_landed_point`\n\nThe following variables are specific to UAVs and can only be used when a UAV is the airplane     being tracked; the following variables refer to that UAV.\n`first_point`\n`takeoff_point`\n`ascended_point`\n`arc_start_point`\n`arc_end_point`\n`descent_to_airliner_point`\n`on_airliner_docking_point`\n`on_airliner_undocking_point`\n`ascended_from_airliner_point`\n`lowering_point`\n`lowered_point`\n`descent_point`\n`landing_point`\n`landed_point`",
                     "title": "Elapsed Mins"
                 },
-                "rate": {
-                    "description": "The rate at which to advance the simulation at `elapsed_mins`.",
-                    "title": "Rate",
+                "time_step_s": {
+                    "description": "The time step (in seconds) with which to advance the simulation time at `elapsed_mins`.",
+                    "title": "Time Step (s)",
                     "type": "number"
                 }
             },
             "required": [
                 "elapsed_mins",
-                "rate"
+                "time_step_s"
             ],
             "title": "Ratepoint",
             "type": "object"
+        },
+        "UavSpecName": {
+            "const": "At200",
+            "enum": [
+                "At200"
+            ],
+            "title": "UavSpecName",
+            "type": "string"
         },
         "UavVizModelName": {
             "const": "cessna",
@@ -242,9 +260,9 @@
             "description": "Configuration of the UAVs (all of which are assumed to be the same).",
             "properties": {
                 "airplane_spec_name": {
+                    "$ref": "#/$defs/UavSpecName",
                     "description": "Which airplane spec to use for every UAV. Must be one of those listed below. `specs.py`     acts as a registry for these and, if a different UAV is desired, a new spec can be added there.\n    ",
-                    "title": "Airplane Spec Name",
-                    "type": "string"
+                    "title": "Airplane Spec Name"
                 },
                 "refueling_rate_kW": {
                     "description": "The maximum rate (in kilowatts / joules per second) at which every UAV can refuel the     airliner. Can represent refueling at a rate of `x` joules of fuel per second, or recharging at     a rate of `x` kilowatts of electricity.\n    ",
@@ -263,7 +281,7 @@
                 },
                 "viz_model_name": {
                     "$ref": "#/$defs/UavVizModelName",
-                    "description": "Which 3D model to use for every UAV, when `viz` is set to true. Must be one of those listed     below. `viz_models.py` acts as a registry for these and, if a different 3D model is desired, a     new one can be added there.\n    ",
+                    "description": "Which 3D model to use for every UAV, when `viz_enabled` is set to true. Must be one of those     listed below. `viz_models.py` acts as a registry for these and, if a different 3D model is     desired, a new one can be added there.\n    ",
                     "title": "Viz Model Name"
                 }
             },
@@ -341,7 +359,7 @@
                     "type": "number"
                 },
                 "airliner_uav_docking_distance_km": {
-                    "description": "The distance (in kilometers) between the airliner and UAV when docked for refueling.     Evident when `viz` is set to true, this is not the distance between the top of the airliner's     fueselage and the bottom of the UAV, but the distance between their respective 3D models'     origins. This means that if either the airliner's or UAV's 3D models are changed, then the     `airliner_uav_docking_distance_km` may need to be changed accordingly.\n    ",
+                    "description": "The distance (in kilometers) between the airliner and UAV when docked for refueling.     Evident when `viz_enabled` is set to true, this is not the distance between the top of the     airliner's fueselage and the bottom of the UAV, but the distance between their respective 3D     models' origins. This means that if either the airliner's or UAV's 3D models are changed, then     the `airliner_uav_docking_distance_km` may need to be changed accordingly.\n    ",
                     "title": "Airliner-UAV Docking Distance (km)",
                     "type": "number"
                 },
@@ -401,8 +419,10 @@
             "type": "object"
         },
         "UavsZoompointsConfig": {
+            "description": "Zoompoints when a UAV is the airplane being tracked.",
             "properties": {
                 "to_airport": {
+                    "description": "Zoompoints for a \"to-airport\" UAV.",
                     "items": {
                         "$ref": "#/$defs/Zoompoint"
                     },
@@ -410,6 +430,7 @@
                     "type": "array"
                 },
                 "from_airport": {
+                    "description": "Zoompoints for a \"from-airport\" UAV.",
                     "items": {
                         "$ref": "#/$defs/Zoompoint"
                     },
@@ -425,11 +446,16 @@
             "type": "object"
         },
         "VizConfig": {
-            "description": "Configuration to use when `viz` is set to true.",
             "properties": {
+                "time_step_multiplier": {
+                    "default": 1.0,
+                    "description": "A number by which to multiply the time steps specified in the `ratepoints`.",
+                    "title": "Time Step Multiplier",
+                    "type": "number"
+                },
                 "max_frame_rate_fps": {
                     "description": "Maximum frame rate (in frames per second) at which to render the visualization. If updating     a frame takes too long, the actual frame rate will be less.\n    ",
-                    "title": "Max Frame Rate (frames/second)",
+                    "title": "Max Frame Rate (Frames/Second)",
                     "type": "integer"
                 },
                 "scene_width": {
@@ -443,7 +469,7 @@
                     "type": "integer"
                 },
                 "theme": {
-                    "description": "Color theme to use for the sky and (if no `map_texture_fpath` is specified) the ground.",
+                    "description": "Color theme to use for the sky and (if no `map_texture_filename` is specified) the ground.",
                     "enum": [
                         "day",
                         "night"
@@ -451,21 +477,53 @@
                     "title": "Theme",
                     "type": "string"
                 },
+                "zoompoints_enabled": {
+                    "default": true,
+                    "description": "Whether to enable the zoompoints. Requires `zoompoints_config` if true. For free zoom     (using the scrollwheel over the viewport), set this to false.\n    ",
+                    "title": "Zoompoints Enabled",
+                    "type": "boolean"
+                },
                 "zoompoints_config": {
-                    "$ref": "#/$defs/ZoompointsConfig",
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/ZoompointsConfig"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
                     "title": "Zoompoints Config"
                 },
                 "landed_uavs_waiting_time_mins": {
-                    "description": "When tracking a UAV, how long (in minutes) to wait after a flyover airport's last UAV lands     before ending that UAV's visualization / starting the next UAV's visualization (dependong on     which UAV is the airplane being tracked).\n    ",
-                    "title": "Landed UAVs Waiting Time (Mins)",
+                    "description": "When tracking a UAV, how long (in minutes) to wait after a flyover airport's last UAV lands     before ending that UAV's visualization / starting the next UAV's visualization (depending on     which UAV is the airplane being tracked).\n    ",
+                    "title": "Landed UAVs Waiting Time (Minutes)",
                     "type": "number"
                 },
-                "map_texture_fpath": {
-                    "title": "Map Texture Fpath",
-                    "type": "string"
+                "map_texture_filename": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Name of the texture image file (e.g., a `.jpg` file) to use for the ground. For some     reason, this file must be added to `vpython`'s textures folder (e.g.,     `~/miniconda3/envs/{conda-env-name}/lib/{python-version}/site-packages/vpython/vpython_data/`).\n    ",
+                    "title": "Map Texture Filename"
                 },
                 "map_view_config": {
-                    "$ref": "#/$defs/MapViewConfig"
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/MapViewConfig"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "Configuration to use when `--preset=map-view`.",
+                    "title": "Map View Config"
                 }
             },
             "required": [
@@ -473,9 +531,7 @@
                 "scene_width",
                 "scene_height",
                 "theme",
-                "zoompoints_config",
                 "landed_uavs_waiting_time_mins",
-                "map_texture_fpath",
                 "map_view_config"
             ],
             "title": "VizConfig",
@@ -509,8 +565,10 @@
             "type": "object"
         },
         "ZoompointsConfig": {
+            "description": "The zoom level of the visualization does not need to be constant. A non-constant zoom level     is achieved by specifying zoompoints: the zoom level at different times in the simulation.     Each zoompoint specifies a `zoom` level at a specified number of minutes elapsed. Between     zoompoints, linear interpolation is used to smoothly transition from one zoom level to the     next. A constant zoom can be set by specifying a single zoompoint.\n    ",
             "properties": {
                 "airliner_zoompoints": {
+                    "description": "Zoompoints when the airliner is the airplane being tracked.",
                     "items": {
                         "$ref": "#/$defs/Zoompoint"
                     },
@@ -518,7 +576,8 @@
                     "type": "array"
                 },
                 "uavs_zoompoints_config": {
-                    "$ref": "#/$defs/UavsZoompointsConfig"
+                    "$ref": "#/$defs/UavsZoompointsConfig",
+                    "title": "UAVs Zoompoints Config"
                 }
             },
             "required": [
@@ -556,20 +615,30 @@
             "title": "UAVs Flight Path Config"
         },
         "ratepoints": {
+            "description": "The rate at which the simulation advances does not need to be constant. A non-constant rate     is achieved by specifying ratepoints: the rate at which to advance the simulation at different     times in the simulation. Each ratepoint specifies a `time_step_s` with which to advance the     simulation at a specified number of minutes elapsed. Between ratepoints, linear interpolation     is used to smoothly transition from one rate to the next. A constant rate can be set by     specifying a single ratepoint.\n    ",
             "items": {
                 "$ref": "#/$defs/Ratepoint"
             },
             "title": "Ratepoints",
             "type": "array"
         },
-        "viz": {
+        "viz_enabled": {
             "default": true,
-            "description": "Whether to visualize the airliner and UAVs in-browser while the simulation runs.",
-            "title": "Viz",
+            "description": "Whether to visualize the airliner and UAVs in-browser while the simulation runs. Requires     `viz_config` if true.\n    ",
+            "title": "Viz Enabled",
             "type": "boolean"
         },
         "viz_config": {
-            "$ref": "#/$defs/VizConfig",
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/VizConfig"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "description": "Configuration to use when `viz_enabled` is set to true.",
             "title": "Viz Config"
         }
     },
@@ -579,8 +648,7 @@
         "n_uavs_per_flyover_airport",
         "uavs_config",
         "uavs_flight_path_config",
-        "ratepoints",
-        "viz_config"
+        "ratepoints"
     ],
     "title": "SimulationConfig",
     "type": "object"

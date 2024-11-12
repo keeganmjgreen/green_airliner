@@ -4,13 +4,13 @@ import datetime as dt
 from enum import Enum
 import json
 from pathlib import Path
-from typing import Dict, List, Literal, Tuple, Union
+from typing import Dict, List, Literal, Optional, Tuple, Union
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
 
-from src.specs import airliner_lookup
+from src.specs import airliner_lookup, uav_lookup
 from src.three_d_sim.flight_path_generation import AIRPORT_CODE_TYPE
 from src.three_d_sim.viz_models import airliner_model_lookup, uav_model_lookup
 
@@ -44,9 +44,9 @@ class AirlinerConfig(Model):
     airliner's energy capacity.
     """
     viz_model_name: AirlinerVizModelName = Field(title="Viz Model Name")
-    """Which 3D model to use for the airliner, when `viz` is set to true. Must be one of those \
-    listed below. `viz_models.py` acts as a registry for these and, if a different 3D model is \
-    desired, a new one can be added there.
+    """Which 3D model to use for the airliner, when `viz_enabled` is set to true. Must be one of \
+    those listed below. `viz_models.py` acts as a registry for these and, if a different 3D model \
+    is desired, a new one can be added there.
     """
 
 
@@ -144,10 +144,10 @@ class UavsFlightPathConfig(FlightPathConfig):
         title="Airliner-UAV Docking Distance (km)"
     )
     """The distance (in kilometers) between the airliner and UAV when docked for refueling. \
-    Evident when `viz` is set to true, this is not the distance between the top of the airliner's \
-    fueselage and the bottom of the UAV, but the distance between their respective 3D models' \
-    origins. This means that if either the airliner's or UAV's 3D models are changed, then the \
-    `airliner_uav_docking_distance_km` may need to be changed accordingly.
+    Evident when `viz_enabled` is set to true, this is not the distance between the top of the \
+    airliner's fueselage and the bottom of the UAV, but the distance between their respective 3D \
+    models' origins. This means that if either the airliner's or UAV's 3D models are changed, then \
+    the `airliner_uav_docking_distance_km` may need to be changed accordingly.
     """
     smallest_undocking_distance_from_airport_km: float = Field(
         title="Smallest (Un)Docking Distance From Airport (km)"
@@ -207,10 +207,14 @@ class NUavsAtFlyOverAirport(Model):
     """The number of UAVs to refuel the airliner just after flying over the airport."""
 
 
+UavSpecName = Enum("UavSpecName", {k: k for k in uav_lookup.keys()})
+UavVizModelName = Enum("UavVizModelName", {k: k for k in uav_model_lookup.keys()})
+
+
 class UavsConfig(Model):
     """Configuration of the UAVs (all of which are assumed to be the same)."""
 
-    airplane_spec_name: str = Field(title="Airplane Spec Name")
+    airplane_spec_name: UavSpecName = Field(title="Airplane Spec Name")
     """Which airplane spec to use for every UAV. Must be one of those listed below. `specs.py` \
     acts as a registry for these and, if a different UAV is desired, a new spec can be added there.
     """
@@ -231,12 +235,10 @@ class UavsConfig(Model):
     airliner** that every UAV starts with before takeoff from its airport. Expressed as a \
     percentage (0-100) of the UAV's refueling energy capacity (based on its cargo space).
     """
-    viz_model_name: Enum("UavVizModelName", {k: k for k in uav_model_lookup.keys()}) = (
-        Field(title="Viz Model Name")
-    )
-    """Which 3D model to use for every UAV, when `viz` is set to true. Must be one of those listed \
-    below. `viz_models.py` acts as a registry for these and, if a different 3D model is desired, a \
-    new one can be added there.
+    viz_model_name: UavVizModelName = Field(title="Viz Model Name")
+    """Which 3D model to use for every UAV, when `viz_enabled` is set to true. Must be one of those \
+    listed below. `viz_models.py` acts as a registry for these and, if a different 3D model is \
+    desired, a new one can be added there.
     """
 
 
@@ -291,7 +293,8 @@ class Timepoint(Model):
 
 
 class Ratepoint(Timepoint):
-    time_step_s: float
+    time_step_s: float = Field(title="Time Step (s)")
+    """The time step (in seconds) with which to advance the simulation time at `elapsed_mins`."""
 
     @property
     def value(self) -> float:
@@ -299,7 +302,7 @@ class Ratepoint(Timepoint):
 
 
 class Zoompoint(Timepoint):
-    zoom: float
+    zoom: float = Field(title="Zoom")
     """The zoom level of the visualization at `elapsed_mins`."""
 
     @property
@@ -308,26 +311,47 @@ class Zoompoint(Timepoint):
 
 
 class UavsZoompointsConfig(Model):
-    to_airport: List[Zoompoint]
-    from_airport: List[Zoompoint]
+    """Zoompoints when a UAV is the airplane being tracked."""
+
+    to_airport: List[Zoompoint] = Field(title="To Airport")
+    """Zoompoints for a "to-airport" UAV."""
+    from_airport: List[Zoompoint] = Field(title="From Airport")
+    """Zoompoints for a "from-airport" UAV."""
 
 
 class ZoompointsConfig(Model):
-    airliner_zoompoints: List[Zoompoint]
-    uavs_zoompoints_config: UavsZoompointsConfig
+    """The zoom level of the visualization does not need to be constant. A non-constant zoom level \
+    is achieved by specifying zoompoints: the zoom level at different times in the simulation. \
+    Each zoompoint specifies a `zoom` level at a specified number of minutes elapsed. Between \
+    zoompoints, linear interpolation is used to smoothly transition from one zoom level to the \
+    next. A constant zoom can be set by specifying a single zoompoint.
+    """
+
+    airliner_zoompoints: List[Zoompoint] = Field(title="Airliner Zoompoints")
+    """Zoompoints when the airliner is the airplane being tracked."""
+    uavs_zoompoints_config: UavsZoompointsConfig = Field(title="UAVs Zoompoints Config")
 
 
 class MapViewConfig(Model):
-    map_texture_fpath: str
-    models_scale_factor: float
-    zoom: float
+    map_texture_filename: Optional[str] = Field(
+        title="Map Texture Filename", default=None
+    )
+    """Name of the texture image file (e.g., a `.jpg` file) to use as the map view's background. \
+    For some reason, this file must be added to `vpython`'s textures folder (e.g., \
+    `~/miniconda3/envs/<conda-env-name>/lib/<python-version>/site-packages/vpython/vpython_data/`).
+    """
+    models_scale_factor: float = Field(title="Models Scale Factor")
+    """Scale factor for the 3D models (how much to enlarge them to still be visible in the map \
+    view).
+    """
+    zoom: float = Field(title="Zoom")
+    """An override zoom level to use exclusively for the map view."""
 
 
 class VizConfig(Model):
-    """Configuration to use when `viz` is set to true."""
-
     time_step_multiplier: float = Field(title="Time Step Multiplier", default=1.0)
-    max_frame_rate_fps: int = Field(title="Max Frame Rate (frames/second)")
+    """A number by which to multiply the time steps specified in the `ratepoints`."""
+    max_frame_rate_fps: int = Field(title="Max Frame Rate (Frames/Second)")
     """Maximum frame rate (in frames per second) at which to render the visualization. If updating \
     a frame takes too long, the actual frame rate will be less.
     """
@@ -336,17 +360,30 @@ class VizConfig(Model):
     scene_height: int = Field(title="Scene Height")
     """Height (in pixels) of the viewport in which the visualization is rendered."""
     theme: Literal["day", "night"] = Field(title="Theme")
-    """Color theme to use for the sky and (if no `map_texture_fpath` is specified) the ground."""
-    zoompoints_config: ZoompointsConfig = Field(title="Zoompoints Config")
+    """Color theme to use for the sky and (if no `map_texture_filename` is specified) the ground."""
+    zoompoints_enabled: bool = Field(title="Zoompoints Enabled", default=True)
+    """Whether to enable the zoompoints. Requires `zoompoints_config` if true. For free zoom \
+    (using the scrollwheel over the viewport), set this to false.
+    """
+    zoompoints_config: Optional[ZoompointsConfig] = Field(
+        title="Zoompoints Config", default=None
+    )
     landed_uavs_waiting_time_mins: float = Field(
-        title="Landed UAVs Waiting Time (Mins)"
+        title="Landed UAVs Waiting Time (Minutes)"
     )
     """When tracking a UAV, how long (in minutes) to wait after a flyover airport's last UAV lands \
-    before ending that UAV's visualization / starting the next UAV's visualization (dependong on \
+    before ending that UAV's visualization / starting the next UAV's visualization (depending on \
     which UAV is the airplane being tracked).
     """
-    map_texture_fpath: str
-    map_view_config: MapViewConfig
+    map_texture_filename: Optional[str] = Field(
+        title="Map Texture Filename", default=None
+    )
+    """Name of the texture image file (e.g., a `.jpg` file) to use for the ground. For some \
+    reason, this file must be added to `vpython`'s textures folder (e.g., \
+    `~/miniconda3/envs/{conda-env-name}/lib/{python-version}/site-packages/vpython/vpython_data/`).
+    """
+    map_view_config: Optional[MapViewConfig] = Field(title="Map View Config")
+    """Configuration to use when `--preset=map-view`."""
 
     @property
     def scene_size(self) -> Tuple[int, int]:
@@ -369,9 +406,19 @@ class SimulationConfig(Model):
         title="UAVs Flight Path Config"
     )
     ratepoints: List[Ratepoint] = Field(title="Ratepoints")
-    viz: bool = Field(title="Viz", default=True)
-    """Whether to visualize the airliner and UAVs in-browser while the simulation runs."""
-    viz_config: VizConfig = Field(title="Viz Config")
+    """The rate at which the simulation advances does not need to be constant. A non-constant rate \
+    is achieved by specifying ratepoints: the rate at which to advance the simulation at different \
+    times in the simulation. Each ratepoint specifies a `time_step_s` with which to advance the \
+    simulation at a specified number of minutes elapsed. Between ratepoints, linear interpolation \
+    is used to smoothly transition from one rate to the next. A constant rate can be set by \
+    specifying a single ratepoint.
+    """
+    viz_enabled: bool = Field(title="Viz Enabled", default=True)
+    """Whether to visualize the airliner and UAVs in-browser while the simulation runs. Requires \
+    `viz_config` if true.
+    """
+    viz_config: Optional[VizConfig] = Field(title="Viz Config", default=None)
+    """Configuration to use when `viz_enabled` is set to true."""
 
     @classmethod
     def from_yaml(
