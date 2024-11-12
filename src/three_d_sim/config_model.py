@@ -119,8 +119,8 @@ AirlinerFlightPathConfig.__doc__ = AirlinerFlightPathConfig.__doc__.strip() + " 
 
 
 class UavsFlightPathConfig(FlightPathConfig):
-    """Configuration of the UAVs' flight paths (all of which are assumed to follow the same
-    parameters). \
+    """Configuration of the UAVs' flight paths (all of which are assumed to follow the same \
+    parameters).
     A UAV is described as having a "service side". The service side is "to-airport" for UAVs that \
     refuel the airliner just **before** it flies over a given airport, and "from-airport" for UAVs \
     that refuel the airliner just **after** it flies over it.
