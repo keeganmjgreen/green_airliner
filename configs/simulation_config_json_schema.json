@@ -455,7 +455,7 @@
                 },
                 "max_frame_rate_fps": {
                     "description": "Maximum frame rate (in frames per second) at which to render the visualization. If updating     a frame takes too long, the actual frame rate will be less.\n    ",
-                    "title": "Max Frame Rate (Frames/Second)",
+                    "title": "Max Frame Rate (FPS)",
                     "type": "integer"
                 },
                 "scene_width": {
@@ -497,7 +497,7 @@
                 },
                 "landed_uavs_waiting_time_mins": {
                     "description": "When tracking a UAV, how long (in minutes) to wait after a flyover airport's last UAV lands     before ending that UAV's visualization / starting the next UAV's visualization (depending on     which UAV is the airplane being tracked).\n    ",
-                    "title": "Landed UAVs Waiting Time (Minutes)",
+                    "title": "Landed UAVs Waiting Time (Mins)",
                     "type": "number"
                 },
                 "map_texture_filename": {

@@ -352,7 +352,7 @@ class MapViewConfig(Model):
 class VizConfig(Model):
     time_step_multiplier: float = Field(title="Time Step Multiplier", default=1.0)
     """A number by which to multiply the time steps specified in the `ratepoints`."""
-    max_frame_rate_fps: int = Field(title="Max Frame Rate (Frames/Second)")
+    max_frame_rate_fps: int = Field(title="Max Frame Rate (FPS)")
     """Maximum frame rate (in frames per second) at which to render the visualization. If updating \
     a frame takes too long, the actual frame rate will be less.
     """
@@ -370,7 +370,7 @@ class VizConfig(Model):
         title="Zoompoints Config", default=None
     )
     landed_uavs_waiting_time_mins: float = Field(
-        title="Landed UAVs Waiting Time (Minutes)"
+        title="Landed UAVs Waiting Time (Mins)"
     )
     """When tracking a UAV, how long (in minutes) to wait after a flyover airport's last UAV lands \
     before ending that UAV's visualization / starting the next UAV's visualization (depending on \
