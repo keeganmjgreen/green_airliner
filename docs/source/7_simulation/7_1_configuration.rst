@@ -6,7 +6,11 @@ Schema
 
 .. raw:: html
 
-    <embed src="../_static/simulation_config_json_schema.html" width=100%, height=1000>
+    <div style="height: 100vh; display: flex; flex-direction: column;">
+        <iframe src="../_static/simulation_config_json_schema.html" style="flex-grow: 1; width: 100%; border: 1px solid #dfdfdf;"></iframe>
+    </div>
+
+
 
 Example for flight from JFK to LAX
 ----------------------------------
