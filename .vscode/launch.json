@@ -1,0 +1,145 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "Feasibility Study",
+            "type": "python",
+            "request": "launch",
+            "program": "src/feasibility_study/feasibility_study.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "Study Runner - Airplane Paths",
+            "type": "python",
+            "request": "launch",
+            "program": "src/three_d_sim/study_runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "--config-dir", "configs/jfk_to_lax/",
+                "--view", "paths",
+            ]
+        },
+        {
+            "name": "Study Runner - Map View, record-airplanes-viz",
+            "type": "python",
+            "request": "launch",
+            "program": "src/three_d_sim/study_runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "--config-dir", "configs/jfk_to_lax/",
+                "--view", "map-view",
+                "--preset", "record-airplanes-viz",
+            ]
+        },
+        {
+            "name": "Study Runner - Airliner Side View",
+            "type": "python",
+            "request": "launch",
+            "program": "src/three_d_sim/study_runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "--config-dir", "configs/jfk_to_lax/",
+                "--view", "side-view",
+                "--track-airplane-id", "Airliner",
+            ]
+        },
+        {
+            "name": "Study Runner - Airliner Side View, record-airplanes-viz",
+            "type": "python",
+            "request": "launch",
+            "program": "src/three_d_sim/study_runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "--config-dir", "configs/jfk_to_lax/",
+                "--view", "side-view",
+                "--track-airplane-id", "Airliner",
+                "--preset", "record-airplanes-viz",
+            ]
+        },
+        {
+            "name": "Study Runner - Airliner Side View, record-graphs",
+            "type": "python",
+            "request": "launch",
+            "program": "src/three_d_sim/study_runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "--config-dir", "configs/jfk_to_lax/",
+                "--view", "side-view",
+                "--track-airplane-id", "Airliner",
+                "--preset", "record-graphs",
+            ]
+        },
+        {
+            "name": "Study Runner - Airliner Tail View, record-airplanes-viz",
+            "type": "python",
+            "request": "launch",
+            "program": "src/three_d_sim/study_runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "--config-dir", "configs/jfk_to_lax/",
+                "--view", "tail-view",
+                "--track-airplane-id", "Airliner",
+                "--preset", "record-airplanes-viz",
+            ]
+        },
+        {
+            "name": "Study Runner - DEN UAV 0 Side View, record-airplanes-viz",
+            "type": "python",
+            "request": "launch",
+            "program": "src/three_d_sim/study_runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "--config-dir", "configs/jfk_to_lax/",
+                "--view", "side-view",
+                "--track-airplane-id", "DEN_UAV_0",
+                "--preset", "record-airplanes-viz",
+            ]
+        },
+    ]
+}
