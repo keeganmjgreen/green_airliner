@@ -12,7 +12,7 @@ The 3D simulation is run by `src/three_d_sim/study_runner.py` (the program's ent
 
 1. Set the `REPO_DIR`, `PYTHONPATH`, and `VIDEO_DIR` environment variables, e.g.:
     
-    `export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/electric_airline/ && export PYTHONPATH=$REPO_DIR && export VIDEO_DIR=/home/keegan_green/electric_airliner_video/`
+    `export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/green_airliner/ && export PYTHONPATH=$REPO_DIR && export VIDEO_DIR=/home/keegan_green/green_airliner_video/`
     
 2. Ensure you are in the repo directory:
     
@@ -20,7 +20,7 @@ The 3D simulation is run by `src/three_d_sim/study_runner.py` (the program's ent
     
 3. Activate the Conda environment:
     
-    `conda activate electric_airline`
+    `conda activate green_airliner`
     
 4. Run the 3D simulation:
     

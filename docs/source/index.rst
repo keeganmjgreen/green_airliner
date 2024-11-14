@@ -1,5 +1,5 @@
-Design and Feasibility Study of Mid-Air Refueling of an Electric Airliner
-=========================================================================
+Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner
+================================================================================
 
 .. toctree::
    :maxdepth: 2

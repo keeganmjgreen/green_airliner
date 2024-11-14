@@ -1,4 +1,4 @@
-name: electric_airline
+name: green_airliner
 dependencies:
   - pip=24.0
   - python=3.12.2

@@ -40,7 +40,7 @@ def simple_wavefront_obj_to_vp(
 	#     obj._axis.value = obj._size._x*norm(obj._axis)
     # to:
     #     obj._axis.value = norm(obj._axis)*obj._size._x
-    # in `~/miniconda3/envs/electric_airline/lib/python3.12/site-packages/vpython/vpython.py`.
+    # in `~/miniconda3/envs/green_airliner/lib/python3.12/site-packages/vpython/vpython.py`.
 
     if model_config.length_m is not None:
         vp_obj.size *= model_config.length_m / M_PER_KM / vp_obj.size.x

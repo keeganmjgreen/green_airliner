@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Design and Feasibility Study of Mid-Air Refueling of an Electric Airliner'
+project = 'Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner'
 copyright = '2024, Keegan Green'
 author = 'Keegan Green'
 
