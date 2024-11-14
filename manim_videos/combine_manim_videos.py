@@ -13,4 +13,5 @@ clips = [
     VideoFileClip(str(Path(args.work_dir, f"Video.mp4"))),
 ]
 final = concatenate_videoclips(clips)
-final.write_videofile(str(Path(args.work_dir, "final.mp4")))
+final.write_videofile(str(Path(args.work_dir, "video_presentation.mp4")))
+final.write_gif(str(Path(args.work_dir, "video_presentation.gif")))
