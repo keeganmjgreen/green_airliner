@@ -1,0 +1,413 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Simulation" href="../7_simulation/7_simulation.html" /><link rel="prev" title="Feasibility Studies with Different Energy Storage Media" href="../5_feasibility_studies/5_feasibility_studies.html" />
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2024.05.06 -->
+        <title>Optimizing the Airliner Flight Plan in Terms of Flyover Airports - Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" /
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../1_background/1_background.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../2_study_objectives/2_study_objectives.html">Study Objectives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3_airliner_uav_selection/3_airliner_uav_selection.html">Selection of the Commercial Airliner and UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4_mid_air_refueling_scheme/4_mid_air_refueling_scheme.html">The Mid-Air Refueling Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../5_feasibility_studies/5_feasibility_studies.html">Feasibility Studies with Different Energy Storage Media</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Optimizing the Airliner Flight Plan in Terms of Flyover Airports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../7_simulation/7_simulation.html">Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../7_simulation/7_1_configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../8_n_uavs_approximation/8_n_uavs_approximation.html">Approximation of the Number of UAVs Required</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../9_airliner_uav_interaction/9_airliner_uav_interaction.html">Airliner–UAV Interaction and Surrounding Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../10_admin_and_logistics/10_admin_and_logistics.html">Administrative and Logistical Considerations</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/6_optimizing_flyover_airports/6_optimizing_flyover_airports.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="optimizing-the-airliner-flight-plan-in-terms-of-flyover-airports">
+<h1>Optimizing the Airliner Flight Plan in Terms of Flyover Airports<a class="headerlink" href="#optimizing-the-airliner-flight-plan-in-terms-of-flyover-airports" title="Link to this heading">¶</a></h1>
+<section id="better-understanding-the-range-and-flight-plan-of-a-hydrogen-fueled-a320">
+<h2>Better understanding the range and flight plan of a hydrogen-fueled A320<a class="headerlink" href="#better-understanding-the-range-and-flight-plan-of-a-hydrogen-fueled-a320" title="Link to this heading">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Previously, energy levels have been expressed in base units of joules (or watt-hours) to be able to meaningfully compare them even when the aircraft’s energy storage capacity differs. However, after selecting hydrogen fuel as the energy storage media, the energy level expressed as a fraction of the aircraft’s energy storage capacity will be used to make comparisons even easier when constantly working with the hydrogen-fueled A320. In battery electric vehicles, this energy level is referred to as State of Charge (SoC) and is usually expressed as a percentage of the battery energy capacity. Hereafter, the term SoC will be adopted for the hydrogen-fueled A320 for convenience.</p>
+</div>
+<p>To better understand the range and overall flight plan of a hydrogen-fueled A320, we can visualize how its SoC changes as a function of the airliner’s location along its flight path. This can also be generalized by visualizing how the SoC falls as a function of distance from each airport, which will be useful when optimizing the flight plan in terms of choosing which airports the airliner will fly over for refueling.</p>
+<p>To do so, a (lon, lat, SoC) graph in 3D space is used:</p>
+<a class="reference internal image-reference" href="../_images/lat_lon_soc.png"><img alt="../_images/lat_lon_soc.png" src="../_images/lat_lon_soc.png" style="width: 75%;" />
+</a>
+<ul class="simple">
+<li><p>The <span class="math notranslate nohighlight">\(x\)</span>-, <span class="math notranslate nohighlight">\(y\)</span>-, and <span class="math notranslate nohighlight">\(z\)</span>-axes are longitude, latitude, and SoC, respectively.</p></li>
+<li><p>The colored points are the (longitude, latitude) coordinates of airports: JFK (red), PIT (blue), DEN (green), and LAX (orange).</p></li>
+<li><p>The thick colored lines show the SoC of the airliner decreasing between airports and the SoC increasing rapidly again when the airliner flies over the flyover airports and is refueled in mid-air.</p></li>
+</ul>
+<p>The range of the airliner from any one airport can be visualized, starting with JFK international airport, as follows. The SoC is modeled to decrease linearly with distance from the origin airport, resulting in an inverted cone surface. The circular intersection of the cone with the horizontal, zero-SoC plane represents the energy of the airliner being fully depleted. The radius of this circular intersection then represents the maximum range of the airliner (neglecting a reserve energy level).</p>
+<a class="reference internal image-reference" href="../_images/lat_lon_soc_1_jfk.png"><img alt="../_images/lat_lon_soc_1_jfk.png" class="align-center" src="../_images/lat_lon_soc_1_jfk.png" style="width: 75%;" />
+</a>
+<p>If the destination airport is not within this range (as is expectedly the case), any airport within the range can and must be selected as an flyover airport over which to fly and be refuelled. While flying in the completely opposite direction of the destination airport is obviously undesirable and may filter out a number of candidates, it is not in general obvious which candidate of flyover airport would be best and by what metric. In general, some questions arise regarding the selection of the flyover airport:</p>
+<ol class="arabic simple">
+<li><p>Should the flyover airport be the one closest to the destination airport?</p></li>
+<li><p>Should the flyover airport be the one closest to the direct flight path that a jet-fueled airliner would have taken to the destination airport?</p></li>
+</ol>
+<p>We will refer to these as criterion 1 and 2. While it may appear that the airport selected by criterion 1 would necessarily be the same as that selected by criterion 2, and vice versa, this is in general not the case. In an extreme and illustrative example, an flyover airport “a” could be 2000 km in the very rough direction of the destination airport, while another flyover airport “b” could be a mere 100 km away and extremely close to a direct flight path to the destination. Neglecting for now the inefficiency of refueling at airport “b” so close to the origin airport, the flyover airports “a” and “b” would be the obvious choices by criteria 1 and 2 respectively—but airports “a” and “b” are strikingly different.</p>
+<p>In any case, if PIT is selected as the flyover airport, then the airliner can be refueled and we repeat the process by again modeling a linear decrease in SoC as the airliner flies from PIT in a yet-undecided direction:</p>
+<a class="reference internal image-reference" href="../_images/lat_lon_soc_2_pit.png"><img alt="../_images/lat_lon_soc_2_pit.png" class="align-center" src="../_images/lat_lon_soc_2_pit.png" style="width: 75%;" />
+</a>
+<p>DEN is selected as the next flyover airport. The process can be repeated until the destination airport (LAX international airport) is within range of the airliner (with some reserve fuel), as is now the case in flying from DEN to LAX.</p>
+<a class="reference internal image-reference" href="../_images/lat_lon_soc_3_den.png"><img alt="../_images/lat_lon_soc_3_den.png" class="align-center" src="../_images/lat_lon_soc_3_den.png" style="width: 75%;" />
+</a>
+</section>
+<section id="extreme-cases">
+<h2>Extreme cases<a class="headerlink" href="#extreme-cases" title="Link to this heading">¶</a></h2>
+<p>The following examples use extreme cases to illustrate two principles that always apply when selecting flyover airports.</p>
+<section id="extreme-case-1">
+<h3>Extreme case 1<a class="headerlink" href="#extreme-case-1" title="Link to this heading">¶</a></h3>
+<p>In an extreme case, the two flyover airports are situated directly along the straight-line flight path from the origin airport (red) to the destination airport (gray):</p>
+<a class="reference internal image-reference" href="../_images/dead_end.png"><img alt="../_images/dead_end.png" class="align-center" src="../_images/dead_end.png" style="width: 50%;" />
+</a>
+<p>The flyover airports are just within range. As a result, the number of flyover airports is at a minimum. This also means that the airliner would be refueled more times per airport and would thus not need to slow down as often for refueling.</p>
+<p>However, the destination airport (which could as well be the next required flyover airport) is marginally out of range, rendering the entire flight path infeasible. This example illustrates that there can be no feasible—let alone optimal—choice of flyover airport without considering the overall flight path.</p>
+</section>
+<section id="extreme-case-2">
+<h3>Extreme case 2<a class="headerlink" href="#extreme-case-2" title="Link to this heading">¶</a></h3>
+<p>Consider the following other extreme case with the same origin and destination airports as in the previous example:</p>
+<a class="reference internal image-reference" href="../_images/bad_yet_best.png"><img alt="../_images/bad_yet_best.png" class="align-center" src="../_images/bad_yet_best.png" style="width: 50%;" />
+</a>
+<p>A flight path following these flyover airports is undesirable for two reasons:</p>
+<ul class="simple">
+<li><p>The total distance of the flight path is very long due to the extreme detour required.</p></li>
+<li><p>The total time of flight is very long not only due to the long distance but also due to the frequency at which the airliner must slow down over flyover airports for refueling. Flyover airports 2 and 4 and marginally beyond the range of the airliner from flyover airports 1 and 3, meaning that the airliner must refuel at more airports (and, in the case of airport 3, fly farther).</p></li>
+</ul>
+<p>However, this example illustrates that the feasible (or optimal) choices of flight paths (in this case only one) are not necessarily intuitive or intuitively good.</p>
+</section>
+</section>
+<section id="optimizing-the-selection-of-flyover-airports">
+<h2>Optimizing the selection of flyover airports<a class="headerlink" href="#optimizing-the-selection-of-flyover-airports" title="Link to this heading">¶</a></h2>
+<p>The total flight time or distance may be minimized by selecting an optimal flight path in terms of the flyover airports. Again, while very similar, minimizing flight time and minimizing distance are not necessarily equivalent objectives because the airliner will take additional time while slowing down, preparing for refueling, and returning to cruise speed. As a consequence, refueling once at multiple airports would require more of this additional time than refueling multiple times at one airport.</p>
+<p>As illustrated in the first extreme case, a feasible solution—let alone a global minimum—will not necessarily be achieved if the selection of a flyover airport is naive to how that choice will affect the future selections and proximities of airports. Any optimization of the flight path must not be greedy optimization.</p>
+<p>Indeed, the choice of earlier decision variables in the optimization problem affects the options of later decision variables as well as how well they can contribute to optimality.</p>
+<p>The optimization problem is a combinatorial one. Solving such an optimization problem represents solving a nonsmooth integer program.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../7_simulation/7_simulation.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Simulation</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../5_feasibility_studies/5_feasibility_studies.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Feasibility Studies with Different Energy Storage Media</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Keegan Green
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Optimizing the Airliner Flight Plan in Terms of Flyover Airports</a><ul>
+<li><a class="reference internal" href="#better-understanding-the-range-and-flight-plan-of-a-hydrogen-fueled-a320">Better understanding the range and flight plan of a hydrogen-fueled A320</a></li>
+<li><a class="reference internal" href="#extreme-cases">Extreme cases</a><ul>
+<li><a class="reference internal" href="#extreme-case-1">Extreme case 1</a></li>
+<li><a class="reference internal" href="#extreme-case-2">Extreme case 2</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#optimizing-the-selection-of-flyover-airports">Optimizing the selection of flyover airports</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>
