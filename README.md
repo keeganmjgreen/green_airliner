@@ -10,9 +10,9 @@ The 3D simulation is run by `src/three_d_sim/study_runner.py` (the program's ent
 
 ### Running via command line
 
-1. Set the `REPO_DIR`, `PYTHONPATH`, and `VIDEO_DIR` environment variables, e.g.:
+1. Set the `REPO_DIR`, `PYTHONPATH`, `MODELS_DIR`, and `VIDEO_DIR` environment variables, e.g.:
     
-    `export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/green_airliner/ && export PYTHONPATH=$REPO_DIR && export VIDEO_DIR=/home/keegan_green/green_airliner_video/`
+    `export REPO_DIR=/home/keegan_green/Dropbox/Documents/Projects/green_airliner/ && export PYTHONPATH=$REPO_DIR && export MODELS_DIR=/home/keegan_green/Dropbox/Documents/Projects/green_airliner/local/models/ && export VIDEO_DIR=/home/keegan_green/green_airliner_video/`
     
 2. Ensure you are in the repo directory:
     

@@ -1,16 +1,16 @@
+import os
+
 import numpy as np
 import vpython as vp
 
 from src.modeling_objects import ModelConfig
 from src.utils.utils import M_PER_KM
 
-MODELS_DIR = "src/three_d_sim/models/"
-
 
 def simple_wavefront_obj_to_vp(
     model_config: ModelConfig, **vp_obj_kwargs
 ) -> vp.compound:
-    with open(MODELS_DIR + model_config.model_subpath, "r") as f:
+    with open(os.environ["MODELS_DIR"] + model_config.model_subpath, "r") as f:
         lines = f.readlines()
 
     vertices = []
@@ -37,7 +37,7 @@ def simple_wavefront_obj_to_vp(
 
     vp_obj = vp.compound(faces, **vp_obj_kwargs)
     # ^ Requires manually changing:
-	#     obj._axis.value = obj._size._x*norm(obj._axis)
+    #     obj._axis.value = obj._size._x*norm(obj._axis)
     # to:
     #     obj._axis.value = norm(obj._axis)*obj._size._x
     # in `~/miniconda3/envs/green_airliner/lib/python3.12/site-packages/vpython/vpython.py`.
