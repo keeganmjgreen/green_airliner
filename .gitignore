@@ -1,6 +1,7 @@
 .idea/
+.env
 __pycache__/
 docs/build/
 tmp/
-
+local/
 *.avi
