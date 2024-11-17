@@ -349,6 +349,15 @@ class MapViewConfig(Model):
     """An override zoom level to use exclusively for the map view."""
 
 
+class ViewportConfig(Model):
+    """Configuration of the viewport in which the 3D visualization is rendered."""
+    width_px: int = Field(title="Width (px)")
+    height_px: int = Field(title="Height (px)")
+
+    @property
+    def size(self) -> Tuple[int, int]:
+        return self.width_px, self.height_px
+
 class VizConfig(Model):
     time_step_multiplier: float = Field(title="Time Step Multiplier", default=1.0)
     """A number by which to multiply the time steps specified in the `ratepoints`."""
@@ -356,10 +365,7 @@ class VizConfig(Model):
     """Maximum frame rate (in frames per second) at which to render the visualization. If updating \
     a frame takes too long, the actual frame rate will be less.
     """
-    scene_width: int = Field(title="Scene Width")
-    """Width (in pixels) of the viewport in which the visualization is rendered."""
-    scene_height: int = Field(title="Scene Height")
-    """Height (in pixels) of the viewport in which the visualization is rendered."""
+    viewport_config: ViewportConfig = Field(title="Viewport Config")
     theme: Literal["day", "night"] = Field(title="Theme")
     """Color theme to use for the sky and (if no `map_texture_filename` is specified) the ground."""
     zoompoints_enabled: bool = Field(title="Zoompoints Enabled", default=True)
@@ -385,10 +391,6 @@ class VizConfig(Model):
     """
     map_view_config: Optional[MapViewConfig] = Field(title="Map View Config")
     """Configuration to use when `--view=map-view`."""
-
-    @property
-    def scene_size(self) -> Tuple[int, int]:
-        return self.scene_width, self.scene_height
 
 
 class SimulationConfig(Model):

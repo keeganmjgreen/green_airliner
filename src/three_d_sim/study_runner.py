@@ -169,20 +169,20 @@ def run_scenario(
             Zoompoint(0, zoom=simulation_config.viz_config.map_view_config.zoom)
         ]
 
-    scene_size = simulation_config.viz_config.scene_size
+    viewport_size = simulation_config.viz_config.viewport_config.size
     captions = True
     if record == "airplanes-viz":
         video_dir = os.environ["VIDEO_DIR"]
         screen_recorders = [
             ScreenRecorder(
                 origin=(8, 138),
-                size=scene_size,
+                size=viewport_size,
                 fname=f"{video_dir}/inputs/{track_airplane_id or ''}-{view}.avi",
             )
         ]
     elif record == "graphs":
         video_dir = os.environ["VIDEO_DIR"]
-        scene_size = (180, 90)
+        viewport_size = (180, 90)
         captions = False
         OFFSET_H = 229  # 228
         GRAPH_H = 445  # 426
@@ -222,7 +222,7 @@ def run_scenario(
             else simulation_config.viz_config.map_texture_filename
         ),
         zoompoints=zoompoints,
-        scene_size=scene_size,
+        viewport_size=viewport_size,
         theme=simulation_config.viz_config.theme,
         models_scale_factor=models_scale_factor,
         captions=captions,

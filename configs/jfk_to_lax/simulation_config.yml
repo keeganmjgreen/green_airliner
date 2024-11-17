@@ -98,8 +98,9 @@ ratepoints:
 viz_config:
   time_step_multiplier: 1
   max_frame_rate_fps: 25
-  scene_width: 1800
-  scene_height: 900
+  viewport_config:
+    width_px: 1800
+    height_px: 900
   theme: night
   zoompoints_config:
     airliner_zoompoints:

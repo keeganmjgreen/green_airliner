@@ -85,7 +85,7 @@ class AirplanesVisualizerEnvironment(Environment):
     map_texture_fpath: str
     zoompoints: List[Zoompoint]
     max_frame_rate_fps: float
-    scene_size: Tuple[int, int] = (1800, 900)
+    viewport_size: Tuple[int, int]
     theme: Literal["day", "night"]
     models_scale_factor: float = 1.0
     captions: bool = True
@@ -109,7 +109,7 @@ class AirplanesVisualizerEnvironment(Environment):
         #     "side-view": f"{self.track_airplane_id} Side View",
         #     "map-view": "Map View",
         # }[self.VIEW]
-        vp.scene.width, vp.scene.height = self.scene_size
+        vp.scene.width, vp.scene.height = self.viewport_size
         vp.scene.background = _rgb_to_vp_color(self.palette.sky)
         vp.scene.ambient = vp.color.white * 0.5
 
