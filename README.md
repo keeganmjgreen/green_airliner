@@ -135,3 +135,22 @@ The following command concatenates the three parts into the final video presenta
 ```
 cd ${VIDEO_DIR} && python ${REPO_DIR}/manim_videos/combine_manim_videos.py --work-dir=${VIDEO_DIR}/media/videos/manim_videos/1080p60/ && vlc ${VIDEO_DIR}/media/videos/manim_videos/1080p60/video_presentation.mp4
 ```
+
+## References for development
+
+### Generating the documentation locally
+
+The documentation can be generated (using Sphinx) locally using the following commands.
+
+First-time setup for generating LaTeX documentation only:
+
+1. Run `sudo apt install latexmk`.
+2. Run `sudo apt install --fix-missing texlive-latex-extra`.
+
+Generate the HTML documentation (LaTeX currently disabled) by running:
+
+```bash
+source docs/documentation_workflow.sh
+```
+
+This script, among other things, automatically converts the `SimulationConfig` Pydantic model to JSON Schema and an interactive HTML page embedded in the documentation.

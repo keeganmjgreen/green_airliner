@@ -436,6 +436,6 @@ if __name__ == "__main__":
     simulation_config_schema = SimulationConfig.model_json_schema()
     json.dump(
         simulation_config_schema,
-        Path("configs/simulation_config_json_schema.json").open("w"),
+        Path("src/three_d_sim/simulation_config_json_schema.json").open("w"),
         indent=4,
     )

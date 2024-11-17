@@ -13,7 +13,7 @@ from src.three_d_sim.environments.airplanes_visualizer_environment import (
     AirplanesVisualizerEnvironment,
     ScreenRecorder,
 )
-from src.three_d_sim.config_model import SimulationConfig, Zoompoint
+from src.three_d_sim.simulation_config_schema import SimulationConfig, Zoompoint
 from src.three_d_sim.flight_path_generation import (
     AirlinerFlightPath,
     UavFlightPath,

@@ -14,7 +14,7 @@ import scipy as sp
 from src.airplanes_simulator import AirplanesSimulator
 from src.modeling_objects import AirplanesState
 from src.utils.utils import timedelta_to_minutes
-from src.three_d_sim.config_model import Ratepoint, Timepoint
+from src.three_d_sim.simulation_config_schema import Ratepoint, Timepoint
 
 
 def get_interpolator_by_elapsed_time(points: List[Timepoint]):
