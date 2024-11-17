@@ -3,7 +3,7 @@ import dataclasses
 import datetime as dt
 import os
 import subprocess
-from typing import Dict, Tuple
+from typing import Dict, Literal, Tuple
 
 from src.feasibility_study.modeling_objects import Fuel
 from src.airplanes_simulator import AirplanesSimulator
@@ -26,7 +26,10 @@ from src.utils.utils import MJ_PER_KWH, timedelta_to_minutes
 
 
 def run_scenario(
-    simulation_config: SimulationConfig, view: View, track_airplane_id: str, preset: str
+    simulation_config: SimulationConfig,
+    view: View,
+    track_airplane_id: str,
+    record: Literal["airplanes-viz", "graphs"],
 ) -> None:
     airliner_config = simulation_config.airliner_config
     airliner = Airliner(
@@ -168,7 +171,7 @@ def run_scenario(
 
     scene_size = simulation_config.viz_config.scene_size
     captions = True
-    if preset == "record-airplanes-viz":
+    if record == "airplanes-viz":
         video_dir = os.environ["VIDEO_DIR"]
         screen_recorders = [
             ScreenRecorder(
@@ -177,7 +180,7 @@ def run_scenario(
                 fname=f"{video_dir}/inputs/{track_airplane_id or ''}-{view}.avi",
             )
         ]
-    elif preset == "record-graphs":
+    elif record == "graphs":
         video_dir = os.environ["VIDEO_DIR"]
         scene_size = (180, 90)
         captions = False
@@ -337,7 +340,7 @@ def parse_cli_args() -> argparse.Namespace:
     parser.add_argument("--config-dir")
     parser.add_argument("--view")
     parser.add_argument("--track-airplane-id", default=None)
-    parser.add_argument("--preset", default=None)
+    parser.add_argument("--record", default=None)
     args = parser.parse_args()
     return args
 
@@ -349,5 +352,5 @@ if __name__ == "__main__":
         simulation_config=SimulationConfig.from_yaml(args.config_dir),
         view=args.view,
         track_airplane_id=args.track_airplane_id,
-        preset=args.preset,
+        record=args.record,
     )

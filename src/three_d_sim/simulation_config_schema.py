@@ -384,7 +384,7 @@ class VizConfig(Model):
     `~/miniconda3/envs/{conda-env-name}/lib/{python-version}/site-packages/vpython/vpython_data/`).
     """
     map_view_config: Optional[MapViewConfig] = Field(title="Map View Config")
-    """Configuration to use when `--preset=map-view`."""
+    """Configuration to use when `--view=map-view`."""
 
     @property
     def scene_size(self) -> Tuple[int, int]:

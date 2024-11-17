@@ -54,7 +54,7 @@
             "args": [
                 "--config-dir", "configs/jfk_to_lax/",
                 "--view", "map-view",
-                "--preset", "record-airplanes-viz",
+                "--record", "airplanes-viz",
             ]
         },
         {
@@ -87,7 +87,7 @@
                 "--config-dir", "configs/jfk_to_lax/",
                 "--view", "side-view",
                 "--track-airplane-id", "Airliner",
-                "--preset", "record-airplanes-viz",
+                "--record", "airplanes-viz",
             ]
         },
         {
@@ -104,7 +104,7 @@
                 "--config-dir", "configs/jfk_to_lax/",
                 "--view", "side-view",
                 "--track-airplane-id", "Airliner",
-                "--preset", "record-graphs",
+                "--record", "graphs",
             ]
         },
         {
@@ -121,7 +121,7 @@
                 "--config-dir", "configs/jfk_to_lax/",
                 "--view", "tail-view",
                 "--track-airplane-id", "Airliner",
-                "--preset", "record-airplanes-viz",
+                "--record", "airplanes-viz",
             ]
         },
         {
@@ -138,7 +138,7 @@
                 "--config-dir", "configs/jfk_to_lax/",
                 "--view", "side-view",
                 "--track-airplane-id", "DEN_UAV_0",
-                "--preset", "record-airplanes-viz",
+                "--record", "airplanes-viz",
             ]
         },
     ]

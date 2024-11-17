@@ -522,7 +522,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "Configuration to use when `--preset=map-view`.",
+                    "description": "Configuration to use when `--view=map-view`.",
                     "title": "Map View Config"
                 }
             },
