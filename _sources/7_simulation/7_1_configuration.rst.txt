@@ -15,5 +15,5 @@ Schema
 Example for flight from JFK to LAX
 ----------------------------------
 
-.. literalinclude:: ../../../configs/jfk_to_lax/simulation_config.yml
+.. literalinclude:: ../../configs/jfk_to_lax/simulation_config.yml
    :language: yaml

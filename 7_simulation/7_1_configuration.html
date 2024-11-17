@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Approximation of the Number of UAVs Required" href="../8_n_uavs_approximation/8_n_uavs_approximation.html" /><link rel="prev" title="Simulation" href="7_simulation.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2024.05.06 -->
-        <title>Configuration - Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner documentation</title>
+        <title>Configuration - Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
@@ -179,7 +179,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner  documentation</div></a>
+      <a href="../index.html"><div class="brand">Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -203,7 +203,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner  documentation</span>
+  <span class="sidebar-brand-text">Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -273,6 +273,245 @@
 </div></section>
 <section id="example-for-flight-from-jfk-to-lax">
 <h2>Example for flight from JFK to LAX<a class="headerlink" href="#example-for-flight-from-jfk-to-lax" title="Link to this heading">¶</a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">airliner_config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">airplane_spec_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lh2FueledA320</span>
+<span class="w">  </span><span class="nt">refueling_rate_kW</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2333333</span><span class="w">  </span><span class="c1"># 7e12/50 J/min LH2 * (60 min/h) / (3600 J/Wh) / (1000 W/kW)</span>
+<span class="w">  </span><span class="nt">initial_energy_level_pc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100.0</span>
+<span class="w">  </span><span class="nt">viz_model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a320</span>
+<span class="nt">airliner_flight_path_config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">origin_airport_code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">JFK</span>
+<span class="w">  </span><span class="nt">flyover_airport_codes</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEN</span>
+<span class="w">  </span><span class="nt">destination_airport_code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LAX</span>
+<span class="w">  </span><span class="nt">takeoff_speed_kmph</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">262.5</span><span class="w">  </span><span class="c1"># mean(240, 285) from https://en.wikipedia.org/wiki/Takeoff</span>
+<span class="w">  </span><span class="nt">takeoff_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">takeoff_leveling_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">  </span><span class="nt">rate_of_climb_mps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">70</span>
+<span class="w">  </span><span class="nt">climb_leveling_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">  </span><span class="nt">cruise_altitude_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.5</span><span class="w">  </span><span class="c1"># mean(9.4, 11.6) from https://en.wikipedia.org/wiki/Cruise_%28aeronautics%29</span>
+<span class="w">  </span><span class="nt">turning_radius_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">  </span><span class="nt">descent_leveling_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">  </span><span class="nt">rate_of_descent_mps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">  </span><span class="nt">landing_leveling_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">  </span><span class="nt">landing_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">landing_speed_kmph</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
+<span class="w">  </span><span class="nt">speed_change_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="nt">n_uavs_per_flyover_airport</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">PIT</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">to_airport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">  </span><span class="c1"># gets labeled as &quot;PIT_UAV_0&quot;</span>
+<span class="w">    </span><span class="nt">from_airport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">  </span><span class="c1"># &quot;PIT_UAV_1&quot;</span>
+<span class="w">  </span><span class="nt">DEN</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">to_airport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">  </span><span class="c1"># &quot;DEN_UAV_0&quot;, &quot;DEN_UAV_1&quot;, &quot;DEN_UAV_2&quot;</span>
+<span class="w">    </span><span class="nt">from_airport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">  </span><span class="c1"># &quot;DEN_UAV_3&quot;, &quot;DEN_UAV_4&quot;</span>
+<span class="nt">uavs_config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">airplane_spec_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">At200</span>
+<span class="w">  </span><span class="nt">refueling_rate_kW</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2333333</span><span class="w">  </span><span class="c1"># assumed same as airliner</span>
+<span class="w">  </span><span class="nt">initial_energy_level_pc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100.0</span>
+<span class="w">  </span><span class="nt">initial_refueling_energy_level_pc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100.0</span>
+<span class="w">  </span><span class="nt">viz_model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cessna</span>
+<span class="nt">uavs_flight_path_config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">takeoff_speed_kmph</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span><span class="w">  </span><span class="c1"># https://en.wikipedia.org/wiki/Takeoff</span>
+<span class="w">  </span><span class="nt">takeoff_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">takeoff_leveling_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">  </span><span class="nt">rate_of_climb_mps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">35</span>
+<span class="w">  </span><span class="nt">climb_leveling_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">  </span><span class="nt">smallest_cruise_altitude_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">11.5</span>
+<span class="w">  </span><span class="nt">descent_leveling_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">  </span><span class="nt">rate_of_descent_mps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">  </span><span class="nt">landing_leveling_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">  </span><span class="nt">landing_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">landing_speed_kmph</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
+<span class="w">  </span><span class="nt">arc_radius_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">airliner_uav_docking_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0015</span>
+<span class="w">  </span><span class="nt">smallest_undocking_distance_from_airport_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">  </span><span class="nt">inter_uav_clearance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
+<span class="w">  </span><span class="nt">airliner_clearance_speed_kmph</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
+<span class="w">  </span><span class="nt">airliner_clearance_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">  </span><span class="nt">smallest_airliner_clearance_altitude_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">  </span><span class="nt">inter_uav_vertical_distance_km</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">ratepoints</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_ascended_point</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_ascended_point + 5</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">  </span><span class="c1"># PIT:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_0_on_airliner_docking_point - 5</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_0_on_airliner_docking_point - 1.5</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_0_on_airliner_undocking_point + 1.5</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_curve_over_PIT_midpoint</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_1_on_airliner_docking_point - 1.5</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_1_on_airliner_undocking_point + 1.5</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_1_on_airliner_undocking_point + 10</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">  </span><span class="c1"># DEN:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEN_UAV_0_on_airliner_docking_point - 10</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEN_UAV_0_on_airliner_docking_point - 1.5</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEN_UAV_0_on_airliner_undocking_point + 1.5</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_curve_over_DEN_midpoint</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_curve_over_DEN_midpoint + 40</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">  </span><span class="c1"># LAX:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_descent_point - 5</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_descent_point</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_landed_point + 5</span>
+<span class="w">    </span><span class="nt">time_step_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="nt">viz_config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">time_step_multiplier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">max_frame_rate_fps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span>
+<span class="w">  </span><span class="nt">scene_width</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800</span>
+<span class="w">  </span><span class="nt">scene_height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">900</span>
+<span class="w">  </span><span class="nt">theme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">night</span>
+<span class="w">  </span><span class="nt">zoompoints_config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">airliner_zoompoints</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_takeoff_point</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_ascended_point</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_ascended_point + 0.5</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.04</span>
+<span class="w">      </span><span class="c1"># PIT:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_0_on_airliner_docking_point - 1</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.02</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_0_on_airliner_docking_point - 0.3</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_0_on_airliner_undocking_point - 0.1</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_0_on_airliner_undocking_point + 0.5</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_curve_over_PIT_midpoint - 5</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_curve_over_PIT_midpoint</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_curve_over_PIT_midpoint + 5</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_1_on_airliner_docking_point - 0.3</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_1_on_airliner_undocking_point - 0.1</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_1_on_airliner_undocking_point + 0.5</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_1_on_airliner_undocking_point + 2</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.02</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PIT_UAV_1_on_airliner_undocking_point + 20</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.005</span>
+<span class="w">      </span><span class="c1"># DEN:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEN_UAV_0_on_airliner_docking_point - 5</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.004</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEN_UAV_0_on_airliner_docking_point - 1</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.02</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEN_UAV_0_on_airliner_docking_point - 0.3</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEN_UAV_0_on_airliner_undocking_point - 0.1</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEN_UAV_0_on_airliner_undocking_point + 0.5</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_curve_over_DEN_midpoint</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEN_UAV_3_on_airliner_docking_point</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEN_UAV_4_on_airliner_undocking_point</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEN_UAV_4_on_airliner_undocking_point + 1</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.02</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEN_UAV_4_on_airliner_undocking_point + 25</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.002</span>
+<span class="w">      </span><span class="c1"># LAX:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_descent_point - 50</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.002</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_descent_point</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.04</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_landing_point</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.04</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_landed_point + 1</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Airliner_landed_point + 5</span>
+<span class="w">        </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">    </span><span class="nt">uavs_zoompoints_config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">to_airport</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">takeoff_point - 2</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">takeoff_point - 1</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascended_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascended_point + 1</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arc_start_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">descent_to_airliner_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on_airliner_docking_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on_airliner_docking_point + 0.1</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on_airliner_undocking_point - 0.1</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on_airliner_undocking_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascended_from_airliner_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">descent_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">landed_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">landed_point + 2</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">      </span><span class="nt">from_airport</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">takeoff_point - 2</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">takeoff_point - 1</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascended_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascended_point + 1</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">descent_to_airliner_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on_airliner_docking_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on_airliner_docking_point + 0.1</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on_airliner_undocking_point - 0.1</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on_airliner_undocking_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascended_from_airliner_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arc_end_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.25</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">landed_point</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">elapsed_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">landed_point + 2</span>
+<span class="w">          </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">  </span><span class="nt">landed_uavs_waiting_time_mins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">  </span><span class="nt">map_texture_fpath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Miller_projection_SW-tessellated-vert_distortion_removed-cropped_to_pm_200deg_around_jfk_lax_centroid-fixed-gridlines_removed-waifu2x-2x.jpg</span>
+<span class="w">  </span><span class="nt">map_view_config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">map_texture_fpath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Miller_projection_SW-tessellated-vert_distortion_removed-cropped_to_pm_200deg_around_jfk_lax_centroid-fixed-waifu2x.jpg</span>
+<span class="w">    </span><span class="nt">models_scale_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20000</span>
+<span class="w">    </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+</pre></div>
+</div>
 </section>
 </section>
 
