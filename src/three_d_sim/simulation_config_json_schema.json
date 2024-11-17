@@ -240,6 +240,26 @@
             "title": "Ratepoint",
             "type": "object"
         },
+        "ScreenPosition": {
+            "properties": {
+                "x_px": {
+                    "description": "X-coordinate (in pixels) relative to the left edge of the screen.",
+                    "title": "X-Coordinate (px)",
+                    "type": "integer"
+                },
+                "y_px": {
+                    "description": "Y-coordinate (in pixels) relative to the top edge of the screen.",
+                    "title": "Y-Coordinate (px)",
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "x_px",
+                "y_px"
+            ],
+            "title": "ScreenPosition",
+            "type": "object"
+        },
         "UavSpecName": {
             "const": "At200",
             "enum": [
@@ -445,6 +465,42 @@
             "title": "UavsZoompointsConfig",
             "type": "object"
         },
+        "ViewportConfig": {
+            "description": "Configuration of the viewport in which the 3D visualization is rendered.",
+            "properties": {
+                "size": {
+                    "$ref": "#/$defs/ViewportSize"
+                },
+                "origin": {
+                    "$ref": "#/$defs/ScreenPosition",
+                    "description": "The position of the viewport with respect to the top-left corner of your screen. Cannot be     set to your liking, but must be set when using the `--record` command-line argument to record     the correct region of your screen.\n    ",
+                    "title": "Origin"
+                }
+            },
+            "required": [
+                "origin"
+            ],
+            "title": "ViewportConfig",
+            "type": "object"
+        },
+        "ViewportSize": {
+            "properties": {
+                "width_px": {
+                    "title": "Width (px)",
+                    "type": "integer"
+                },
+                "height_px": {
+                    "title": "Height (px)",
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "width_px",
+                "height_px"
+            ],
+            "title": "ViewportSize",
+            "type": "object"
+        },
         "VizConfig": {
             "properties": {
                 "time_step_multiplier": {
@@ -458,15 +514,9 @@
                     "title": "Max Frame Rate (FPS)",
                     "type": "integer"
                 },
-                "scene_width": {
-                    "description": "Width (in pixels) of the viewport in which the visualization is rendered.",
-                    "title": "Scene Width",
-                    "type": "integer"
-                },
-                "scene_height": {
-                    "description": "Height (in pixels) of the viewport in which the visualization is rendered.",
-                    "title": "Scene Height",
-                    "type": "integer"
+                "viewport_config": {
+                    "$ref": "#/$defs/ViewportConfig",
+                    "title": "Viewport Config"
                 },
                 "theme": {
                     "description": "Color theme to use for the sky and (if no `map_texture_filename` is specified) the ground.",
@@ -528,8 +578,7 @@
             },
             "required": [
                 "max_frame_rate_fps",
-                "scene_width",
-                "scene_height",
+                "viewport_config",
                 "theme",
                 "landed_uavs_waiting_time_mins",
                 "map_view_config"

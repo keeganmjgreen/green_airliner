@@ -99,8 +99,12 @@ viz_config:
   time_step_multiplier: 1
   max_frame_rate_fps: 25
   viewport_config:
-    width_px: 1800
-    height_px: 900
+    size:
+      width_px: 1800
+      height_px: 900
+    origin:
+      x_px: 8
+      y_px: 138
   theme: night
   zoompoints_config:
     airliner_zoompoints:

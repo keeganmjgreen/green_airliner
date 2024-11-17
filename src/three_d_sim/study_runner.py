@@ -13,7 +13,7 @@ from src.three_d_sim.environments.airplanes_visualizer_environment import (
     AirplanesVisualizerEnvironment,
     ScreenRecorder,
 )
-from src.three_d_sim.simulation_config_schema import SimulationConfig, Zoompoint
+from src.three_d_sim.simulation_config_schema import SimulationConfig, ViewportSize, Zoompoint
 from src.three_d_sim.flight_path_generation import (
     AirlinerFlightPath,
     UavFlightPath,
@@ -170,31 +170,34 @@ def run_scenario(
         ]
 
     viewport_size = simulation_config.viz_config.viewport_config.size
+    viewport_origin = simulation_config.viz_config.viewport_config.origin
     captions = True
     if record == "airplanes-viz":
         video_dir = os.environ["VIDEO_DIR"]
         screen_recorders = [
             ScreenRecorder(
-                origin=(8, 138),
+                origin=viewport_origin,
                 size=viewport_size,
                 fname=f"{video_dir}/inputs/{track_airplane_id or ''}-{view}.avi",
             )
         ]
     elif record == "graphs":
-        video_dir = os.environ["VIDEO_DIR"]
-        viewport_size = (180, 90)
         captions = False
-        OFFSET_H = 229  # 228
-        GRAPH_H = 445  # 426
+        video_dir = os.environ["VIDEO_DIR"]
+        viewport_size = ViewportSize(
+            width_px=180, height_px=90
+        )  # Make room for graphs.
+        VERTICAL_OFFSET_PX = viewport_origin.y_px + viewport_size.height_px + 1
+        graph_size = ViewportSize(width_px=640, height_px=445)
         screen_recorders = [
             ScreenRecorder(
-                origin=(8, OFFSET_H),
-                size=(640, GRAPH_H),
+                origin=(viewport_origin.x_px, VERTICAL_OFFSET_PX),
+                size=graph_size.tuple,
                 fname=f"{video_dir}/inputs/Airliner-energy-level-graph.avi",
             ),
             ScreenRecorder(
-                origin=(8, OFFSET_H + GRAPH_H),
-                size=(640, GRAPH_H),
+                origin=(viewport_origin.x_px, VERTICAL_OFFSET_PX + graph_size.height_px),
+                size=graph_size.tuple,
                 fname=f"{video_dir}/inputs/Airliner-speed-graph.avi",
             ),
         ]

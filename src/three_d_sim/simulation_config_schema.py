@@ -349,10 +349,34 @@ class MapViewConfig(Model):
     """An override zoom level to use exclusively for the map view."""
 
 
-class ViewportConfig(Model):
-    """Configuration of the viewport in which the 3D visualization is rendered."""
+class ViewportSize(Model):
     width_px: int = Field(title="Width (px)")
     height_px: int = Field(title="Height (px)")
+
+    @property
+    def tuple(self) -> Tuple[int, int]:
+        return self.width_px, self.height_px
+
+
+class ScreenPosition(Model):
+    x_px: int = Field(title="X-Coordinate (px)")
+    """X-coordinate (in pixels) relative to the left edge of the screen."""
+    y_px: int = Field(title="Y-Coordinate (px)")
+    """Y-coordinate (in pixels) relative to the top edge of the screen."""
+
+    @property
+    def to_tuple(self) -> Tuple[int, int]:
+        return (self.x_px, self.y_px)
+
+
+class ViewportConfig(Model):
+    """Configuration of the viewport in which the 3D visualization is rendered."""
+    size: ViewportSize = Field(title="Viewport Size")
+    origin: ScreenPosition = Field(title="Origin")
+    """The position of the viewport with respect to the top-left corner of your screen. Cannot be \
+    set to your liking, but must be set when using the `--record` command-line argument to record \
+    the correct region of your screen.
+    """
 
     @property
     def size(self) -> Tuple[int, int]:
