@@ -148,7 +148,7 @@ class Airplane:
     energy_level_pc: float = dataclasses.field(init=False)
     location: Union[Location, None] = dataclasses.field(init=False)
     heading: Union[np.ndarray, None] = dataclasses.field(init=False)
-    waypoints: List[Location] = dataclasses.field(init=False)
+    waypoints: List[Waypoint] = dataclasses.field(init=False)
 
     def __post_init__(self):
         self.energy_capacity_MJ = self.airplane_spec.energy_capacity_MJ
@@ -278,7 +278,7 @@ class Uav(Airplane):
 
     def __post_init__(self):
         if not isinstance(self.airplane_spec, UavSpec):
-            self.airplane_spec = uav_lookup[self.airplane_spec]
+            self.airplane_spec = uav_lookup[self.airplane_spec.name]
 
         if type(self.viz_model) is not ModelConfig:
             self.viz_model = uav_model_lookup[self.viz_model.name]

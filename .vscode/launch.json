@@ -38,7 +38,7 @@
             },
             "args": [
                 "--config-dir", "configs/jfk_to_lax/",
-                "--view", "paths",
+                "--view", "airplane-paths",
             ]
         },
         {

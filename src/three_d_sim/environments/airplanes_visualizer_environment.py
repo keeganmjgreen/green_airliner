@@ -17,7 +17,7 @@ from src.three_d_sim.environments.environment import (
 from src.three_d_sim.flight_path_generation import FlightPath, orthogonal_xy_vector
 from src.three_d_sim.wavefront_obj_to_vp import simple_wavefront_obj_to_vp
 from src.utils.utils import timedelta_to_minutes
-from three_d_sim.simulation_config_schema import Zoompoint
+from src.three_d_sim.simulation_config_schema import Zoompoint
 
 View = Literal["side-view", "tail-view", "map-view"]
 
