@@ -737,12 +737,14 @@ def get_uav_on_airliner_point(
     return point
 
 
-def provision_airliner_from_flight_path(
-    airliner: Airliner,
+def generate_all_airliner_waypoints(
+    airliner_id: AirplaneId,
     airliner_fp: AirlinerFlightPath,
     uavs: Dict[AIRPORT_CODE_TYPE, Dict[AirplaneId, Uav]],
     uav_fps: Dict[AIRPORT_CODE_TYPE, Dict[AirplaneId, UavFlightPath]],
-) -> None:
+) -> List[Waypoint]:
+    waypoints: List[Waypoint] = []
+
     for i in range(len(airliner_fp.airports) - 1):
         prev_airport = airliner_fp.airports[i]
         next_airport = airliner_fp.airports[i + 1]
@@ -750,17 +752,15 @@ def provision_airliner_from_flight_path(
         if i == 0:
             # From first airport...
 
-            airliner.location = prev_airport
+            waypoints.append(Waypoint(LOCATION=prev_airport))
 
-            airliner.waypoints += _gen_takeoff_or_landing_waypoints(
-                airplane_id=airliner.id,
+            waypoints += _gen_takeoff_or_landing_waypoints(
+                airplane_id=airliner_id,
                 takeoff_or_landing="takeoff",
                 airport_location=prev_airport,
                 eventual_point=next_airport.xy_coords,
                 flight_path=airliner_fp,
             )
-
-            airliner.set_heading(airliner.waypoints[0])
 
         if i < len(airliner_fp.airports) - 2:
             # Between any two airports...
@@ -838,20 +838,20 @@ def provision_airliner_from_flight_path(
                         or j == len(airport_uavs)
                         and service_side == "from_airport"
                     ):
-                        airliner.waypoints += _gen_speed_change_waypoints(
+                        waypoints += _gen_speed_change_waypoints(
                             start_location=start_location,
                             start_speed_kmph=start_speed_kmph,
                             end_location=end_location,
                             end_speed_kmph=end_speed_kmph,
                         )
                     if j < len(airport_uavs):
-                        airliner.waypoints.append(
+                        waypoints.append(
                             Waypoint(
                                 uav_on_airliner_docking_point,
                                 DIRECT_APPROACH_SPEED_KMPH=uav_fp.cruise_speed_kmph,
                             )
                         )
-                        airliner.waypoints.append(
+                        waypoints.append(
                             Waypoint(
                                 get_uav_on_airliner_point(
                                     airliner_fp, uav=uav, kind="undocking"
@@ -861,7 +861,7 @@ def provision_airliner_from_flight_path(
                         )
 
             curve_waypoints = _gen_horizontal_curve_waypoints(
-                airplane_id=airliner.id,
+                airplane_id=airliner_id,
                 prev_airport=airliner_fp.airports[i],
                 curr_airport=airliner_fp.airports[i + 1],
                 next_airport=airliner_fp.airports[i + 2],
@@ -870,20 +870,21 @@ def provision_airliner_from_flight_path(
                 DIRECT_APPROACH_SPEED_KMPH=300,  # TODO
             )
             provision_airliner_docking(service_side="to_airport")
-            airliner.waypoints += curve_waypoints
+            waypoints += curve_waypoints
             provision_airliner_docking(service_side="from_airport")
 
         if i == len(airliner_fp.airports) - 2:
             # To last airport...
 
-            airliner.waypoints += _gen_takeoff_or_landing_waypoints(
-                airplane_id=airliner.id,
+            waypoints += _gen_takeoff_or_landing_waypoints(
+                airplane_id=airliner_id,
                 takeoff_or_landing="landing",
                 airport_location=next_airport,
                 eventual_point=prev_airport.xy_coords,
                 flight_path=airliner_fp,
             )
 
+    return waypoints
 
 def delay_uavs(
     uavs: Dict[AIRPORT_CODE_TYPE, Dict[AirplaneId, Uav]], airliner: Airliner

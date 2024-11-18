@@ -18,7 +18,7 @@ from src.three_d_sim.flight_path_generation import (
     AirlinerFlightPath,
     UavFlightPath,
     delay_uavs,
-    provision_airliner_from_flight_path,
+    generate_all_airliner_waypoints,
     generate_all_uav_waypoints,
     viz_airplane_paths,
 )
@@ -63,7 +63,9 @@ def run_scenario(
         simulation_config, fuel=airliner.airplane_spec.fuel, airliner_fp=airliner_fp
     )
 
-    provision_airliner_from_flight_path(airliner, airliner_fp, uavs, uav_fps)
+    waypoints = generate_all_airliner_waypoints(airliner.id, airliner_fp, uavs, uav_fps)
+    airliner.location = waypoints.pop(0).LOCATION
+    airliner.waypoints = waypoints
 
     flat_uavs = {
         k: {k2: v2 for x in v.values() for k2, v2 in x.items()} for k, v in uavs.items()
