@@ -89,7 +89,7 @@ class Waypoint:
     """
 
     LOCATION: Location
-    DIRECT_APPROACH_SPEED_KMPH: float
+    DIRECT_APPROACH_SPEED_KMPH: Union[float, None] = None
     TIME_INTO_SIMULATION: Union[dt.timedelta, None] = dt.timedelta(0)
     ZERO_ANGLE_OF_ATTACK: bool = False
     # ^ TODO: change to ANGLE_OF_ATTACK: Union[float, None] = None

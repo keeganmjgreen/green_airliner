@@ -19,7 +19,7 @@ from src.three_d_sim.flight_path_generation import (
     UavFlightPath,
     delay_uavs,
     provision_airliner_from_flight_path,
-    provision_uav_from_flight_path,
+    generate_all_uav_waypoints,
     viz_airplane_paths,
 )
 from src.utils.utils import MJ_PER_KWH, timedelta_to_minutes
@@ -329,9 +329,11 @@ def make_uavs(
                 # Add the UAV Flight Path to the `uav_fps` dict:
                 uav_fps[uav_airport_code][service_side][uav.id] = uav_fp
 
-                provision_uav_from_flight_path(
-                    uav, service_side_uav_idx, n_uavs, uav_fp, airliner_fp
+                waypoints = generate_all_uav_waypoints(
+                    uav.id, service_side_uav_idx, n_uavs, uav_fp, airliner_fp
                 )
+                uav.location = waypoints.pop(0).LOCATION
+                uav.waypoints = waypoints
 
                 airport_uav_idx += 1
 
