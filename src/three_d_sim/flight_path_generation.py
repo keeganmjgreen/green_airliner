@@ -101,7 +101,9 @@ class AirlinerFlightPath(FlightPath):
 
     def __post_init__(self):
         self.origin_airport = ALL_AIRPORT_LOCATIONS[self.origin_airport]
-        self.flyover_airports = [ALL_AIRPORT_LOCATIONS[a] for a in self.flyover_airports]
+        self.flyover_airports = [
+            ALL_AIRPORT_LOCATIONS[a] for a in self.flyover_airports
+        ]
         self.destination_airport = ALL_AIRPORT_LOCATIONS[self.destination_airport]
 
     @property
@@ -110,7 +112,9 @@ class AirlinerFlightPath(FlightPath):
 
     @property
     def airports(self) -> List[AirportLocation]:
-        return [self.origin_airport] + self.flyover_airports + [self.destination_airport]
+        return (
+            [self.origin_airport] + self.flyover_airports + [self.destination_airport]
+        )
 
 
 @dataclasses.dataclass(kw_only=True)
@@ -400,7 +404,7 @@ def _gen_takeoff_or_landing_waypoints(
             intermediate_distance={
                 "takeoff": flight_path.takeoff_distance_km,
                 "landing": flight_path.landing_distance_km,
-            }[takeoff_or_landing]
+            }[takeoff_or_landing],
         ),
         end_altitude_km=altitude_km,
         eventual_point=eventual_point,
@@ -418,7 +422,7 @@ def _gen_takeoff_or_landing_waypoints(
         end_speed_kmph={
             "takeoff": flight_path.takeoff_speed_kmph,
             "landing": flight_path.landing_speed_kmph,
-        }[takeoff_or_landing]
+        }[takeoff_or_landing],
     )
 
     if takeoff_or_landing == "takeoff":
@@ -457,8 +461,12 @@ def _gen_horizontal_curve_waypoints(
         Waypoint(Location(*point, altitude_km), **waypoint_kwargs)
         for point in curve_points
     ]
-    curve_waypoints[0].LOCATION.TAG = f"{airplane_id}_curve_over_{curr_airport.CODE}_start_point"
-    curve_waypoints[-1].LOCATION.TAG = f"{airplane_id}_curve_over_{curr_airport.CODE}_end_point"
+    curve_waypoints[0].LOCATION.TAG = (
+        f"{airplane_id}_curve_over_{curr_airport.CODE}_start_point"
+    )
+    curve_waypoints[-1].LOCATION.TAG = (
+        f"{airplane_id}_curve_over_{curr_airport.CODE}_end_point"
+    )
     return curve_waypoints
 
 
@@ -540,9 +548,7 @@ def _generate_uav_waypoints(
 
     takeoff_or_landing_waypoints = _gen_takeoff_or_landing_waypoints(
         airplane_id=uav_id,
-        takeoff_or_landing=(
-            "takeoff" if uav_fp_half == "first-half" else "landing"
-        ),
+        takeoff_or_landing=("takeoff" if uav_fp_half == "first-half" else "landing"),
         airport_location=Location(*B),
         eventual_point=E,
         flight_path=uav_fp,
@@ -552,15 +558,25 @@ def _generate_uav_waypoints(
     if uav_fp_half == "first-half":
         uav_arc_waypoints[0].LOCATION.TAG = f"{uav_id}_arc_start_point"
         uav_arc_waypoints[-1].LOCATION.TAG = f"{uav_id}_arc_end_point"
-        altitude_transition_waypoints[0].LOCATION.TAG = f"{uav_id}_descent_to_airliner_point"
-        altitude_transition_waypoints[-1].LOCATION.TAG = f"{uav_id}_on_airliner_docking_point"
+        altitude_transition_waypoints[0].LOCATION.TAG = (
+            f"{uav_id}_descent_to_airliner_point"
+        )
+        altitude_transition_waypoints[-1].LOCATION.TAG = (
+            f"{uav_id}_on_airliner_docking_point"
+        )
     elif uav_fp_half == "second-half":
-        altitude_transition_waypoints[-1].LOCATION.TAG = f"{uav_id}_on_airliner_undocking_point"
-        altitude_transition_waypoints[0].LOCATION.TAG = f"{uav_id}_ascended_from_airliner_point"
+        altitude_transition_waypoints[-1].LOCATION.TAG = (
+            f"{uav_id}_on_airliner_undocking_point"
+        )
+        altitude_transition_waypoints[0].LOCATION.TAG = (
+            f"{uav_id}_ascended_from_airliner_point"
+        )
         uav_arc_waypoints[-1].LOCATION.TAG = f"{uav_id}_arc_start_point"
         uav_arc_waypoints[0].LOCATION.TAG = f"{uav_id}_arc_end_point"
 
-    uav_waypoints = takeoff_or_landing_waypoints + uav_arc_waypoints + altitude_transition_waypoints
+    uav_waypoints = (
+        takeoff_or_landing_waypoints + uav_arc_waypoints + altitude_transition_waypoints
+    )
 
     if uav_fp_half == "second-half":
         uav_waypoints = list(reversed(uav_waypoints))
@@ -570,7 +586,11 @@ def _generate_uav_waypoints(
 
 
 def generate_all_uav_waypoints(
-    uav_id: AirplaneId, j: int, n_uavs: int, uav_fp: UavFlightPath, airliner_fp: AirlinerFlightPath
+    uav_id: AirplaneId,
+    j: int,
+    n_uavs: int,
+    uav_fp: UavFlightPath,
+    airliner_fp: AirlinerFlightPath,
 ) -> List[Waypoint]:
     uav_airport = uav_fp.home_airport
     prev_airliner_airport = airliner_fp.airports[
@@ -579,11 +599,21 @@ def generate_all_uav_waypoints(
     next_airliner_airport_location = airliner_fp.airports[
         airliner_fp.airports.index(uav_airport) + 1
     ]
-    airport_A = prev_airliner_airport if uav_fp.service_side == "to_airport" else next_airliner_airport_location
+    airport_A = (
+        prev_airliner_airport
+        if uav_fp.service_side == "to_airport"
+        else next_airliner_airport_location
+    )
     waypoints: List[Waypoint] = []
     waypoints.append(
         Waypoint(
-            LOCATION=Location(*_intermediate_point_between(uav_airport.xy_coords, airport_A.xy_coords, intermediate_distance=(0.015 * (n_uavs - j))))
+            LOCATION=Location(
+                *_intermediate_point_between(
+                    uav_airport.xy_coords,
+                    airport_A.xy_coords,
+                    intermediate_distance=(0.015 * (n_uavs - j)),
+                )
+            )
         )
     )
     if uav_fp.service_side == "to_airport":
@@ -650,7 +680,11 @@ def generate_all_uav_waypoints(
             airplane_id=uav_id,
             takeoff_or_landing="landing",
             airport_location=Location(
-                *_intermediate_point_between(uav_airport.xy_coords, airport_A.xy_coords, intermediate_distance=(0.015 * (j + 1)))
+                *_intermediate_point_between(
+                    uav_airport.xy_coords,
+                    airport_A.xy_coords,
+                    intermediate_distance=(0.015 * (j + 1)),
+                )
             ),
             eventual_point=waypoints[-1].LOCATION.xy_coords,
             flight_path=uav_fp,
@@ -687,8 +721,12 @@ def generate_all_uav_waypoints(
             wrt_runway=False,
             inverted=True,
         )
-        altitude_transition_waypoints[0].LOCATION.TAG = f"{uav_id}_descent_to_airliner_point"
-        altitude_transition_waypoints[-1].LOCATION.TAG = f"{uav_id}_on_airliner_docking_point"
+        altitude_transition_waypoints[0].LOCATION.TAG = (
+            f"{uav_id}_descent_to_airliner_point"
+        )
+        altitude_transition_waypoints[-1].LOCATION.TAG = (
+            f"{uav_id}_on_airliner_docking_point"
+        )
         waypoints += altitude_transition_waypoints
 
         waypoints += last_waypoints
