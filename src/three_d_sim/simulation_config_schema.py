@@ -58,21 +58,23 @@ class FlightPathConfig(Model):
     reaching the takeoff speed.
     """
     takeoff_leveling_distance_km: float = Field(title="Takeoff Leveling Distance (km)")
-    """See diagram."""
+    """See "Flight path configuration" diagram."""
     rate_of_climb_mps: float = Field(title="Rate of Climb (m/s)")
     """The speed (in meters per second) at which the airliner climbs between takeoff and cruise. \
     This is only the vertical component of the aiplane's velocity.
     """
     climb_leveling_distance_km: float = Field(title="Climb Leveling Distance (km)")
-    """See diagram. Affects how long the airplane takes of level off between climb and cruise."""
+    """See "Flight path configuration" diagram. Affects how long the airplane takes of level off \
+    between climb and cruise.
+    """
     descent_leveling_distance_km: float = Field(title="")
-    """See diagram."""
+    """See "Flight path configuration" diagram."""
     rate_of_descent_mps: float = Field(title="Rate of Descent (m/s)")
     """The speed (in meters per second) at which the airliner descends between cruise and landing. \
     This is only the vertical component of the airplane's velocity.
     """
     landing_leveling_distance_km: float = Field(title="Landing Leveling Distance (km)")
-    """See diagram. Affects how long the airplane takes to land."""
+    """See "Flight path configuration" diagram. Affects how long the airplane takes to land."""
     landing_distance_km: float = Field(title="Landing Distance (km)")
     """The distance (in kilometers) for the airplane to decelerate from landing speed to a \
     standstill.
@@ -83,7 +85,7 @@ class FlightPathConfig(Model):
 
 fp_config_fields = list(FlightPathConfig.model_fields.keys())
 doc = (
-    "Many fields are explained in the diagram. "
+    'Many fields are explained in the "Flight path configuration" diagram. '
     f" Fields `{fp_config_fields[0]}` through `{fp_config_fields[-1]}` are shared between the "
     "`airliner_flight_path_config` and the `uavs_flight_path_config` and are described as applying "
     'to an "airplane" rather than to an "airliner" or "UAV" specifically. Fields after that differ.'

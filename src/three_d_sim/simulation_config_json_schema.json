@@ -34,7 +34,7 @@
             "type": "object"
         },
         "AirlinerFlightPathConfig": {
-            "description": "Configuration of the airliner's flight path. Many fields are explained in the diagram.  Fields `takeoff_speed_kmph` through `landing_speed_kmph` are shared between the `airliner_flight_path_config` and the `uavs_flight_path_config` and are described as applying to an \"airplane\" rather than to an \"airliner\" or \"UAV\" specifically. Fields after that differ.",
+            "description": "Configuration of the airliner's flight path. Many fields are explained in the \"Flight path configuration\" diagram.  Fields `takeoff_speed_kmph` through `landing_speed_kmph` are shared between the `airliner_flight_path_config` and the `uavs_flight_path_config` and are described as applying to an \"airplane\" rather than to an \"airliner\" or \"UAV\" specifically. Fields after that differ.",
             "properties": {
                 "takeoff_speed_kmph": {
                     "description": "The speed (in kilometers per hour) required for the airplane to take off.",
@@ -47,7 +47,7 @@
                     "type": "number"
                 },
                 "takeoff_leveling_distance_km": {
-                    "description": "See diagram.",
+                    "description": "See \"Flight path configuration\" diagram.",
                     "title": "Takeoff Leveling Distance (km)",
                     "type": "number"
                 },
@@ -57,12 +57,12 @@
                     "type": "number"
                 },
                 "climb_leveling_distance_km": {
-                    "description": "See diagram. Affects how long the airplane takes of level off between climb and cruise.",
+                    "description": "See \"Flight path configuration\" diagram. Affects how long the airplane takes of level off     between climb and cruise.\n    ",
                     "title": "Climb Leveling Distance (km)",
                     "type": "number"
                 },
                 "descent_leveling_distance_km": {
-                    "description": "See diagram.",
+                    "description": "See \"Flight path configuration\" diagram.",
                     "title": "",
                     "type": "number"
                 },
@@ -72,7 +72,7 @@
                     "type": "number"
                 },
                 "landing_leveling_distance_km": {
-                    "description": "See diagram. Affects how long the airplane takes to land.",
+                    "description": "See \"Flight path configuration\" diagram. Affects how long the airplane takes to land.",
                     "title": "Landing Leveling Distance (km)",
                     "type": "number"
                 },
@@ -316,7 +316,7 @@
             "type": "object"
         },
         "UavsFlightPathConfig": {
-            "description": "Configuration of the UAVs' flight paths (all of which are assumed to follow the same     parameters).\nA UAV is described as having a \"service side\". The service side is \"to-airport\" for UAVs that     refuel the airliner just **before** it flies over a given airport, and \"from-airport\" for UAVs     that refuel the airliner just **after** it flies over it. Many fields are explained in the diagram.  Fields `takeoff_speed_kmph` through `landing_speed_kmph` are shared between the `airliner_flight_path_config` and the `uavs_flight_path_config` and are described as applying to an \"airplane\" rather than to an \"airliner\" or \"UAV\" specifically. Fields after that differ.",
+            "description": "Configuration of the UAVs' flight paths (all of which are assumed to follow the same     parameters).\nA UAV is described as having a \"service side\". The service side is \"to-airport\" for UAVs that     refuel the airliner just **before** it flies over a given airport, and \"from-airport\" for UAVs     that refuel the airliner just **after** it flies over it. Many fields are explained in the \"Flight path configuration\" diagram.  Fields `takeoff_speed_kmph` through `landing_speed_kmph` are shared between the `airliner_flight_path_config` and the `uavs_flight_path_config` and are described as applying to an \"airplane\" rather than to an \"airliner\" or \"UAV\" specifically. Fields after that differ.",
             "properties": {
                 "takeoff_speed_kmph": {
                     "description": "The speed (in kilometers per hour) required for the airplane to take off.",
@@ -329,7 +329,7 @@
                     "type": "number"
                 },
                 "takeoff_leveling_distance_km": {
-                    "description": "See diagram.",
+                    "description": "See \"Flight path configuration\" diagram.",
                     "title": "Takeoff Leveling Distance (km)",
                     "type": "number"
                 },
@@ -339,12 +339,12 @@
                     "type": "number"
                 },
                 "climb_leveling_distance_km": {
-                    "description": "See diagram. Affects how long the airplane takes of level off between climb and cruise.",
+                    "description": "See \"Flight path configuration\" diagram. Affects how long the airplane takes of level off     between climb and cruise.\n    ",
                     "title": "Climb Leveling Distance (km)",
                     "type": "number"
                 },
                 "descent_leveling_distance_km": {
-                    "description": "See diagram.",
+                    "description": "See \"Flight path configuration\" diagram.",
                     "title": "",
                     "type": "number"
                 },
@@ -354,7 +354,7 @@
                     "type": "number"
                 },
                 "landing_leveling_distance_km": {
-                    "description": "See diagram. Affects how long the airplane takes to land.",
+                    "description": "See \"Flight path configuration\" diagram. Affects how long the airplane takes to land.",
                     "title": "Landing Leveling Distance (km)",
                     "type": "number"
                 },
