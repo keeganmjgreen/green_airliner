@@ -110,8 +110,3 @@ After TODO minutes, the airliner lands at LAX with a reserve of TODO SoC:
 .. image:: 17.png
 
 `3:15 in video <https://youtu.be/5WDB9vRs0N4&t=195>`_
-
-Configuration
--------------
-
-.. image:: flight_plan.svg

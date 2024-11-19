@@ -9,6 +9,7 @@
         <title>Configuration - Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_collapse.css?v=226d88b4" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
     
     
@@ -273,6 +274,8 @@
 </div></section>
 <section id="example-for-flight-from-jfk-to-lax">
 <h2>Example for flight from JFK to LAX<a class="headerlink" href="#example-for-flight-from-jfk-to-lax" title="Link to this heading">¶</a></h2>
+<div class="sphinx_collapse docutils container">
+<input class="sphinx_collapse__input" id="932d5eba-49f7-4485-9222-e44021c8127d" name="932d5eba-49f7-4485-9222-e44021c8127d" type="checkbox"><label class="sphinx_collapse__label" for="932d5eba-49f7-4485-9222-e44021c8127d"><i class="sphinx_collapse__icon"></i>Click to expand/collapse.</label><div class="sphinx_collapse__content docutils container">
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">airliner_config</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">airplane_spec_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lh2FueledA320</span>
 <span class="w">  </span><span class="nt">refueling_rate_kW</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2333333</span><span class="w">  </span><span class="c1"># 7e12/50 J/min LH2 * (60 min/h) / (3600 J/Wh) / (1000 W/kW)</span>
@@ -517,6 +520,12 @@
 <span class="w">    </span><span class="nt">zoom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 </pre></div>
 </div>
+</div>
+</div>
+</section>
+<section id="flight-path-configuration">
+<h2>Flight path configuration<a class="headerlink" href="#flight-path-configuration" title="Link to this heading">¶</a></h2>
+<img alt="../_images/flight_path.svg" src="../_images/flight_path.svg" />
 </section>
 </section>
 
@@ -578,6 +587,7 @@
 <li><a class="reference internal" href="#">Configuration</a><ul>
 <li><a class="reference internal" href="#schema">Schema</a></li>
 <li><a class="reference internal" href="#example-for-flight-from-jfk-to-lax">Example for flight from JFK to LAX</a></li>
+<li><a class="reference internal" href="#flight-path-configuration">Flight path configuration</a></li>
 </ul>
 </li>
 </ul>
