@@ -981,6 +981,18 @@ def write_airplane_paths(airplanes: List[Airplane]) -> None:
         )
 
 
+def write_airplane_tagged_waypoints(airplanes: List[Airplane]) -> None:
+    for airplane in airplanes:
+        fpath = Path(f"tmp/airplane_tagged_waypoints/{airplane.id}.csv")
+        fpath.parent.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(airplane.all_tagged_waypoints).drop(columns=["TAG"]).to_csv(
+            fpath,
+            header=False,
+            index=False,
+            float_format="%f",
+        )
+
+
 def viz_airplane_paths(airplanes: List[Airplane]) -> None:
     def _speed_to_color(speed_kmph: float) -> np.array:
         MIN_SPEED_RGB = np.array([0, 0, 1])

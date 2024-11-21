@@ -178,6 +178,10 @@ class Airplane:
         assert len(tagged_waypoints) == 1
         return tagged_waypoints[0]
 
+    @property
+    def all_tagged_waypoints(self) -> List[Location]:
+        return [wp.LOCATION for wp in self.waypoints if wp.LOCATION.TAG is not None]
+
     def get_travel_durations_to_tagged_waypoints(self) -> Dict[str, dt.timedelta]:
         current_location = deepcopy(self.location)
         cumulative_travel_duration = dt.timedelta(0)
