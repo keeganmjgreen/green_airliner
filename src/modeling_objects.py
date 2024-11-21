@@ -158,6 +158,13 @@ class Airplane:
         self.heading = None
         self.waypoints = []
 
+    @property
+    def all_locations(self) -> List[Location]:
+        return [
+            loc.xyz_coords
+            for loc in [self.location] + [wp.LOCATION for wp in self.waypoints]
+        ]
+
     def set_heading(self, to_waypoint: Waypoint) -> np.ndarray:
         heading = to_waypoint.LOCATION.xyz_coords - self.location.xyz_coords
         if to_waypoint.ZERO_ANGLE_OF_ATTACK:

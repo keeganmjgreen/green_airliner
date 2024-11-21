@@ -1,6 +1,7 @@
 import dataclasses
 import datetime as dt
 from copy import deepcopy
+from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Union
 
 import matplotlib.pyplot as plt
@@ -942,6 +943,7 @@ def generate_all_airliner_waypoints(
 
     return waypoints
 
+
 def delay_uavs(
     uavs: Dict[AIRPORT_CODE_TYPE, Dict[AirplaneId, Uav]], airliner: Airliner
 ) -> None:
@@ -967,7 +969,19 @@ def delay_uavs(
             )
 
 
-def viz_airplane_paths(airplanes: List[Airplane], markers: bool = False) -> None:
+def write_airplane_paths(airplanes: List[Airplane]) -> None:
+    for airplane in airplanes:
+        fpath = Path(f"tmp/airplane_paths/{airplane.id}.csv")
+        fpath.parent.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(airplane.all_locations).to_csv(
+            fpath,
+            header=False,
+            index=False,
+            float_format="%f",
+        )
+
+
+def viz_airplane_paths(airplanes: List[Airplane]) -> None:
     def _speed_to_color(speed_kmph: float) -> np.array:
         MIN_SPEED_RGB = np.array([0, 0, 1])
         MIN_SPEED_KMPH = 0
@@ -980,12 +994,9 @@ def viz_airplane_paths(airplanes: List[Airplane], markers: bool = False) -> None
 
     fig = go.Figure()
     for airplane in airplanes:
-        locations = [
-            loc.xyz_coords
-            for loc in [airplane.location] + [wp.LOCATION for wp in airplane.waypoints]
-        ]
         speeds_kmph = [wp.DIRECT_APPROACH_SPEED_KMPH for wp in airplane.waypoints]
-        pair_segments = list(zip(locations[1:], locations[:-1]))
+        all_locations = airplane.all_locations
+        pair_segments = list(zip(all_locations[1:], all_locations[:-1]))
         for pair_segment, speed_kmph in zip(pair_segments, speeds_kmph):
             x, y, z = np.c_[pair_segment]
             fig.add_scatter3d(

@@ -21,6 +21,7 @@ from src.three_d_sim.flight_path_generation import (
     generate_all_airliner_waypoints,
     generate_all_uav_waypoints,
     viz_airplane_paths,
+    write_airplane_paths,
 )
 from src.utils.utils import MJ_PER_KWH, timedelta_to_minutes
 
@@ -78,7 +79,13 @@ def run_scenario(
     ]
 
     if view == "airplane-paths":
-        viz_airplane_paths(airplanes)
+        if track_airplane_id is None:
+            airplanes_to_track = airplanes
+        else:
+            airplanes_to_track = [airplanes[track_airplane_id]]
+        write_airplane_paths(airplanes_to_track)
+        if simulation_config.viz_enabled:
+            viz_airplane_paths(airplanes_to_track)
         quit()
 
     airplanes_emulator = AirplanesSimulator(
