@@ -361,9 +361,11 @@ def parse_cli_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = parse_cli_args()
-    subprocess.Popen(["google-chrome", "--guest", "--start-maximized"])
+    simulation_config = SimulationConfig.from_yaml(args.config_dir)
+    if simulation_config.viz_enabled:
+        subprocess.Popen(["google-chrome", "--guest", "--start-maximized"])
     run_scenario(
-        simulation_config=SimulationConfig.from_yaml(args.config_dir),
+        simulation_config=simulation_config,
         view=args.view,
         track_airplane_id=args.track_airplane_id,
         record=args.record,
