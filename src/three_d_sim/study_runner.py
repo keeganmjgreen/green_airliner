@@ -185,7 +185,7 @@ def run_scenario(
             Zoompoint(0, zoom=simulation_config.viz_config.map_view_config.zoom)
         ]
 
-    viewport_size = simulation_config.viz_config.viewport_config.size
+    viewport_size = simulation_config.viz_config.viewport_config.size.tuple
     viewport_origin = simulation_config.viz_config.viewport_config.origin
     captions = True
     if record == "airplanes-viz":

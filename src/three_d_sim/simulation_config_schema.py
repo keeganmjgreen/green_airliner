@@ -401,10 +401,6 @@ class ViewportConfig(Model):
     the correct region of your screen.
     """
 
-    @property
-    def size(self) -> Tuple[int, int]:
-        return self.width_px, self.height_px
-
 class VizConfig(Model):
     time_step_multiplier: float = Field(title="Time Step Multiplier", default=1.0)
     """A number by which to multiply the time steps specified in the `ratepoints`."""
