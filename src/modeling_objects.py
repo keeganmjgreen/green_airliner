@@ -131,6 +131,7 @@ class Waypoint:
 
 
 AirplaneId = str
+UavId = AirplaneId
 
 
 @dataclasses.dataclass(kw_only=True)
@@ -280,6 +281,7 @@ class Airliner(Airplane):
 
 @dataclasses.dataclass(kw_only=True)
 class Uav(Airplane):
+    id: UavId
     airplane_spec: Union[Type[UavSpec], str]
     payload_fuel: Fuel
     initial_refueling_energy_level_pc: float

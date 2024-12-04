@@ -1,21 +1,21 @@
 import argparse
-import dataclasses
 import datetime as dt
 import os
 import subprocess
 from typing import Dict, Literal, Tuple
 
-from src.feasibility_study.modeling_objects import Fuel
 from src.airplanes_simulator import AirplanesSimulator
-from src.modeling_objects import Airliner, AirplanesState, Uav
+from src.feasibility_study.modeling_objects import Fuel
+from src.modeling_objects import Airliner, AirplanesState, Uav, UavId
 from src.three_d_sim.environments.airplanes_visualizer_environment import (
-    View,
     AirplanesVisualizerEnvironment,
     ScreenRecorder,
+    View,
 )
-from src.three_d_sim.simulation_config_schema import SimulationConfig, ViewportSize, Zoompoint
 from src.three_d_sim.flight_path_generation import (
     AirlinerFlightPath,
+    AirportCode,
+    ServiceSide,
     UavFlightPath,
     delay_uavs,
     generate_all_airliner_waypoints,
@@ -23,6 +23,11 @@ from src.three_d_sim.flight_path_generation import (
     viz_airplane_paths,
     write_airplane_paths,
     write_airplane_tagged_waypoints,
+)
+from src.three_d_sim.simulation_config_schema import (
+    SimulationConfig,
+    ViewportSize,
+    Zoompoint,
 )
 from src.utils.utils import MJ_PER_KWH, timedelta_to_minutes
 
@@ -207,7 +212,10 @@ def run_scenario(
                 fname=f"{video_dir}/inputs/Airliner-energy-level-graph.avi",
             ),
             ScreenRecorder(
-                origin=(viewport_origin.x_px, VERTICAL_OFFSET_PX + graph_size.height_px),
+                origin=(
+                    viewport_origin.x_px,
+                    VERTICAL_OFFSET_PX + graph_size.height_px,
+                ),
                 size=graph_size.tuple,
                 fname=f"{video_dir}/inputs/Airliner-speed-graph.avi",
             ),
@@ -251,7 +259,8 @@ def run_scenario(
 def make_uavs(
     simulation_config: SimulationConfig, fuel: Fuel, airliner_fp: AirlinerFlightPath
 ) -> Tuple[
-    Dict[str, Dict[str, Dict[str, Uav]]], Dict[str, Dict[str, Dict[str, UavFlightPath]]]
+    Dict[AirportCode, Dict[ServiceSide, Dict[UavId, Uav]]],
+    Dict[AirportCode, Dict[ServiceSide, Dict[UavId, UavFlightPath]]],
 ]:
     uavs = {}
     uav_fps = {}
@@ -313,7 +322,6 @@ def make_uavs(
                     landing_leveling_distance_km=uavs_fp_config.landing_leveling_distance_km,
                     landing_distance_km=uavs_fp_config.landing_distance_km,
                     landing_speed_kmph=uavs_fp_config.landing_speed_kmph,
-
                     arc_radius_km=uavs_fp_config.arc_radius_km,
                     refueling_altitude_km=(
                         airliner_fp.cruise_altitude_km

@@ -11,7 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 from src.specs import airliner_lookup, uav_lookup
-from src.three_d_sim.flight_path_generation import AIRPORT_CODE_TYPE
+from src.three_d_sim.flight_path_generation import AirportCode
 from src.three_d_sim.viz_models import airliner_model_lookup, uav_model_lookup
 
 
@@ -95,15 +95,15 @@ doc = (
 class AirlinerFlightPathConfig(FlightPathConfig):
     """Configuration of the airliner's flight path."""
 
-    origin_airport_code: AIRPORT_CODE_TYPE = Field(title="Origin Airport Code")
+    origin_airport_code: AirportCode = Field(title="Origin Airport Code")
     """The three-letter IATA airport code of the origin airport from which the airliner departs."""
-    flyover_airport_codes: List[AIRPORT_CODE_TYPE] = Field(
+    flyover_airport_codes: List[AirportCode] = Field(
         title="Flyover Airport Codes"
     )
     """The codes of the airports over which the airliner flies to be mid-air refueled by those \
     airports' UAVs.
     """
-    destination_airport_code: AIRPORT_CODE_TYPE = Field(
+    destination_airport_code: AirportCode = Field(
         title="Destination Airport Code"
     )
     """The code of the destination airport at which the airliner will land."""
@@ -426,7 +426,7 @@ class SimulationConfig(Model):
     airliner_flight_path_config: AirlinerFlightPathConfig = Field(
         title="Airliner Flight Path Config"
     )
-    n_uavs_per_flyover_airport: Dict[AIRPORT_CODE_TYPE, NUavsAtFlyOverAirport] = Field(
+    n_uavs_per_flyover_airport: Dict[AirportCode, NUavsAtFlyOverAirport] = Field(
         title="# UAVs Per Flyover Airport"
     )
     """The number of UAVs at each flyover airport."""

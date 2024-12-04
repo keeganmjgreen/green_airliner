@@ -1,5 +1,4 @@
 import dataclasses
-import datetime as dt
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Union
@@ -7,35 +6,36 @@ from typing import Any, Dict, List, Literal, Optional, Union
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
 
 from src.modeling_objects import (
-    AirplaneId,
     KM_PER_LAT_LON,
     Airliner,
     Airplane,
+    AirplaneId,
     Location,
     Uav,
+    UavId,
+    Waypoint,
 )
-from src.modeling_objects import Waypoint
 from src.utils.utils import M_PER_KM, SECONDS_PER_HOUR
 
 from .planar_curve_points_generation import generate_planar_curve_points
 
-AIRPORT_CODE_TYPE = str
+AirportCode = str
+ServiceSide = Literal["to-airport", "from-airport"]
 
 AIRPORT_LOCATIONS_CSV_PATH = "src/three_d_sim/airport_locations.csv"
 
 
 @dataclasses.dataclass(kw_only=True)
 class AirportLocation(Location):
-    CODE: AIRPORT_CODE_TYPE
+    CODE: AirportCode
 
 
 def get_all_airport_locations(
     normalize_coords: bool = False,
-) -> Dict[AIRPORT_CODE_TYPE, AirportLocation]:
+) -> Dict[AirportCode, AirportLocation]:
     DEFAULT_ALTITUDE = 0.0
 
     airport_location_df = pd.read_csv(AIRPORT_LOCATIONS_CSV_PATH)
@@ -95,9 +95,9 @@ class FlightPath:
 
 @dataclasses.dataclass(kw_only=True)
 class AirlinerFlightPath(FlightPath):
-    origin_airport: Union[AirportLocation, AIRPORT_CODE_TYPE]
-    flyover_airports: List[Union[AirportLocation, AIRPORT_CODE_TYPE]]
-    destination_airport: Union[AirportLocation, AIRPORT_CODE_TYPE]
+    origin_airport: Union[AirportLocation, AirportCode]
+    flyover_airports: List[Union[AirportLocation, AirportCode]]
+    destination_airport: Union[AirportLocation, AirportCode]
     speed_change_distance_km: float
 
     def __post_init__(self):
@@ -108,7 +108,7 @@ class AirlinerFlightPath(FlightPath):
         self.destination_airport = ALL_AIRPORT_LOCATIONS[self.destination_airport]
 
     @property
-    def flyover_airport_codes(self) -> List[AIRPORT_CODE_TYPE]:
+    def flyover_airport_codes(self) -> List[AirportCode]:
         return [a.CODE for a in self.flyover_airports]
 
     @property
@@ -120,7 +120,7 @@ class AirlinerFlightPath(FlightPath):
 
 @dataclasses.dataclass(kw_only=True)
 class UavFlightPath(FlightPath):
-    home_airport: Union[AirportLocation, AIRPORT_CODE_TYPE]
+    home_airport: Union[AirportLocation, AirportCode]
     arc_radius_km: float
     refueling_altitude_km: float
     refueling_distance_km: float
@@ -778,8 +778,8 @@ def get_uav_on_airliner_point(
 
 def _generate_airliner_docking_waypoints(
     airliner_fp: AirlinerFlightPath,
-    uavs: Dict[AIRPORT_CODE_TYPE, Dict[AirplaneId, Uav]],
-    uav_fps: Dict[AIRPORT_CODE_TYPE, Dict[AirplaneId, UavFlightPath]],
+    uavs: Dict[AirportCode, Dict[AirplaneId, Uav]],
+    uav_fps: Dict[AirportCode, Dict[AirplaneId, UavFlightPath]],
     i: int,
     service_side: Literal["to_airport", "from_airport"],
     airliner_curve_waypoints: List[Waypoint],
@@ -876,8 +876,8 @@ def _generate_airliner_docking_waypoints(
 def generate_all_airliner_waypoints(
     airliner_id: AirplaneId,
     airliner_fp: AirlinerFlightPath,
-    uavs: Dict[AIRPORT_CODE_TYPE, Dict[AirplaneId, Uav]],
-    uav_fps: Dict[AIRPORT_CODE_TYPE, Dict[AirplaneId, UavFlightPath]],
+    uavs: Dict[AirportCode, Dict[AirplaneId, Uav]],
+    uav_fps: Dict[AirportCode, Dict[AirplaneId, UavFlightPath]],
 ) -> List[Waypoint]:
     waypoints: List[Waypoint] = []
 
@@ -944,9 +944,7 @@ def generate_all_airliner_waypoints(
     return waypoints
 
 
-def delay_uavs(
-    uavs: Dict[AIRPORT_CODE_TYPE, Dict[AirplaneId, Uav]], airliner: Airliner
-) -> None:
+def delay_uavs(uavs: Dict[AirportCode, Dict[UavId, Uav]], airliner: Airliner) -> None:
     for airport_uavs in uavs.values():
         for uav in airport_uavs.values():
             uav_travel_duration_to_docking_point = (
