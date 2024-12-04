@@ -370,7 +370,7 @@
                 },
                 "smallest_cruise_altitude_km": {
                     "description": "The minimum cruise altitude (in kilometers) among the UAVs. Among the UAVs with     \"to-airport\" service, and among the UAVs with \"from-airport\" service, this is the actual     cruise altitude of the UAV that refuels the airliner first. Subsequent UAVs must cruise at     higher altitudes (differing by the `inter_uav_vertical_distance_km`) to stay out of each     other's flight paths.\n    ",
-                    "title": "Default Cruise Altitude (km)",
+                    "title": "Smallest Cruise Altitude (km)",
                     "type": "number"
                 },
                 "arc_radius_km": {
@@ -405,7 +405,7 @@
                 },
                 "smallest_airliner_clearance_altitude_km": {
                     "description": "See `airliner_clearance_speed_kmph`. The `smallest_airliner_clearance_altitude_km` is the     minimum altitude (in kilometers) at which the UAVs will fly after descending below the     airliner's cruise altitude on its way back to the airport. Among the UAVs with \"to-airport\"     service, and among the UAVs with \"from-airport\" service, this is the actual airliner clearance     altitude of the UAV that refuels the airliner first. Subsequent UAVs must have higher airliner     clearance altitudes (differing by the `inter_uav_vertical_distance_km`) to stay out of each     other's flight paths.\n    ",
-                    "title": "Default Airliner Clearance Altitude (km)",
+                    "title": "Smallest Airliner Clearance Altitude (km)",
                     "type": "number"
                 },
                 "inter_uav_vertical_distance_km": {

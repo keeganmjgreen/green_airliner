@@ -128,7 +128,7 @@ class UavsFlightPathConfig(FlightPathConfig):
     that refuel the airliner just **after** it flies over it.
     """
 
-    smallest_cruise_altitude_km: float = Field(title="Default Cruise Altitude (km)")
+    smallest_cruise_altitude_km: float = Field(title="Smallest Cruise Altitude (km)")
     """The minimum cruise altitude (in kilometers) among the UAVs. Among the UAVs with \
     "to-airport" service, and among the UAVs with "from-airport" service, this is the actual \
     cruise altitude of the UAV that refuels the airliner first. Subsequent UAVs must cruise at \
@@ -181,7 +181,7 @@ class UavsFlightPathConfig(FlightPathConfig):
     """See `airliner_clearance_speed_kmph`. The `airliner_clearance_distance_km` is the distance \
     (in kilometers) by which every UAV will 'fall behind' the airliner after undocking."""
     smallest_airliner_clearance_altitude_km: float = Field(
-        title="Default Airliner Clearance Altitude (km)"
+        title="Smallest Airliner Clearance Altitude (km)"
     )
     """See `airliner_clearance_speed_kmph`. The `smallest_airliner_clearance_altitude_km` is the \
     minimum altitude (in kilometers) at which the UAVs will fly after descending below the \
