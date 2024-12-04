@@ -810,8 +810,7 @@ def get_uav_on_airliner_point(
 
 def _generate_airliner_docking_waypoints(
     airliner_fp: AirlinerFlightPath,
-    uavs: Dict[AirportCode, Dict[AirplaneId, Uav]],
-    uav_fps: Dict[AirportCode, Dict[AirplaneId, UavFlightPath]],
+    uavs: Dict[AirportCode, Dict[ServiceSide, Dict[UavId, Uav]]],
     i: int,
     service_side: Literal["to_airport", "from_airport"],
     airliner_curve_waypoints: List[Waypoint],
@@ -822,12 +821,10 @@ def _generate_airliner_docking_waypoints(
     next_airport = airliner_fp.airports[i + 1]
 
     airport_uavs = list(uavs[next_airport.CODE][service_side].values())
-    airport_uav_fps = list(uav_fps[next_airport.CODE][service_side].values())
 
     for j in range(len(airport_uavs) + 1):
         if j < len(airport_uavs):
             uav = airport_uavs[j]
-            uav_fp = airport_uav_fps[j]
             uav_on_airliner_docking_point = get_uav_on_airliner_point(
                 airliner_fp, uav, kind="docking"
             )
@@ -848,19 +845,18 @@ def _generate_airliner_docking_waypoints(
             start_speed_kmph = airliner_fp.cruise_speed_kmph
         elif len(airport_uavs) > 0:
             prev_uav = airport_uavs[j - 1]
-            prev_uav_fp = airport_uav_fps[j - 1]
             prev_uav_on_airliner_undocking_point = get_uav_on_airliner_point(
                 airliner_fp, uav=prev_uav, kind="undocking"
             )
             start_location = prev_uav_on_airliner_undocking_point
-            start_speed_kmph = prev_uav_fp.cruise_speed_kmph
+            start_speed_kmph = prev_uav.flight_path.cruise_speed_kmph
         else:
             start_location = airliner_curve_waypoints[-1].LOCATION
             start_speed_kmph = 300  # TODO
 
         if j < len(airport_uavs):
             end_location = uav_on_airliner_docking_point
-            end_speed_kmph = uav_fp.cruise_speed_kmph
+            end_speed_kmph = uav.flight_path.cruise_speed_kmph
         elif service_side == "from_airport":
             end_location = Location(
                 *_intermediate_point_between(
@@ -892,13 +888,13 @@ def _generate_airliner_docking_waypoints(
             waypoints.append(
                 Waypoint(
                     uav_on_airliner_docking_point,
-                    DIRECT_APPROACH_SPEED_KMPH=uav_fp.cruise_speed_kmph,
+                    DIRECT_APPROACH_SPEED_KMPH=uav.flight_path.cruise_speed_kmph,
                 )
             )
             waypoints.append(
                 Waypoint(
                     get_uav_on_airliner_point(airliner_fp, uav=uav, kind="undocking"),
-                    DIRECT_APPROACH_SPEED_KMPH=uav_fp.cruise_speed_kmph,
+                    DIRECT_APPROACH_SPEED_KMPH=uav.flight_path.cruise_speed_kmph,
                 )
             )
 
@@ -909,7 +905,6 @@ def generate_all_airliner_waypoints(
     airliner_id: AirplaneId,
     airliner_fp: AirlinerFlightPath,
     uavs: Dict[AirportCode, Dict[AirplaneId, Uav]],
-    uav_fps: Dict[AirportCode, Dict[AirplaneId, UavFlightPath]],
 ) -> List[Waypoint]:
     waypoints: List[Waypoint] = []
 
@@ -947,7 +942,6 @@ def generate_all_airliner_waypoints(
             waypoints += _generate_airliner_docking_waypoints(
                 airliner_fp,
                 uavs,
-                uav_fps,
                 i,
                 service_side="to_airport",
                 airliner_curve_waypoints=curve_waypoints,
@@ -956,7 +950,6 @@ def generate_all_airliner_waypoints(
             waypoints += _generate_airliner_docking_waypoints(
                 airliner_fp,
                 uavs,
-                uav_fps,
                 i,
                 service_side="from_airport",
                 airliner_curve_waypoints=curve_waypoints,

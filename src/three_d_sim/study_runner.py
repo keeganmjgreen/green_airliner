@@ -45,14 +45,17 @@ def run_scenario(
         initial_energy_level_pc=airliner_config.initial_energy_level_pc,
         viz_model=airliner_config.viz_model_name,
     )
-    airliner_fp_config = simulation_config.airliner_flight_path_config
-    airliner_fp = AirlinerFlightPath.from_configs(airliner_fp_config, airliner_config)
-
-    uavs, uav_fps = make_uavs(
-        simulation_config, fuel=airliner.airplane_spec.fuel, airliner_fp=airliner_fp
+    airliner.flight_path = AirlinerFlightPath.from_configs(
+        simulation_config.airliner_flight_path_config, airliner_config
     )
 
-    waypoints = generate_all_airliner_waypoints(airliner.id, airliner_fp, uavs, uav_fps)
+    uavs = make_uavs(
+        simulation_config,
+        fuel=airliner.airplane_spec.fuel,
+        airliner_fp=airliner.flight_path,
+    )
+
+    waypoints = generate_all_airliner_waypoints(airliner.id, airliner.flight_path, uavs)
     airliner.location = waypoints.pop(0).LOCATION
     airliner.waypoints = waypoints
 
@@ -88,7 +91,7 @@ def run_scenario(
     airliner_reference_times = {
         k: timedelta_to_minutes(v) for k, v in airliner_reference_times.items()
     }
-    for airport in airliner_fp.flyover_airports:
+    for airport in airliner.flight_path.flyover_airports:
         airliner_reference_times[f"Airliner_curve_over_{airport.CODE}_midpoint"] = (
             airliner_reference_times[f"Airliner_curve_over_{airport.CODE}_start_point"]
             + airliner_reference_times[f"Airliner_curve_over_{airport.CODE}_end_point"]
@@ -146,9 +149,10 @@ def run_scenario(
             for zp in zoompoints:
                 zp.evaluate_elapsed_mins(uav_reference_times)
 
-            if uav_airport_code != airliner_fp.flyover_airports[0].CODE:
-                previous_airport = airliner_fp.flyover_airports[
-                    airliner_fp.flyover_airport_codes.index(uav_airport_code) - 1
+            if uav_airport_code != airliner.flight_path.flyover_airports[0].CODE:
+                previous_airport = airliner.flight_path.flyover_airports[
+                    airliner.flight_path.flyover_airport_codes.index(uav_airport_code)
+                    - 1
                 ]
                 previous_uav = (
                     list(uavs[previous_airport.CODE]["to_airport"].values())
@@ -217,7 +221,7 @@ def run_scenario(
         skip_timedelta=skip_timedelta,
         end_time=dt.timedelta(minutes=zoompoints[-1].elapsed_mins),
         ev_taxis_emulator_or_interface=airplanes_emulator,
-        airliner_flight_path=airliner_fp,
+        airliner_flight_path=airliner.flight_pathp,
         track_airplane_id=track_airplane_id,
         view=view,
         map_texture_fpath=(
@@ -240,19 +244,13 @@ def run_scenario(
 
 def make_uavs(
     simulation_config: SimulationConfig, fuel: Fuel, airliner_fp: AirlinerFlightPath
-) -> Tuple[
-    Dict[AirportCode, Dict[ServiceSide, Dict[UavId, Uav]]],
-    Dict[AirportCode, Dict[ServiceSide, Dict[UavId, UavFlightPath]]],
-]:
+) -> Dict[AirportCode, Dict[ServiceSide, Dict[UavId, Uav]]]:
     uavs = {}
-    uav_fps = {}
     for uav_airport_code, x in simulation_config.n_uavs_per_flyover_airport.items():
         airport_uav_idx = 0
         uavs[uav_airport_code] = {}
-        uav_fps[uav_airport_code] = {}
         for service_side, n_uavs in x.dict().items():
             uavs[uav_airport_code][service_side] = {}
-            uav_fps[uav_airport_code][service_side] = {}
             for service_side_uav_idx in range(n_uavs):
                 uav, uav_fp = make_uav(
                     simulation_config,
@@ -266,12 +264,10 @@ def make_uavs(
                 )
                 # Add the UAV to the `uavs` dict:
                 uavs[uav_airport_code][service_side][uav.id] = uav
-                # Add the UAV Flight Path to the `uav_fps` dict:
-                uav_fps[uav_airport_code][service_side][uav.id] = uav_fp
 
                 airport_uav_idx += 1
 
-    return uavs, uav_fps
+    return uavs
 
 
 def make_uav(
@@ -283,7 +279,7 @@ def make_uav(
     service_side: ServiceSide,
     n_uavs: int,
     service_side_uav_idx: int,
-) -> Tuple[Uav, UavFlightPath]:
+) -> Uav:
     uavs_config = simulation_config.uavs_config
     # Instantiate the UAV:
     uav = Uav(
@@ -301,7 +297,7 @@ def make_uav(
         simulation_config.uavs_config.refueling_rate_kW,
     )
     refueling_distance_km = (
-        uav.airplane_spec.cruise_speed_kmph
+        uavs_config.airplane_spec.cruise_speed_kmph
         * uav.refueling_energy_capacity_MJ
         / refueling_rate_kW
         / MJ_PER_KWH
@@ -313,7 +309,7 @@ def make_uav(
     )
     uavs_fp_config = simulation_config.uavs_flight_path_config
     # Instantiate the UAV Flight Path:
-    uav_fp = UavFlightPath(
+    uav.flight_path = UavFlightPath(
         home_airport=uav_airport_code,
         takeoff_speed_kmph=uavs_fp_config.takeoff_speed_kmph,
         takeoff_distance_km=uavs_fp_config.takeoff_distance_km,
@@ -352,11 +348,12 @@ def make_uav(
     )
 
     waypoints = generate_all_uav_waypoints(
-        uav.id, service_side_uav_idx, n_uavs, uav_fp, airliner_fp
+        uav.id, service_side_uav_idx, n_uavs, uav.flight_path, airliner_fp
     )
     uav.location = waypoints.pop(0).LOCATION
     uav.waypoints = waypoints
-    return uav, uav_fp
+
+    return uav
 
 
 def parse_cli_args() -> argparse.Namespace:

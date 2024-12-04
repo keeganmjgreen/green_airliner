@@ -12,6 +12,7 @@ from src.feasibility_study.modeling_objects import BaseAirliner as AirlinerSpec
 from src.feasibility_study.modeling_objects import BaseAirplane as AirplaneSpec
 from src.feasibility_study.modeling_objects import Fuel
 from src.feasibility_study.modeling_objects import Uav as UavSpec
+from src.three_d_sim.flight_path_generation import FlightPath
 from src.three_d_sim.viz_models import ModelConfig
 from src.utils.utils import MJ_PER_KWH, cosd, sind, timedelta_to_minutes
 
@@ -137,6 +138,7 @@ class Airplane:
     initial_energy_level_pc: float
     energy_level_pc_bounds: Tuple[float, float] = (0.0, 100.0)
     energy_efficiency_pc: float = 100.0
+    flight_path: Union[FlightPath, None] = None
     viz_model: Union[ModelConfig, str, None] = None
 
     energy_capacity_MJ: float = dataclasses.field(init=False)
