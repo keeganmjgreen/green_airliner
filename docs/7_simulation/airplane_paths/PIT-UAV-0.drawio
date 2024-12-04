@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:132.0) Gecko/20100101 Firefox/132.0" version="24.8.9">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:132.0) Gecko/20100101 Firefox/132.0" version="24.9.3">
   <diagram name="Page-1" id="xgsBKiDcWhWVlIdVWDK1">
     <mxGraphModel dx="1434" dy="864" grid="0" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
       <root>
@@ -17,11 +17,11 @@
         </mxCell>
         <mxCell id="P7f96D7kv0JGmWKx6UQL-24" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=#D4E1F5;endArrow=none;endFill=0;textShadow=0;labelBorderColor=#A9C4EB;" parent="1" source="P7f96D7kv0JGmWKx6UQL-5" edge="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="535" y="225" as="targetPoint" />
+            <mxPoint x="530" y="225" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="P7f96D7kv0JGmWKx6UQL-5" value="PIT_UAV_0_ascended_point" style="text;fontColor=default;fontFamily=Courier New;verticalAlign=middle;align=center;labelBackgroundColor=#D4E1F5;textShadow=0;labelBorderColor=#A9C4EB;" parent="1" vertex="1">
-          <mxGeometry x="535" y="135" width="20" height="20" as="geometry" />
+        <mxCell id="P7f96D7kv0JGmWKx6UQL-5" value="PIT_UAV_0_ascended_point" style="text;fontColor=default;fontFamily=Courier New;verticalAlign=middle;align=right;labelBackgroundColor=#D4E1F5;textShadow=0;labelBorderColor=#A9C4EB;" parent="1" vertex="1">
+          <mxGeometry x="500" y="185" width="20" height="20" as="geometry" />
         </mxCell>
         <mxCell id="P7f96D7kv0JGmWKx6UQL-25" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=#D4E1F5;endArrow=none;endFill=0;textShadow=0;labelBorderColor=#A9C4EB;" parent="1" source="P7f96D7kv0JGmWKx6UQL-6" edge="1">
           <mxGeometry relative="1" as="geometry">
@@ -154,22 +154,22 @@
         <mxCell id="P7f96D7kv0JGmWKx6UQL-12" value="PIT_UAV_0_lowering_point" style="text;fontColor=default;fontFamily=Courier New;verticalAlign=middle;align=right;labelBackgroundColor=#D4E1F5;textShadow=0;labelBorderColor=#A9C4EB;" parent="1" vertex="1">
           <mxGeometry x="640" y="260" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="jyjgohk3QJxgRRXcm6k8-1" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;" vertex="1" parent="1">
+        <mxCell id="jyjgohk3QJxgRRXcm6k8-1" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="755" y="270" width="30" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="jyjgohk3QJxgRRXcm6k8-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="jyjgohk3QJxgRRXcm6k8-4">
+        <mxCell id="jyjgohk3QJxgRRXcm6k8-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="jyjgohk3QJxgRRXcm6k8-4" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="785" y="285" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="jyjgohk3QJxgRRXcm6k8-4" value="UAV turns around&lt;font color=&quot;#808080&quot;&gt; &lt;font style=&quot;font-size: 12px;&quot;&gt;(&lt;font face=&quot;Courier New&quot;&gt;arc_radius_km&lt;/font&gt;)&lt;/font&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;rounded=0;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="jyjgohk3QJxgRRXcm6k8-4" value="UAV turns around&lt;font color=&quot;#808080&quot;&gt; &lt;font style=&quot;font-size: 12px;&quot;&gt;(&lt;font face=&quot;Courier New&quot;&gt;arc_radius_km&lt;/font&gt;)&lt;/font&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;rounded=0;fontStyle=1;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="805" y="275" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="jyjgohk3QJxgRRXcm6k8-10" value="UAV docks with airliner&lt;br&gt;&lt;font style=&quot;font-size: 12px;&quot; color=&quot;#808080&quot;&gt;(for &lt;font face=&quot;Courier New&quot;&gt;airliner_uav_docking_distance_km&lt;/font&gt;)&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;rounded=0;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="jyjgohk3QJxgRRXcm6k8-10" value="UAV docks with airliner&lt;br&gt;&lt;font style=&quot;font-size: 12px;&quot; color=&quot;#808080&quot;&gt;(for &lt;font face=&quot;Courier New&quot;&gt;airliner_uav_docking_distance_km&lt;/font&gt;)&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;rounded=0;fontStyle=1;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="770" y="390" width="20" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="jyjgohk3QJxgRRXcm6k8-11" value="UAV slows down to clear airliner&lt;font color=&quot;#808080&quot;&gt;&lt;br&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;(&lt;font face=&quot;Courier New&quot;&gt;airliner_clearance_distance_km&lt;/font&gt;,&lt;br&gt;at &lt;font face=&quot;Courier New&quot;&gt;airliner_clearance_speed_kmph&lt;/font&gt;)&lt;/font&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;rounded=0;fontStyle=1;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="570" y="165" width="230" height="50" as="geometry" />
+        <mxCell id="jyjgohk3QJxgRRXcm6k8-11" value="UAV temporarily slows down to&lt;br&gt;&lt;font face=&quot;Courier New&quot;&gt;airliner_clearance_speed_kmph&lt;/font&gt; to clear airliner&lt;font color=&quot;#808080&quot;&gt;&lt;br&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;(for &lt;font face=&quot;Courier New&quot;&gt;airliner_clearance_distance_km&lt;/font&gt;)&lt;br&gt;&lt;/font&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;rounded=0;fontStyle=1;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="600" y="155" width="230" height="50" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

@@ -47,7 +47,7 @@ The following diagram shows all airplane paths surrounding PIT (airliner, PIT-UA
 
 The following diagram shows the paths of DEN-UAV-0 and DEN-UAV-1 according to the example ``simulation_config.yml`` file.
 
-TODO
+.. image:: airplane_paths/DEN-UAVs.svg
 
 The following diagram shows all airplane paths surrounding DEN.
 
