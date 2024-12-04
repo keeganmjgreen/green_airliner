@@ -38,26 +38,7 @@ def run_scenario(
     track_airplane_id: str,
     record: Literal["airplanes-viz", "graphs"],
 ) -> None:
-    airliner_config = simulation_config.airliner_config
-    airliner = Airliner(
-        airplane_spec=airliner_config.airplane_spec,
-        refueling_rate_kW=airliner_config.refueling_rate_kW,
-        initial_energy_level_pc=airliner_config.initial_energy_level_pc,
-        viz_model=airliner_config.viz_model_name,
-    )
-    airliner.flight_path = AirlinerFlightPath.from_configs(
-        simulation_config.airliner_flight_path_config, airliner_config
-    )
-
-    uavs = make_uavs(
-        simulation_config,
-        fuel=airliner.airplane_spec.fuel,
-        airliner_fp=airliner.flight_path,
-    )
-
-    waypoints = generate_all_airliner_waypoints(airliner.id, airliner.flight_path, uavs)
-    airliner.location = waypoints.pop(0).LOCATION
-    airliner.waypoints = waypoints
+    airliner, uavs = make_airplanes(simulation_config)
 
     flat_uavs = {
         k: {k2: v2 for x in v.values() for k2, v2 in x.items()} for k, v in uavs.items()
@@ -240,6 +221,32 @@ def run_scenario(
     for screen_recorder in screen_recorders:
         screen_recorder.release()
     quit()
+
+def make_airplanes(
+    simulation_config: SimulationConfig,
+) -> Tuple[Airliner, Dict[AirportCode, Dict[ServiceSide, Dict[UavId, Uav]]]]:
+    airliner_config = simulation_config.airliner_config
+    airliner = Airliner(
+        airplane_spec=airliner_config.airplane_spec,
+        refueling_rate_kW=airliner_config.refueling_rate_kW,
+        initial_energy_level_pc=airliner_config.initial_energy_level_pc,
+        viz_model=airliner_config.viz_model_name,
+    )
+    airliner.flight_path = AirlinerFlightPath.from_configs(
+        simulation_config.airliner_flight_path_config, airliner_config
+    )
+
+    uavs = make_uavs(
+        simulation_config,
+        fuel=airliner.airplane_spec.fuel,
+        airliner_fp=airliner.flight_path,
+    )
+
+    waypoints = generate_all_airliner_waypoints(airliner.id, airliner.flight_path, uavs)
+    airliner.location = waypoints.pop(0).LOCATION
+    airliner.waypoints = waypoints
+
+    return airliner, uavs
 
 
 def make_uavs(
