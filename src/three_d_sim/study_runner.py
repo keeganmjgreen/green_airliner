@@ -221,7 +221,7 @@ def run_scenario(
         skip_timedelta=skip_timedelta,
         end_time=dt.timedelta(minutes=zoompoints[-1].elapsed_mins),
         ev_taxis_emulator_or_interface=airplanes_emulator,
-        airliner_flight_path=airliner.flight_pathp,
+        airports=airliner.flight_path.airports,
         track_airplane_id=track_airplane_id,
         view=view,
         map_texture_fpath=(

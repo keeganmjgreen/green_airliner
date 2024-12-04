@@ -14,7 +14,7 @@ from src.three_d_sim.environments.environment import (
     Environment,
     get_interpolator_by_elapsed_time,
 )
-from src.three_d_sim.flight_path_generation import FlightPath, orthogonal_xy_vector
+from src.three_d_sim.flight_path_generation import AirportLocation, orthogonal_xy_vector
 from src.three_d_sim.wavefront_obj_to_vp import simple_wavefront_obj_to_vp
 from src.utils.utils import timedelta_to_minutes
 from src.three_d_sim.simulation_config_schema import Zoompoint
@@ -79,7 +79,7 @@ class ScreenRecorder:
 
 @dataclasses.dataclass(kw_only=True)
 class AirplanesVisualizerEnvironment(Environment):
-    airliner_flight_path: FlightPath
+    airports: List[AirportLocation]
     track_airplane_id: str
     view: View
     map_texture_fpath: str
@@ -167,13 +167,12 @@ class AirplanesVisualizerEnvironment(Environment):
         # )
 
     def _render_airports(self):
-        airports = self.airliner_flight_path.airports
         # x_coords = [loc.X_KM for loc in airports]
         # y_coords = [loc.Y_KM for loc in airports]
         # center = vp.vector(
         #     *[(max(coords) - min(coords)) / 2 for coords in [x_coords, y_coords]], 0
         # )
-        for airport in airports:
+        for airport in self.airports:
             cr = vp.shapes.circle(pos=list(airport.xy_coords), radius=AIRPORT_RADIUS_KM)
             for i in range(len(cr)):
                 vs = [airport.xy_coords, cr[i - 1], cr[i]]
