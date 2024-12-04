@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import dataclasses
 from copy import deepcopy
 from pathlib import Path
@@ -19,6 +21,10 @@ from src.modeling_objects import (
     Waypoint,
 )
 from src.utils.utils import M_PER_KM, SECONDS_PER_HOUR
+from three_d_sim.simulation_config_schema import (
+    AirlinerConfig,
+    AirlinerFlightPathConfig,
+)
 
 from .planar_curve_points_generation import generate_planar_curve_points
 
@@ -106,6 +112,32 @@ class AirlinerFlightPath(FlightPath):
             ALL_AIRPORT_LOCATIONS[a] for a in self.flyover_airports
         ]
         self.destination_airport = ALL_AIRPORT_LOCATIONS[self.destination_airport]
+
+    @classmethod
+    def from_configs(
+        cls,
+        airliner_fp_config: AirlinerFlightPathConfig,
+        airliner_config: AirlinerConfig,
+    ) -> AirlinerFlightPath:
+        return cls(
+            origin_airport=airliner_fp_config.origin_airport_code,
+            flyover_airports=airliner_fp_config.flyover_airport_codes,
+            destination_airport=airliner_fp_config.destination_airport_code,
+            takeoff_speed_kmph=airliner_fp_config.takeoff_speed_kmph,
+            takeoff_distance_km=airliner_fp_config.takeoff_distance_km,
+            takeoff_leveling_distance_km=airliner_fp_config.takeoff_leveling_distance_km,
+            rate_of_climb_mps=airliner_fp_config.rate_of_climb_mps,
+            climb_leveling_distance_km=airliner_fp_config.climb_leveling_distance_km,
+            cruise_altitude_km=airliner_fp_config.cruise_altitude_km,
+            cruise_speed_kmph=airliner_config.airplane_spec.cruise_speed_kmph,
+            speed_change_distance_km=airliner_fp_config.speed_change_distance_km,
+            turning_radius_km=airliner_fp_config.turning_radius_km,
+            descent_leveling_distance_km=airliner_fp_config.descent_leveling_distance_km,
+            rate_of_descent_mps=airliner_fp_config.rate_of_descent_mps,
+            landing_leveling_distance_km=airliner_fp_config.landing_leveling_distance_km,
+            landing_distance_km=airliner_fp_config.landing_distance_km,
+            landing_speed_kmph=airliner_fp_config.landing_speed_kmph,
+        )
 
     @property
     def flyover_airport_codes(self) -> List[AirportCode]:

@@ -46,25 +46,7 @@ def run_scenario(
         viz_model=airliner_config.viz_model_name,
     )
     airliner_fp_config = simulation_config.airliner_flight_path_config
-    airliner_fp = AirlinerFlightPath(
-        origin_airport=airliner_fp_config.origin_airport_code,
-        flyover_airports=airliner_fp_config.flyover_airport_codes,
-        destination_airport=airliner_fp_config.destination_airport_code,
-        takeoff_speed_kmph=airliner_fp_config.takeoff_speed_kmph,
-        takeoff_distance_km=airliner_fp_config.takeoff_distance_km,
-        takeoff_leveling_distance_km=airliner_fp_config.takeoff_leveling_distance_km,
-        rate_of_climb_mps=airliner_fp_config.rate_of_climb_mps,
-        climb_leveling_distance_km=airliner_fp_config.climb_leveling_distance_km,
-        cruise_altitude_km=airliner_fp_config.cruise_altitude_km,
-        cruise_speed_kmph=airliner_config.airplane_spec.cruise_speed_kmph,
-        speed_change_distance_km=airliner_fp_config.speed_change_distance_km,
-        turning_radius_km=airliner_fp_config.turning_radius_km,
-        descent_leveling_distance_km=airliner_fp_config.descent_leveling_distance_km,
-        rate_of_descent_mps=airliner_fp_config.rate_of_descent_mps,
-        landing_leveling_distance_km=airliner_fp_config.landing_leveling_distance_km,
-        landing_distance_km=airliner_fp_config.landing_distance_km,
-        landing_speed_kmph=airliner_fp_config.landing_speed_kmph,
-    )
+    airliner_fp = AirlinerFlightPath.from_configs(airliner_fp_config, airliner_config)
 
     uavs, uav_fps = make_uavs(
         simulation_config, fuel=airliner.airplane_spec.fuel, airliner_fp=airliner_fp
