@@ -1,18 +1,23 @@
 from __future__ import annotations
 
 import datetime as dt
-from enum import Enum
 import json
+from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Literal, Optional, Tuple, Union
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
-
+from src.feasibility_study.modeling_objects import BaseAirliner as AirlinerSpec
+from src.feasibility_study.modeling_objects import Uav as UavSpec
 from src.specs import airliner_lookup, uav_lookup
 from src.three_d_sim.flight_path_generation import AirportCode
-from src.three_d_sim.viz_models import airliner_model_lookup, uav_model_lookup
+from src.three_d_sim.viz_models import (
+    ModelConfig,
+    airliner_model_lookup,
+    uav_model_lookup,
+)
 
 
 class Model(BaseModel):
@@ -48,6 +53,14 @@ class AirlinerConfig(Model):
     those listed below. `viz_models.py` acts as a registry for these and, if a different 3D model \
     is desired, a new one can be added there.
     """
+
+    @property
+    def airplane_spec(self) -> AirlinerSpec:
+        return airliner_lookup[self.airplane_spec_name.name]
+
+    @property
+    def viz_model(self) -> ModelConfig:
+        return airliner_model_lookup[self.viz_model_name.name]
 
 
 class FlightPathConfig(Model):
@@ -242,6 +255,14 @@ class UavsConfig(Model):
     listed below. `viz_models.py` acts as a registry for these and, if a different 3D model is \
     desired, a new one can be added there.
     """
+
+    @property
+    def airplane_spec(self) -> UavSpec:
+        return uav_lookup[self.airplane_spec_name.name]
+
+    @property
+    def viz_model(self) -> ModelConfig:
+        return uav_model_lookup[self.viz_model.name]
 
 
 class Timepoint(Model):

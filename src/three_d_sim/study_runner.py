@@ -40,7 +40,7 @@ def run_scenario(
 ) -> None:
     airliner_config = simulation_config.airliner_config
     airliner = Airliner(
-        airplane_spec=airliner_config.airplane_spec_name,
+        airplane_spec=airliner_config.airplane_spec,
         refueling_rate_kW=airliner_config.refueling_rate_kW,
         initial_energy_level_pc=airliner_config.initial_energy_level_pc,
         viz_model=airliner_config.viz_model_name,
@@ -56,7 +56,7 @@ def run_scenario(
         rate_of_climb_mps=airliner_fp_config.rate_of_climb_mps,
         climb_leveling_distance_km=airliner_fp_config.climb_leveling_distance_km,
         cruise_altitude_km=airliner_fp_config.cruise_altitude_km,
-        cruise_speed_kmph=airliner.airplane_spec.cruise_speed_kmph,
+        cruise_speed_kmph=airliner_config.airplane_spec.cruise_speed_kmph,
         speed_change_distance_km=airliner_fp_config.speed_change_distance_km,
         turning_radius_km=airliner_fp_config.turning_radius_km,
         descent_leveling_distance_km=airliner_fp_config.descent_leveling_distance_km,
@@ -306,7 +306,7 @@ def make_uav(
     # Instantiate the UAV:
     uav = Uav(
         id=f"{uav_airport_code}_UAV_{airport_uav_idx}",
-        airplane_spec=uavs_config.airplane_spec_name,
+        airplane_spec=uavs_config.airplane_spec,
         refueling_rate_kW=uavs_config.refueling_rate_kW,
         initial_energy_level_pc=uavs_config.initial_energy_level_pc,
         viz_model=uavs_config.viz_model_name,
@@ -342,7 +342,7 @@ def make_uav(
             uavs_fp_config.smallest_cruise_altitude_km
             + uavs_fp_config.inter_uav_vertical_distance_km * service_side_uav_idx
         ),
-        cruise_speed_kmph=uav.airplane_spec.cruise_speed_kmph,
+        cruise_speed_kmph=uavs_config.airplane_spec.cruise_speed_kmph,
         turning_radius_km=airliner_fp.turning_radius_km,
         descent_leveling_distance_km=uavs_fp_config.descent_leveling_distance_km,
         rate_of_descent_mps=uavs_fp_config.rate_of_descent_mps,
