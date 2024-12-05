@@ -267,15 +267,18 @@
         <article role="main" id="furo-main-content">
           <section id="configuration">
 <h1>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">¶</a></h1>
+<p>The simulation is configured by a <code class="docutils literal notranslate"><span class="pre">simulation_config.yml</span></code> file in the specified <code class="docutils literal notranslate"><span class="pre">--config-dir</span></code>. This YAML file must follow the following schema.</p>
 <section id="schema">
 <h2>Schema<a class="headerlink" href="#schema" title="Link to this heading">¶</a></h2>
+<p>The following schema is a full specification of the simulation config, including its required and optional fields, their data types, and descriptions.</p>
 <div style="height: 100vh; display: flex; flex-direction: column;">
     <iframe src="../_static/simulation_config_json_schema.html" style="flex-grow: 1; width: 100%; border: 1px solid #dfdfdf;"></iframe>
 </div></section>
 <section id="example-for-flight-from-jfk-to-lax">
 <h2>Example for flight from JFK to LAX<a class="headerlink" href="#example-for-flight-from-jfk-to-lax" title="Link to this heading">¶</a></h2>
+<p>The following is an example <code class="docutils literal notranslate"><span class="pre">simulation_config.yml</span></code> file for a flight from JFK to LAX.</p>
 <div class="sphinx_collapse docutils container">
-<input class="sphinx_collapse__input" id="932d5eba-49f7-4485-9222-e44021c8127d" name="932d5eba-49f7-4485-9222-e44021c8127d" type="checkbox"><label class="sphinx_collapse__label" for="932d5eba-49f7-4485-9222-e44021c8127d"><i class="sphinx_collapse__icon"></i>Click to expand/collapse.</label><div class="sphinx_collapse__content docutils container">
+<input class="sphinx_collapse__input" id="06fcea6e-82f8-4267-896b-ce70c6efd386" name="06fcea6e-82f8-4267-896b-ce70c6efd386" type="checkbox"><label class="sphinx_collapse__label" for="06fcea6e-82f8-4267-896b-ce70c6efd386"><i class="sphinx_collapse__icon"></i>Click to expand/collapse.</label><div class="sphinx_collapse__content docutils container">
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">airliner_config</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">airplane_spec_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lh2FueledA320</span>
 <span class="w">  </span><span class="nt">refueling_rate_kW</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2333333</span><span class="w">  </span><span class="c1"># 7e12/50 J/min LH2 * (60 min/h) / (3600 J/Wh) / (1000 W/kW)</span>
@@ -525,7 +528,22 @@
 </section>
 <section id="flight-path-configuration">
 <h2>Flight path configuration<a class="headerlink" href="#flight-path-configuration" title="Link to this heading">¶</a></h2>
+<p>The simulation config includes configuration of the airliner and UAVs’ flight paths. The following diagrams explain a number of fields of the airliner and UAVs’ flight path configs in the context of the airplanes’ phases of flight, speed profile, and flight between airports.</p>
 <img alt="../_images/flight_path.svg" src="../_images/flight_path.svg" />
+<section id="uav-flight-path">
+<h3>UAV flight path<a class="headerlink" href="#uav-flight-path" title="Link to this heading">¶</a></h3>
+<p>The following diagram shows the path of PIT-UAV-0 according to the example <code class="docutils literal notranslate"><span class="pre">simulation_config.yml</span></code> file. The <cite>xy</cite>-plane is to-scale but the vertical <cite>z</cite>-axis is scaled up to more clearly illustrate the altitude differences. The diagram shows some additional fields specific to the UAVs’ flight path config. The diagram also shows certain points—waypoints—along the UAV’s path. For example, when the UAV takes off, has reached its cruise altitude, begins to descend onto the airliner, etc. (These waypoints are labeled in the diagram, and their labels can be referenced when specifying the <code class="docutils literal notranslate"><span class="pre">elapsed_mins</span></code> of ratepoints or zoompoints.)</p>
+<img alt="../_images/PIT-UAV-0.svg" src="../_images/PIT-UAV-0.svg" />
+<p>The following diagram shows all airplane paths surrounding PIT (airliner, PIT-UAV-0, and PIT-UAV-1). It is to-scale and was generated using <code class="docutils literal notranslate"><span class="pre">viz_airplane_paths.py</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">src</span><span class="o">/</span><span class="n">three_d_sim</span><span class="o">/</span><span class="n">viz_airplane_paths</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">config</span><span class="o">-</span><span class="nb">dir</span><span class="o">=</span><span class="n">configs</span><span class="o">/</span><span class="n">jfk_to_lax</span><span class="o">/</span>
+</pre></div>
+</div>
+<img alt="../_images/PIT.png" src="../_images/PIT.png" />
+<p>The following diagram shows the paths of DEN-UAV-0 and DEN-UAV-1 according to the example <code class="docutils literal notranslate"><span class="pre">simulation_config.yml</span></code> file.</p>
+<img alt="../_images/DEN-UAVs.svg" src="../_images/DEN-UAVs.svg" />
+<p>The following diagram shows all airplane paths surrounding DEN.</p>
+<img alt="../_images/DEN.png" src="../_images/DEN.png" />
+</section>
 </section>
 </section>
 
@@ -587,7 +605,10 @@
 <li><a class="reference internal" href="#">Configuration</a><ul>
 <li><a class="reference internal" href="#schema">Schema</a></li>
 <li><a class="reference internal" href="#example-for-flight-from-jfk-to-lax">Example for flight from JFK to LAX</a></li>
-<li><a class="reference internal" href="#flight-path-configuration">Flight path configuration</a></li>
+<li><a class="reference internal" href="#flight-path-configuration">Flight path configuration</a><ul>
+<li><a class="reference internal" href="#uav-flight-path">UAV flight path</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
