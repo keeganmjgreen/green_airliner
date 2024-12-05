@@ -278,7 +278,7 @@
 <h2>Example for flight from JFK to LAX<a class="headerlink" href="#example-for-flight-from-jfk-to-lax" title="Link to this heading">¶</a></h2>
 <p>The following is an example <code class="docutils literal notranslate"><span class="pre">simulation_config.yml</span></code> file for a flight from JFK to LAX.</p>
 <div class="sphinx_collapse docutils container">
-<input class="sphinx_collapse__input" id="06fcea6e-82f8-4267-896b-ce70c6efd386" name="06fcea6e-82f8-4267-896b-ce70c6efd386" type="checkbox"><label class="sphinx_collapse__label" for="06fcea6e-82f8-4267-896b-ce70c6efd386"><i class="sphinx_collapse__icon"></i>Click to expand/collapse.</label><div class="sphinx_collapse__content docutils container">
+<input class="sphinx_collapse__input" id="d88528f2-5dcf-43b4-bfe0-c3b71f3decea" name="d88528f2-5dcf-43b4-bfe0-c3b71f3decea" type="checkbox"><label class="sphinx_collapse__label" for="d88528f2-5dcf-43b4-bfe0-c3b71f3decea"><i class="sphinx_collapse__icon"></i>Click to expand/collapse.</label><div class="sphinx_collapse__content docutils container">
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">airliner_config</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">airplane_spec_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lh2FueledA320</span>
 <span class="w">  </span><span class="nt">refueling_rate_kW</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2333333</span><span class="w">  </span><span class="c1"># 7e12/50 J/min LH2 * (60 min/h) / (3600 J/Wh) / (1000 W/kW)</span>
@@ -532,15 +532,15 @@
 <img alt="../_images/flight_path.svg" src="../_images/flight_path.svg" />
 <section id="uav-flight-path">
 <h3>UAV flight path<a class="headerlink" href="#uav-flight-path" title="Link to this heading">¶</a></h3>
-<p>The following diagram shows the path of PIT-UAV-0 according to the example <code class="docutils literal notranslate"><span class="pre">simulation_config.yml</span></code> file. The <cite>xy</cite>-plane is to-scale but the vertical <cite>z</cite>-axis is scaled up to more clearly illustrate the altitude differences. The diagram shows some additional fields specific to the UAVs’ flight path config. The diagram also shows certain points—waypoints—along the UAV’s path. For example, when the UAV takes off, has reached its cruise altitude, begins to descend onto the airliner, etc. (These waypoints are labeled in the diagram, and their labels can be referenced when specifying the <code class="docutils literal notranslate"><span class="pre">elapsed_mins</span></code> of ratepoints or zoompoints.)</p>
-<img alt="../_images/PIT-UAV-0.svg" src="../_images/PIT-UAV-0.svg" />
-<p>The following diagram shows all airplane paths surrounding PIT (airliner, PIT-UAV-0, and PIT-UAV-1). It is to-scale and was generated using <code class="docutils literal notranslate"><span class="pre">viz_airplane_paths.py</span></code>:</p>
+<p>The following diagram shows the path of PIT_UAV_0 according to the example <code class="docutils literal notranslate"><span class="pre">simulation_config.yml</span></code> file. The <cite>xy</cite>-plane is to-scale but the vertical <cite>z</cite>-axis is scaled up to more clearly illustrate the altitude differences. The diagram shows some additional fields specific to the UAVs’ flight path config. The diagram also shows certain points—waypoints—along the UAV’s path. For example, when the UAV takes off, has reached its cruise altitude, begins to descend onto the airliner, etc. (These waypoints are labeled in the diagram, and their labels can be referenced when specifying the <code class="docutils literal notranslate"><span class="pre">elapsed_mins</span></code> of ratepoints or zoompoints.)</p>
+<img alt="../_images/PIT_UAV_0.svg" src="../_images/PIT_UAV_0.svg" />
+<p>The following diagram shows all airplane paths surrounding PIT (airliner, PIT_UAV_0, and PIT_UAV_1). It is to-scale and was generated using <code class="docutils literal notranslate"><span class="pre">viz_airplane_paths.py</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">src</span><span class="o">/</span><span class="n">three_d_sim</span><span class="o">/</span><span class="n">viz_airplane_paths</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">config</span><span class="o">-</span><span class="nb">dir</span><span class="o">=</span><span class="n">configs</span><span class="o">/</span><span class="n">jfk_to_lax</span><span class="o">/</span>
 </pre></div>
 </div>
 <img alt="../_images/PIT.png" src="../_images/PIT.png" />
-<p>The following diagram shows the paths of DEN-UAV-0 and DEN-UAV-1 according to the example <code class="docutils literal notranslate"><span class="pre">simulation_config.yml</span></code> file.</p>
-<img alt="../_images/DEN-UAVs.svg" src="../_images/DEN-UAVs.svg" />
+<p>The following diagram shows the paths of DEN_UAV_0 and DEN_UAV_1 according to the example <code class="docutils literal notranslate"><span class="pre">simulation_config.yml</span></code> file.</p>
+<img alt="../_images/DEN_UAVs.svg" src="../_images/DEN_UAVs.svg" />
 <p>The following diagram shows all airplane paths surrounding DEN.</p>
 <img alt="../_images/DEN.png" src="../_images/DEN.png" />
 </section>
