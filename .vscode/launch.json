@@ -27,7 +27,7 @@
             }
         },
         {
-            "name": "Study Runner - Airplane Paths",
+            "name": "Viz Airliner and PIT UAV Paths",
             "type": "debugpy",
             "request": "launch",
             "program": "src/three_d_sim/viz_airplane_paths.py",
@@ -38,11 +38,11 @@
             },
             "args": [
                 "--config-dir=configs/jfk_to_lax/",
-                "--airplane-id=*",
+                "--airplane-id=Airliner,PIT_UAV_*",
             ]
         },
         {
-            "name": "Study Runner - Map View, record-airplanes-viz",
+            "name": "Simulation - Map View, Record Viewport",
             "type": "debugpy",
             "request": "launch",
             "program": "src/three_d_sim/simulation.py",
@@ -54,11 +54,11 @@
             "args": [
                 "--config-dir=configs/jfk_to_lax/",
                 "--view=map-view",
-                "--record=airplanes-viz",
+                "--record=viewport",
             ]
         },
         {
-            "name": "Study Runner - Airliner Side View",
+            "name": "Simulation - Airliner Side View",
             "type": "debugpy",
             "request": "launch",
             "program": "src/three_d_sim/simulation.py",
@@ -74,7 +74,7 @@
             ]
         },
         {
-            "name": "Study Runner - Airliner Side View, record-airplanes-viz",
+            "name": "Simulation - Airliner Side View, Record Viewport",
             "type": "debugpy",
             "request": "launch",
             "program": "src/three_d_sim/simulation.py",
@@ -87,11 +87,11 @@
                 "--config-dir=configs/jfk_to_lax/",
                 "--view=side-view",
                 "--track-airplane-id=Airliner",
-                "--record=airplanes-viz",
+                "--record=viewport",
             ]
         },
         {
-            "name": "Study Runner - Airliner Side View, record-graphs",
+            "name": "Simulation - Airliner Side View, Record Graphs",
             "type": "debugpy",
             "request": "launch",
             "program": "src/three_d_sim/simulation.py",
@@ -108,7 +108,7 @@
             ]
         },
         {
-            "name": "Study Runner - Airliner Tail View, record-airplanes-viz",
+            "name": "Simulation - Airliner Tail View, Record Viewport",
             "type": "debugpy",
             "request": "launch",
             "program": "src/three_d_sim/simulation.py",
@@ -121,11 +121,11 @@
                 "--config-dir=configs/jfk_to_lax/",
                 "--view=tail-view",
                 "--track-airplane-id=Airliner",
-                "--record=airplanes-viz",
+                "--record=viewport",
             ]
         },
         {
-            "name": "Study Runner - DEN UAV 0 Side View, record-airplanes-viz",
+            "name": "Simulation - DEN_UAV_0 Side View, Record Viewport",
             "type": "debugpy",
             "request": "launch",
             "program": "src/three_d_sim/simulation.py",
@@ -138,7 +138,7 @@
                 "--config-dir=configs/jfk_to_lax/",
                 "--view=side-view",
                 "--track-airplane-id=DEN_UAV_0",
-                "--record=airplanes-viz",
+                "--record=viewport",
             ]
         },
     ]

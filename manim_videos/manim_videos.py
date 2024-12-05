@@ -2,6 +2,8 @@ import dataclasses
 import os
 from typing import Optional, Tuple
 
+import numpy as np
+
 import cv2
 from manim import *
 from manim.mobject.text import text_mobject
@@ -300,7 +302,7 @@ class Video(Scene):
         )
         uav_crop_to_width = (self.w - map_wp) / 2
         uav1_view = VideoFeed(
-            name="PIT/DEN-UAV-0 side view",
+            name="PIT/DEN_UAV_0 side view",
             fpath_lineup=[
                 "inputs/PIT_UAV_0-side-view.avi",
                 "inputs/DEN_UAV_0-side-view.avi",
@@ -316,14 +318,21 @@ class Video(Scene):
             show_grid=self.show_grid,
             crop_to_width=uav_crop_to_width,
             captions={
-                3: [Caption("2 refueling UAVs ready at | Pittsburgh International Airport", 3, 1.25, color=BLACK)],
+                3: [
+                    Caption(
+                        "2 refueling UAVs ready at | Pittsburgh International Airport",
+                        3,
+                        1.25,
+                        color=BLACK,
+                    )
+                ],
             },
         )
         uav2_view = VideoFeed(
-            name="PIT/DEN-UAV-1 side view",
+            name="PIT/DEN_UAV_1 side view",
             fpath_lineup=[
-                "inputs/PIT-UAV-1-side-view.avi",
-                "inputs/DEN-UAV-1-side-view.avi",
+                "inputs/PIT_UAV_1-side-view.avi",
+                "inputs/DEN_UAV_1-side-view.avi",
             ],
             scale=map_scale,
             pos=np.array(

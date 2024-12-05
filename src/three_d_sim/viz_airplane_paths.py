@@ -69,9 +69,33 @@ def viz_airplane_paths(airplanes: list[Airplane]) -> None:
 
 
 def parse_cli_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--config-dir")
-    parser.add_argument("--airplane-id", default="*")
+    parser = argparse.ArgumentParser(prog="Visualization of Generated Airplane Paths")
+    parser.add_argument(
+        "--config-dir",
+        help="Path containing `simulation_config.yml` file.",
+    )
+    parser.add_argument(
+        "--paths-viz-enabled",
+        type=bool,
+        default=True,
+        help=(
+            "Whether to visualize the airplane paths in-browser. Defaults to true. "
+            "If set to true, the browser tab opens in your system's default browser. With the "
+            "assumption that this is Google Chrome, the program firstly and automatically opens a "
+            'new "guest" Chrome window in which this new browser tab will be opened.'
+        ),
+    )
+    parser.add_argument(
+        "--airplane-ids",
+        default="*",
+        help=(
+            "The airplane IDs whose airplane paths to visualize. "
+            'Supports wildcards ("*"). '
+            'For example, "*" (the default) will match all airplane IDs and thus visualize all '
+            'airplane paths, while "Airliner,PIT_UAV_*" will visualize only the paths of the '
+            "airliner and PIT UAVs."
+        ),
+    )
     args = parser.parse_args()
     return args
 
@@ -79,7 +103,7 @@ def parse_cli_args() -> argparse.Namespace:
 if __name__ == "__main__":
     args = parse_cli_args()
     simulation_config = SimulationConfig.from_yaml(args.config_dir)
-    if simulation_config.viz_enabled:
+    if args.paths_viz_enabled:
         subprocess.Popen(["google-chrome", "--guest", "--start-maximized"])
 
     airliner, uavs = make_airplanes(simulation_config)
@@ -94,11 +118,14 @@ if __name__ == "__main__":
         uav for uav_dict in flat_uavs.values() for uav in uav_dict.values()
     ]
 
+    airplane_id_patterns = [x.strip() for x in args.airplane_ids.split(",")]
     selected_airplanes = [
-        a for a in airplanes if fnmatch.fnmatch(a.id, args.airplane_id)
+        a
+        for a in airplanes
+        if any(fnmatch.fnmatch(a.id, pattern) for pattern in airplane_id_patterns)
     ]
 
     write_airplane_paths(selected_airplanes)
     write_airplane_tagged_waypoints(selected_airplanes)
-    if simulation_config.viz_enabled:
+    if args.paths_viz_enabled:
         viz_airplane_paths(selected_airplanes)

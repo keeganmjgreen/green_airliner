@@ -23,10 +23,21 @@ from src.utils.utils import timedelta_to_minutes
 
 def run_simulation(
     simulation_config: SimulationConfig,
+    simulation_viz_enabled: bool,
     view: View,
-    track_airplane_id: str,
-    record: Literal["airplanes-viz", "graphs"],
+    track_airplane_id: str | None,
+    record: Literal["viewport", "graphs"],
 ) -> None:
+    if not simulation_viz_enabled:
+        assert view is None
+        assert track_airplane_id is None
+    else:
+        assert view is not None
+        if view == View.MAP_VIEW:
+            assert track_airplane_id is None
+        else:
+            assert track_airplane_id is not None
+
     airliner, uavs = make_airplanes(simulation_config)
 
     flat_uavs = {
@@ -133,7 +144,7 @@ def run_simulation(
     viewport_size = simulation_config.viz_config.viewport_config.size.tuple
     viewport_origin = simulation_config.viz_config.viewport_config.origin
     captions = True
-    if record == "airplanes-viz":
+    if record == "viewport":
         video_dir = os.environ["VIDEO_DIR"]
         screen_recorders = [
             ScreenRecorder(
@@ -202,11 +213,62 @@ def run_simulation(
 
 
 def parse_cli_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--config-dir")
-    parser.add_argument("--view")
-    parser.add_argument("--track-airplane-id", default=None)
-    parser.add_argument("--record", default=None)
+    parser = argparse.ArgumentParser(
+        prog="Simulation of UAVs Mid-Air Refueling an Airliner of Arbitrary Fuel",
+        description=(
+            "The simulation includes the takeoff, climb, descent, and landing of each of the "
+            "aircraft as well as the interaction between the airliner and each UAV throughout the "
+            "flight."
+        ),
+    )
+    parser.add_argument(
+        "--config-dir",
+        help="Path containing `simulation_config.yml` file.",
+    )
+    parser.add_argument(
+        "--simulation-viz-enabled",
+        default=True,
+        type=bool,
+        help=(
+            "Whether to visualize the airliner and UAVs in-browser while the simulation runs. "
+            "Defaults to true. "
+            "If set to true, requires a `viz_config` to be specified in the "
+            "`simulation_config.yml` file."
+            "If set to true, the browser tab opens in your system's default browser. With the "
+            "assumption that this is Google Chrome, the program firstly and automatically opens a "
+            'new "guest" Chrome window in which this new browser tab will be opened.'
+        ),
+    )
+    parser.add_argument(
+        "--view",
+        default=None,
+        choices=[v.value for v in View],
+        help=(
+            View.__doc__
+            + "\n"
+            + "\n".join(
+                f"{v.value}: {View.__annotations__[v.name].__metadata__[0]}"
+                for v in View
+            )
+        ),
+    )
+    parser.add_argument(
+        "--track-airplane-id",
+        default=None,
+        help=(
+            'The ID of the airplane to track (e.g., "Airliner") when `--viz-enabled=true` and '
+            f'`--view` is not "{View.MAP_VIEW.value}".'
+        ),
+    )
+    parser.add_argument(
+        "--record",
+        default=None,
+        choices=["viewport", "graphs"],
+        help=(
+            "What part of the in-browser visualization to screen-record, if any, when "
+            "`--viz-enabled=true`."
+        ),
+    )
     args = parser.parse_args()
     return args
 
@@ -214,11 +276,12 @@ def parse_cli_args() -> argparse.Namespace:
 if __name__ == "__main__":
     args = parse_cli_args()
     simulation_config = SimulationConfig.from_yaml(args.config_dir)
-    if simulation_config.viz_enabled:
+    if args.simulation_viz_enabled:
         subprocess.Popen(["google-chrome", "--guest", "--start-maximized"])
     run_simulation(
         simulation_config=simulation_config,
-        view=args.view,
+        simulation_viz_enabled=args.simulation_viz_enabled,
+        view=View(args.view),
         track_airplane_id=args.track_airplane_id,
         record=args.record,
     )

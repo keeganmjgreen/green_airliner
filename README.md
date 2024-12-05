@@ -49,7 +49,7 @@ The 3D simulation is rendered via VPython in a browser tab. Unless `--view=map-v
 
 The browser tab opens in your system's default browser. With the assumption that this is Google Chrome, the program firstly and automatically opens a new "guest" Chrome window in which this new browser tab will be opened. The program will stop (and the 3D rendering will freeze) after the airplane (specified by `--track-airplane-id`) lands, but it can be stopped early when running from the command line by pressing `Ctrl`+`C` therein. After, the "guest" Chrome window can be closed.
 
-Specifying ` --record=airplanes-viz` records the 3D rendering and saves it to a `.avi` video file with a specific name. Because newer VPython no longer supports opening 3D renderings in standalone windows and the functionality to write the 3D rendering to a video file seems to no longer work, this is done by screen-recording region(s) of the screen whose coordinates are hard-coded in `simulation.py`. While automatic, a consequence is not being able to use that screen region for other purposes during simulation/recording. An advantage over manual screen-recording, however, is that the recorded frame rate is fixed and synced with the simulation, and thus unaffected by any lags in running the program.
+Specifying ` --record=viewport` records the 3D rendering and saves it to a `.avi` video file with a specific name. Because newer VPython no longer supports opening 3D renderings in standalone windows and the functionality to write the 3D rendering to a video file seems to no longer work, this is done by screen-recording region(s) of the screen whose coordinates are hard-coded in `simulation.py`. While automatic, a consequence is not being able to use that screen region for other purposes during simulation/recording. An advantage over manual screen-recording, however, is that the recorded frame rate is fixed and synced with the simulation, and thus unaffected by any lags in running the program.
 
 Specifying `--record=graphs` is similar, but records both the airliner's speed graph and SoC graph to separate video files.
 
@@ -66,25 +66,25 @@ Each of the visualizations ("video feeds") in the following screenshot from the 
 Airliner:
 
 ```bash
-python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=Airliner --record=airplanes-viz
+python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=Airliner --record=viewport
 ```
 
 UAVs from PIT:
   - First UAV (leading up to PIT flyover):
     ```bash
-    python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=PIT_UAV_0 --record=airplanes-viz
+    python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=PIT_UAV_0 --record=viewport
     ```
   - Second UAV (directly after PIT flyover):
     ```bash
-    python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=PIT-UAV-1 --record=airplanes-viz
+    python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=PIT_UAV_1 --record=viewport
     ```
 
 UAVs from DEN (only the first two UAVs, leading up to the DEN flyover):
   - ```bash
-    python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=DEN-UAV-0 --record=airplanes-viz
+    python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=DEN_UAV_0 --record=viewport
     ```
   - ```bash
-    python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=DEN-UAV-1 --record=airplanes-viz
+    python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=DEN_UAV_1 --record=viewport
     ```
 
 #### "Bird's eye" (map) view of all airplanes
@@ -92,7 +92,7 @@ UAVs from DEN (only the first two UAVs, leading up to the DEN flyover):
 The following command specifies `--view=map-view` to show a "bird's eye" (map) view of all the airplanes (airliner and UAVs). The airplanes' 3D models are scaled up (and their altitudes increased) for illustrative purposes, such that they remain visible.
 
 ```bash
-python src/three_d_sim/simulation.py --view=map-view --record=airplanes-viz
+python src/three_d_sim/simulation.py --view=map-view --record=viewport
 ```
 
 #### Airliner speed and SoC graphs

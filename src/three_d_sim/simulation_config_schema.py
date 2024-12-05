@@ -50,9 +50,9 @@ class AirlinerConfig(Model):
     airliner's energy capacity.
     """
     viz_model_name: AirlinerVizModelName = Field(title="Viz Model Name")  # type: ignore
-    """Which 3D model to use for the airliner, when `viz_enabled` is set to true. Must be one of \
-    those listed below. `viz_models.py` acts as a registry for these and, if a different 3D model \
-    is desired, a new one can be added there.
+    """Which 3D model to use for the airliner, when `--simulation-viz-enabled=true` (the default). \
+    Must be one of those listed below. `viz_models.py` acts as a registry for these and, if a \
+    different 3D model is desired, a new one can be added there.
     """
 
     @property
@@ -158,10 +158,10 @@ class UavsFlightPathConfig(FlightPathConfig):
         title="Airliner-UAV Docking Distance (km)"
     )
     """The distance (in kilometers) between the airliner and UAV when docked for refueling. \
-    Evident when `viz_enabled` is set to true, this is not the distance between the top of the \
-    airliner's fueselage and the bottom of the UAV, but the distance between their respective 3D \
-    models' origins. This means that if either the airliner's or UAV's 3D models are changed, then \
-    the `airliner_uav_docking_distance_km` may need to be changed accordingly.
+    Evident when `--simulation-viz-enabled=true` (the default), this is not the distance between \
+    the top of the airliner's fueselage and the bottom of the UAV, but the distance between their \
+    respective 3D models' origins. This means that if either the airliner's or UAV's 3D models are \
+    changed, then the `airliner_uav_docking_distance_km` may need to be changed accordingly.
     """
     smallest_undocking_distance_from_airport_km: float = Field(
         title="Smallest (Un)Docking Distance From Airport (km)"
@@ -250,9 +250,9 @@ class UavsConfig(Model):
     percentage (0-100) of the UAV's refueling energy capacity (based on its cargo space).
     """
     viz_model_name: UavVizModelName = Field(title="Viz Model Name")  # type: ignore
-    """Which 3D model to use for every UAV, when `viz_enabled` is set to true. Must be one of those \
-    listed below. `viz_models.py` acts as a registry for these and, if a different 3D model is \
-    desired, a new one can be added there.
+    """Which 3D model to use for every UAV, when `--simulation-viz-enabled=true` (the default). \
+    Must be one of those listed below. `viz_models.py` acts as a registry for these and, if a \
+    different 3D model is desired, a new one can be added there.
     """
 
     @property
@@ -462,12 +462,8 @@ class SimulationConfig(Model):
     smoothly transition from one rate to the next. A constant rate can be set by specifying a \
     single ratepoint.
     """
-    viz_enabled: bool = Field(title="Viz Enabled", default=True)
-    """Whether to visualize the airliner and UAVs in-browser while the simulation runs. Requires \
-    `viz_config` if true.
-    """
     viz_config: Optional[VizConfig] = Field(title="Viz Config", default=None)
-    """Configuration to use when `viz_enabled` is set to true."""
+    """Configuration to use when `--simulation-viz-enabled=true` (the default)."""
 
     @classmethod
     def from_yaml(

@@ -1,7 +1,7 @@
 import dataclasses
 from enum import Enum
 import os
-from typing import List, Literal, Tuple
+from typing import Annotated, List, Literal, Tuple
 
 import cv2
 import numpy as np
@@ -24,9 +24,22 @@ from src.three_d_sim.wavefront_obj_to_vp import simple_wavefront_obj_to_vp
 from src.utils.utils import timedelta_to_minutes
 
 class View(Enum):
-    SIDE_VIEW = "side-view"
-    TAIL_VIEW = "tail-view"
-    MAP_VIEW = "map-view"
+    """What to show in the viewport in which the 3D visualization is rendered when
+    `--simulation-viz-enabled=true` (the default).
+    """
+
+    SIDE_VIEW: Annotated[
+        str,
+        "View the airplane from the side. Requires specifying a `--track-airplane-id`.",
+    ] = "side-view"
+    TAIL_VIEW: Annotated[
+        str,
+        "View the airplane from its tail (third person). Requires specifying a `--track-airplane-id`.",
+    ] = "tail-view"
+    MAP_VIEW: Annotated[
+        str,
+        'View the airports, airplanes and their paths from above, magnified, in a "bird\'s eye" view. Cannot be used while specifying a `--track-airplane-id`',
+    ] = "map-view"
 
 
 Color = Tuple[int, int, int]
