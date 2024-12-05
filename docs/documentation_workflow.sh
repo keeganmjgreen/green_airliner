@@ -4,6 +4,10 @@ set -o allexport && source .env && set +o allexport
 # Activate the Conda environment:
 conda activate green_airliner
 
+# Save auto-generated documentation of the `simulation.py` and `viz_airplane_paths.py` CLIs:
+python src/three_d_sim/simulation.py --help > docs/7_simulation/simulation_cli.txt
+python src/three_d_sim/viz_airplane_paths.py --help > docs/7_simulation/viz_airplane_paths_cli.txt
+
 # Run `simulation_config_schema.py`, whose main guard will convert the `SimulationConfig` Pydantic
 #     model therein to JSON Schema `simulation_config_json_schema.json`.
 python src/three_d_sim/simulation_config_schema.py

@@ -1,0 +1,41 @@
+usage: Simulation of UAVs Mid-Air Refueling an Airliner of Arbitrary Fuel
+       [-h] [--config-dir CONFIG_DIR]
+       [--simulation-viz-enabled SIMULATION_VIZ_ENABLED]
+       [--view {side-view,tail-view,map-view}]
+       [--track-airplane-id TRACK_AIRPLANE_ID] [--record {viewport,graphs}]
+
+The simulation includes the takeoff, climb, descent, and landing of each of
+the aircraft as well as the interaction between the airliner and each UAV
+throughout the flight.
+
+options:
+  -h, --help            show this help message and exit
+  --config-dir CONFIG_DIR
+                        Path containing `simulation_config.yml` file.
+  --simulation-viz-enabled SIMULATION_VIZ_ENABLED
+                        Whether to visualize the airliner and UAVs in-browser
+                        while the simulation runs. Defaults to true. If set to
+                        true, requires a `viz_config` to be specified in the
+                        `simulation_config.yml` file. If set to true, the
+                        browser tab opens in your system's default browser.
+                        With the assumption that this is Google Chrome, the
+                        program firstly and automatically opens a new "guest"
+                        Chrome window in which this new browser tab will be
+                        opened.
+  --view {side-view,tail-view,map-view}
+                        What to show in the viewport in which the 3D
+                        visualization is rendered when `--simulation-viz-
+                        enabled=true`. side-view: View the airplane from the
+                        side. Requires specifying a `--track-airplane-id`.
+                        tail-view: View the airplane from its tail (third
+                        person). Requires specifying a `--track-airplane-id`.
+                        map-view: View the airports, airplanes and their paths
+                        from above, magnified, in a "bird's eye" view. Cannot
+                        be used while specifying a `--track-airplane-id`
+  --track-airplane-id TRACK_AIRPLANE_ID
+                        The ID of the airplane to track (e.g., "Airliner")
+                        when `--viz-enabled=true` and `--view` is not "map-
+                        view".
+  --record {viewport,graphs}
+                        What part of the in-browser visualization to screen-
+                        record, if any, when `--viz-enabled=true`.

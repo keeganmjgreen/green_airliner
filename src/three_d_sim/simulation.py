@@ -233,7 +233,7 @@ def parse_cli_args() -> argparse.Namespace:
             "Whether to visualize the airliner and UAVs in-browser while the simulation runs. "
             "Defaults to true. "
             "If set to true, requires a `viz_config` to be specified in the "
-            "`simulation_config.yml` file."
+            "`simulation_config.yml` file. "
             "If set to true, the browser tab opens in your system's default browser. With the "
             "assumption that this is Google Chrome, the program firstly and automatically opens a "
             'new "guest" Chrome window in which this new browser tab will be opened.'

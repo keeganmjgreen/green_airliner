@@ -1,0 +1,23 @@
+usage: Visualization of Generated Airplane Paths [-h]
+                                                 [--config-dir CONFIG_DIR]
+                                                 [--paths-viz-enabled PATHS_VIZ_ENABLED]
+                                                 [--airplane-ids AIRPLANE_IDS]
+
+options:
+  -h, --help            show this help message and exit
+  --config-dir CONFIG_DIR
+                        Path containing `simulation_config.yml` file.
+  --paths-viz-enabled PATHS_VIZ_ENABLED
+                        Whether to visualize the airplane paths in-browser.
+                        Defaults to true. If set to true, the browser tab
+                        opens in your system's default browser. With the
+                        assumption that this is Google Chrome, the program
+                        firstly and automatically opens a new "guest" Chrome
+                        window in which this new browser tab will be opened.
+  --airplane-ids AIRPLANE_IDS
+                        The airplane IDs whose airplane paths to visualize.
+                        Supports wildcards ("*"). For example, "*" (the
+                        default) will match all airplane IDs and thus
+                        visualize all airplane paths, while
+                        "Airliner,PIT_UAV_*" will visualize only the paths of
+                        the airliner and PIT UAVs.

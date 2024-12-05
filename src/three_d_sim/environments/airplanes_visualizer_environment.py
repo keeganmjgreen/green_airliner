@@ -25,7 +25,7 @@ from src.utils.utils import timedelta_to_minutes
 
 class View(Enum):
     """What to show in the viewport in which the 3D visualization is rendered when
-    `--simulation-viz-enabled=true` (the default).
+    `--simulation-viz-enabled=true`.
     """
 
     SIDE_VIEW: Annotated[
