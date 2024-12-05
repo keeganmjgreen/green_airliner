@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-import dataclasses
 from copy import deepcopy
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Literal, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,166 +10,22 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from src.modeling_objects import (
-    KM_PER_LAT_LON,
     Airliner,
+    AirlinerFlightPath,
     Airplane,
     AirplaneId,
+    AirportCode,
+    AirportLocation,
+    FlightPath,
     Location,
+    ServiceSide,
     Uav,
+    UavFlightPath,
     UavId,
     Waypoint,
 )
-from src.utils.utils import M_PER_KM, SECONDS_PER_HOUR
-from three_d_sim.simulation_config_schema import (
-    AirlinerConfig,
-    AirlinerFlightPathConfig,
-)
 
 from .planar_curve_points_generation import generate_planar_curve_points
-
-AirportCode = str
-ServiceSide = Literal["to-airport", "from-airport"]
-
-AIRPORT_LOCATIONS_CSV_PATH = "src/three_d_sim/airport_locations.csv"
-
-
-@dataclasses.dataclass(kw_only=True)
-class AirportLocation(Location):
-    CODE: AirportCode
-
-
-def get_all_airport_locations(
-    normalize_coords: bool = False,
-) -> Dict[AirportCode, AirportLocation]:
-    DEFAULT_ALTITUDE = 0.0
-
-    airport_location_df = pd.read_csv(AIRPORT_LOCATIONS_CSV_PATH)
-    all_airport_locations = {
-        row["airport_code"]: AirportLocation(
-            Y_KM=(row["lat"] * KM_PER_LAT_LON),
-            X_KM=(row["lon"] * KM_PER_LAT_LON),
-            ALTITUDE_KM=row.get("altitude", DEFAULT_ALTITUDE),
-            CODE=row["airport_code"],
-        )
-        for row in airport_location_df.to_dict("records")
-    }
-    if normalize_coords:
-        min_y_km, max_y_km = [
-            m(loc.Y_KM for loc in all_airport_locations.values()) for m in [min, max]
-        ]
-        min_x_km, max_x_km = [
-            m(loc.X_KM for loc in all_airport_locations.values()) for m in [min, max]
-        ]
-        for loc in all_airport_locations.values():
-            loc.Y_KM = loc.Y_KM - (min_y_km + max_y_km) / 2
-            loc.X_KM = loc.X_KM - (min_x_km + max_x_km) / 2
-    return all_airport_locations
-
-
-ALL_AIRPORT_LOCATIONS = get_all_airport_locations(normalize_coords=True)
-
-
-@dataclasses.dataclass
-class FlightPath:
-    takeoff_speed_kmph: float
-    takeoff_distance_km: float
-    takeoff_leveling_distance_km: float
-    rate_of_climb_mps: float
-    climb_leveling_distance_km: float
-    cruise_altitude_km: float
-    cruise_speed_kmph: float
-    turning_radius_km: float
-    descent_leveling_distance_km: float
-    rate_of_descent_mps: float
-    landing_leveling_distance_km: float
-    landing_distance_km: float
-    landing_speed_kmph: float
-
-    def __post_init__(self):
-        assert self.takeoff_leveling_distance_km < self.takeoff_distance_km
-        assert self.landing_leveling_distance_km < self.landing_distance_km
-
-    @property
-    def rate_of_climb_kmph(self) -> float:
-        return self.rate_of_climb_mps / M_PER_KM * SECONDS_PER_HOUR
-
-    @property
-    def rate_of_descent_kmph(self) -> float:
-        return self.rate_of_descent_mps / M_PER_KM * SECONDS_PER_HOUR
-
-
-@dataclasses.dataclass(kw_only=True)
-class AirlinerFlightPath(FlightPath):
-    origin_airport: Union[AirportLocation, AirportCode]
-    flyover_airports: List[Union[AirportLocation, AirportCode]]
-    destination_airport: Union[AirportLocation, AirportCode]
-    speed_change_distance_km: float
-
-    def __post_init__(self):
-        self.origin_airport = ALL_AIRPORT_LOCATIONS[self.origin_airport]
-        self.flyover_airports = [
-            ALL_AIRPORT_LOCATIONS[a] for a in self.flyover_airports
-        ]
-        self.destination_airport = ALL_AIRPORT_LOCATIONS[self.destination_airport]
-
-    @classmethod
-    def from_configs(
-        cls,
-        airliner_fp_config: AirlinerFlightPathConfig,
-        airliner_config: AirlinerConfig,
-    ) -> AirlinerFlightPath:
-        return cls(
-            origin_airport=airliner_fp_config.origin_airport_code,
-            flyover_airports=airliner_fp_config.flyover_airport_codes,
-            destination_airport=airliner_fp_config.destination_airport_code,
-            takeoff_speed_kmph=airliner_fp_config.takeoff_speed_kmph,
-            takeoff_distance_km=airliner_fp_config.takeoff_distance_km,
-            takeoff_leveling_distance_km=airliner_fp_config.takeoff_leveling_distance_km,
-            rate_of_climb_mps=airliner_fp_config.rate_of_climb_mps,
-            climb_leveling_distance_km=airliner_fp_config.climb_leveling_distance_km,
-            cruise_altitude_km=airliner_fp_config.cruise_altitude_km,
-            cruise_speed_kmph=airliner_config.airplane_spec.cruise_speed_kmph,
-            speed_change_distance_km=airliner_fp_config.speed_change_distance_km,
-            turning_radius_km=airliner_fp_config.turning_radius_km,
-            descent_leveling_distance_km=airliner_fp_config.descent_leveling_distance_km,
-            rate_of_descent_mps=airliner_fp_config.rate_of_descent_mps,
-            landing_leveling_distance_km=airliner_fp_config.landing_leveling_distance_km,
-            landing_distance_km=airliner_fp_config.landing_distance_km,
-            landing_speed_kmph=airliner_fp_config.landing_speed_kmph,
-        )
-
-    @property
-    def flyover_airport_codes(self) -> List[AirportCode]:
-        return [a.CODE for a in self.flyover_airports]
-
-    @property
-    def airports(self) -> List[AirportLocation]:
-        return (
-            [self.origin_airport] + self.flyover_airports + [self.destination_airport]
-        )
-
-
-@dataclasses.dataclass(kw_only=True)
-class UavFlightPath(FlightPath):
-    home_airport: Union[AirportLocation, AirportCode]
-    arc_radius_km: float
-    refueling_altitude_km: float
-    refueling_distance_km: float
-    service_side: Union[Literal["to_airport", "from_airport"], None] = None
-    undocking_distance_from_airport_km: Union[float, None] = None
-    airliner_clearance_speed_kmph: Union[float, None] = None
-    airliner_clearance_distance_km: Union[float, None] = None
-    airliner_clearance_altitude_km: Union[float, None] = None
-
-    def __post_init__(self):
-        self.home_airport = ALL_AIRPORT_LOCATIONS[self.home_airport]
-
-    @property
-    def AVG_AIRLINER_CLEARANCE_SPEED_KMPH(self) -> Union[float, None]:
-        if self.airliner_clearance_speed_kmph is not None:
-            return (self.cruise_speed_kmph + self.airliner_clearance_speed_kmph) / 2
-        else:
-            return None
 
 
 def _unit_vector(vector: np.ndarray) -> np.ndarray:
@@ -212,7 +67,7 @@ def _gen_speed_change_waypoints(
     end_speed_kmph: float,
     num: int = 50,
     **waypoint_kwargs,
-) -> List[Waypoint]:
+) -> list[Waypoint]:
     distance_km = Location.direct_distance_km_between(start_location, end_location)
     intermediate_distances_km = np.linspace(0, distance_km, num + 1)[1:]
     intermediate_points = [
@@ -242,7 +97,7 @@ def _gen_tmp_speed_change_waypoints(
     end_location: Location,
     num: int = 50,
     **waypoint_kwargs,
-) -> List[Waypoint]:
+) -> list[Waypoint]:
     distance_km = Location.direct_distance_km_between(start_location, end_location)
     halfway_location = Location(
         *_intermediate_point_between(
@@ -279,7 +134,7 @@ def _gen_vertical_curve_waypoints(
     flight_path: FlightPath,
     flight_path_part: Literal["takeoff", "climb", "descent", "landing"],
     speed_kmph: float,
-) -> List[Waypoint]:
+) -> list[Waypoint]:
     leveling_distance_km = {
         "takeoff": flight_path.takeoff_leveling_distance_km,
         "climb": flight_path.climb_leveling_distance_km,
@@ -328,7 +183,7 @@ def _gen_altitude_transition_waypoints(
     flight_path: FlightPath,
     wrt_runway: bool = True,
     inverted: bool = False,
-) -> List[Waypoint]:
+) -> list[Waypoint]:
     kind = +1 if end_altitude_km > start_altitude_km else -1
     invert = +1 if not inverted else -1
     delta_altitude_km = abs(abs(end_altitude_km - start_altitude_km))
@@ -425,7 +280,7 @@ def _gen_takeoff_or_landing_waypoints(
     flight_path: FlightPath,
     altitude_km: Optional[float] = None,
     inverted: bool = False,
-) -> List[Waypoint]:
+) -> list[Waypoint]:
     if altitude_km is None:
         altitude_km = flight_path.cruise_altitude_km
 
@@ -482,8 +337,8 @@ def _gen_horizontal_curve_waypoints(
     next_airport: AirportLocation,
     altitude_km: float,
     turning_radius_km: float,
-    **waypoint_kwargs: Dict[str, Any],
-) -> List[Waypoint]:
+    **waypoint_kwargs: dict[str, Any],
+) -> list[Waypoint]:
     curve_points = generate_planar_curve_points(
         p1=prev_airport.xy_coords,
         p2=curr_airport.xy_coords,
@@ -510,7 +365,7 @@ def _generate_uav_waypoints(
     uav_fp: UavFlightPath,
     uav_fp_half: Literal["first-half", "second-half"],
     plot: bool = False,
-) -> List[Waypoint]:
+) -> list[Waypoint]:
     A = airport_A.xy_coords
     B = airport_B.xy_coords
     AB = B - A
@@ -624,7 +479,7 @@ def generate_all_uav_waypoints(
     n_uavs: int,
     uav_fp: UavFlightPath,
     airliner_fp: AirlinerFlightPath,
-) -> List[Waypoint]:
+) -> list[Waypoint]:
     uav_airport = uav_fp.home_airport
     prev_airliner_airport = airliner_fp.airports[
         airliner_fp.airports.index(uav_airport) - 1
@@ -637,7 +492,7 @@ def generate_all_uav_waypoints(
         if uav_fp.service_side == "to_airport"
         else next_airliner_airport_location
     )
-    waypoints: List[Waypoint] = []
+    waypoints: list[Waypoint] = []
     waypoints.append(
         Waypoint(
             LOCATION=Location(
@@ -810,12 +665,12 @@ def get_uav_on_airliner_point(
 
 def _generate_airliner_docking_waypoints(
     airliner_fp: AirlinerFlightPath,
-    uavs: Dict[AirportCode, Dict[ServiceSide, Dict[UavId, Uav]]],
+    uavs: dict[AirportCode, dict[ServiceSide, dict[UavId, Uav]]],
     i: int,
     service_side: Literal["to_airport", "from_airport"],
-    airliner_curve_waypoints: List[Waypoint],
-) -> List[Waypoint]:
-    waypoints: List[Waypoint] = []
+    airliner_curve_waypoints: list[Waypoint],
+) -> list[Waypoint]:
+    waypoints: list[Waypoint] = []
 
     prev_airport = airliner_fp.airports[i]
     next_airport = airliner_fp.airports[i + 1]
@@ -904,9 +759,9 @@ def _generate_airliner_docking_waypoints(
 def generate_all_airliner_waypoints(
     airliner_id: AirplaneId,
     airliner_fp: AirlinerFlightPath,
-    uavs: Dict[AirportCode, Dict[AirplaneId, Uav]],
-) -> List[Waypoint]:
-    waypoints: List[Waypoint] = []
+    uavs: dict[AirportCode, dict[AirplaneId, Uav]],
+) -> list[Waypoint]:
+    waypoints: list[Waypoint] = []
 
     for i in range(len(airliner_fp.airports) - 1):
         prev_airport = airliner_fp.airports[i]
@@ -969,7 +824,7 @@ def generate_all_airliner_waypoints(
     return waypoints
 
 
-def delay_uavs(uavs: Dict[AirportCode, Dict[UavId, Uav]], airliner: Airliner) -> None:
+def delay_uavs(uavs: dict[AirportCode, dict[UavId, Uav]], airliner: Airliner) -> None:
     for airport_uavs in uavs.values():
         for uav in airport_uavs.values():
             uav_travel_duration_to_docking_point = (
@@ -992,7 +847,7 @@ def delay_uavs(uavs: Dict[AirportCode, Dict[UavId, Uav]], airliner: Airliner) ->
             )
 
 
-def write_airplane_paths(airplanes: List[Airplane]) -> None:
+def write_airplane_paths(airplanes: list[Airplane]) -> None:
     for airplane in airplanes:
         fpath = Path(f"tmp/airplane_paths/{airplane.id}.csv")
         fpath.parent.mkdir(parents=True, exist_ok=True)
@@ -1004,7 +859,7 @@ def write_airplane_paths(airplanes: List[Airplane]) -> None:
         )
 
 
-def write_airplane_tagged_waypoints(airplanes: List[Airplane]) -> None:
+def write_airplane_tagged_waypoints(airplanes: list[Airplane]) -> None:
     for airplane in airplanes:
         fpath = Path(f"tmp/airplane_tagged_waypoints/{airplane.id}.csv")
         fpath.parent.mkdir(parents=True, exist_ok=True)
@@ -1016,7 +871,7 @@ def write_airplane_tagged_waypoints(airplanes: List[Airplane]) -> None:
         )
 
 
-def viz_airplane_paths(airplanes: List[Airplane]) -> None:
+def viz_airplane_paths(airplanes: list[Airplane]) -> None:
     def _speed_to_color(speed_kmph: float) -> np.array:
         MIN_SPEED_RGB = np.array([0, 0, 1])
         MIN_SPEED_KMPH = 0

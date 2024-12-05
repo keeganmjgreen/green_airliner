@@ -4,7 +4,7 @@ import datetime as dt
 import json
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Literal, Optional, Tuple, Union
+from typing import Literal, Optional, Union
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
@@ -12,12 +12,13 @@ from pydantic import BaseModel, ConfigDict, Field
 from src.feasibility_study.modeling_objects import BaseAirliner as AirlinerSpec
 from src.feasibility_study.modeling_objects import Uav as UavSpec
 from src.specs import airliner_lookup, uav_lookup
-from src.three_d_sim.flight_path_generation import AirportCode
 from src.three_d_sim.viz_models import (
     ModelConfig,
     airliner_model_lookup,
     uav_model_lookup,
 )
+
+AirportCode = str
 
 
 class Model(BaseModel):
@@ -110,9 +111,7 @@ class AirlinerFlightPathConfig(FlightPathConfig):
 
     origin_airport_code: AirportCode = Field(title="Origin Airport Code")
     """The three-letter IATA airport code of the origin airport from which the airliner departs."""
-    flyover_airport_codes: List[AirportCode] = Field(
-        title="Flyover Airport Codes"
-    )
+    flyover_airport_codes: list[AirportCode] = Field(title="Flyover Airport Codes")
     """The codes of the airports over which the airliner flies to be mid-air refueled by those \
     airports' UAVs.
     """
@@ -307,7 +306,7 @@ class Timepoint(Model):
     `landed_point`
     """
 
-    def evaluate_elapsed_mins(self, reference_times: Dict[str, int]) -> dt.timedelta:
+    def evaluate_elapsed_mins(self, reference_times: dict[str, int]) -> dt.timedelta:
         self.elapsed_mins = eval(str(self.elapsed_mins), reference_times)
 
     @property
@@ -336,9 +335,9 @@ class Zoompoint(Timepoint):
 class UavsZoompointsConfig(Model):
     """Zoompoints when a UAV is the airplane being tracked."""
 
-    to_airport: List[Zoompoint] = Field(title="To Airport")
+    to_airport: list[Zoompoint] = Field(title="To Airport")
     """Zoompoints for a "to-airport" UAV."""
-    from_airport: List[Zoompoint] = Field(title="From Airport")
+    from_airport: list[Zoompoint] = Field(title="From Airport")
     """Zoompoints for a "from-airport" UAV."""
 
 
@@ -351,7 +350,7 @@ class ZoompointsConfig(Model):
     can be set by specifying a single zoompoint.
     """
 
-    airliner_zoompoints: List[Zoompoint] = Field(title="Airliner Zoompoints")
+    airliner_zoompoints: list[Zoompoint] = Field(title="Airliner Zoompoints")
     """Zoompoints when the airliner is the airplane being tracked."""
     uavs_zoompoints_config: UavsZoompointsConfig = Field(title="UAVs Zoompoints Config")
 
@@ -377,7 +376,7 @@ class ViewportSize(Model):
     height_px: int = Field(title="Height (px)")
 
     @property
-    def tuple(self) -> Tuple[int, int]:
+    def tuple(self) -> tuple[int, int]:
         return self.width_px, self.height_px
 
 
@@ -388,7 +387,7 @@ class ScreenPosition(Model):
     """Y-coordinate (in pixels) relative to the top edge of the screen."""
 
     @property
-    def to_tuple(self) -> Tuple[int, int]:
+    def to_tuple(self) -> tuple[int, int]:
         return (self.x_px, self.y_px)
 
 
@@ -443,7 +442,7 @@ class SimulationConfig(Model):
     airliner_flight_path_config: AirlinerFlightPathConfig = Field(
         title="Airliner Flight Path Config"
     )
-    n_uavs_per_flyover_airport: Dict[AirportCode, NUavsAtFlyOverAirport] = Field(
+    n_uavs_per_flyover_airport: dict[AirportCode, NUavsAtFlyOverAirport] = Field(
         title="# UAVs Per Flyover Airport"
     )
     """The number of UAVs at each flyover airport."""
@@ -451,7 +450,7 @@ class SimulationConfig(Model):
     uavs_flight_path_config: UavsFlightPathConfig = Field(
         title="UAVs Flight Path Config"
     )
-    ratepoints: List[Ratepoint] = Field(title="Ratepoints")
+    ratepoints: list[Ratepoint] = Field(title="Ratepoints")
     """The rate at which the simulation advances does not need to be constant. A non-constant rate \
     is achieved by specifying ratepoints: the rate at which to advance the simulation at different \
     times in the simulation. This is most useful when `vis_enabled` is true for speeding up \
@@ -472,7 +471,7 @@ class SimulationConfig(Model):
 
     @classmethod
     def from_yaml(
-        cls, dir: Union[Path, str], fname: str = "simulation_config.yml"
+        cls, dir: Path | str, fname: str = "simulation_config.yml"
     ) -> SimulationConfig:
         return cls(**yaml.safe_load(Path(dir, fname).read_text()))
 

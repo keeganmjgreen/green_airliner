@@ -9,15 +9,18 @@ import pyautogui
 import vpython as vp
 
 from src.modeling_objects import KM_PER_LAT_LON
+from src.three_d_sim.airplane_waypoints_generation import (
+    AirportLocation,
+    orthogonal_xy_vector,
+)
 from src.three_d_sim.environments.environment import (
     BaseEnvironment,
     Environment,
     get_interpolator_by_elapsed_time,
 )
-from src.three_d_sim.flight_path_generation import AirportLocation, orthogonal_xy_vector
+from src.three_d_sim.simulation_config_schema import Zoompoint
 from src.three_d_sim.wavefront_obj_to_vp import simple_wavefront_obj_to_vp
 from src.utils.utils import timedelta_to_minutes
-from src.three_d_sim.simulation_config_schema import Zoompoint
 
 View = Literal["side-view", "tail-view", "map-view"]
 

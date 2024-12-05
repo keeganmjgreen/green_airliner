@@ -5,10 +5,7 @@ import pandas as pd
 from src import specs
 from src.feasibility_study.modeling_objects import BaseAirliner, Uav
 from src.feasibility_study.study_runner import run_study
-from src.modeling_objects import Location
-from src.three_d_sim.flight_path_generation import (
-    get_all_airport_locations,
-)  # TODO move
+from src.modeling_objects import Location, get_all_airport_locations
 
 ALL_AIRPORT_LOCATIONS = get_all_airport_locations()
 

@@ -2,21 +2,23 @@ import argparse
 import datetime as dt
 import os
 import subprocess
-from typing import Dict, Literal, Tuple
+from typing import Literal
 
 from src.airplanes_simulator import AirplanesSimulator
 from src.feasibility_study.modeling_objects import Fuel
-from src.modeling_objects import Airliner, AirplanesState, Uav, UavId
-from src.three_d_sim.environments.airplanes_visualizer_environment import (
-    AirplanesVisualizerEnvironment,
-    ScreenRecorder,
-    View,
-)
-from src.three_d_sim.flight_path_generation import (
+from src.modeling_objects import (
+    Airliner,
     AirlinerFlightPath,
+    AirplanesState,
     AirportCode,
     ServiceSide,
+    Uav,
     UavFlightPath,
+    UavId,
+)
+from src.utils.utils import MJ_PER_KWH, timedelta_to_minutes
+
+from .airplane_waypoints_generation import (
     delay_uavs,
     generate_all_airliner_waypoints,
     generate_all_uav_waypoints,
@@ -24,12 +26,16 @@ from src.three_d_sim.flight_path_generation import (
     write_airplane_paths,
     write_airplane_tagged_waypoints,
 )
-from src.three_d_sim.simulation_config_schema import (
+from .environments.airplanes_visualizer_environment import (
+    AirplanesVisualizerEnvironment,
+    ScreenRecorder,
+    View,
+)
+from .simulation_config_schema import (
     SimulationConfig,
     ViewportSize,
     Zoompoint,
 )
-from src.utils.utils import MJ_PER_KWH, timedelta_to_minutes
 
 
 def run_scenario(
@@ -224,7 +230,7 @@ def run_scenario(
 
 def make_airplanes(
     simulation_config: SimulationConfig,
-) -> Tuple[Airliner, Dict[AirportCode, Dict[ServiceSide, Dict[UavId, Uav]]]]:
+) -> tuple[Airliner, dict[AirportCode, dict[ServiceSide, dict[UavId, Uav]]]]:
     airliner_config = simulation_config.airliner_config
     airliner = Airliner(
         airplane_spec=airliner_config.airplane_spec,
@@ -251,7 +257,7 @@ def make_airplanes(
 
 def make_uavs(
     simulation_config: SimulationConfig, fuel: Fuel, airliner_fp: AirlinerFlightPath
-) -> Dict[AirportCode, Dict[ServiceSide, Dict[UavId, Uav]]]:
+) -> dict[AirportCode, dict[ServiceSide, dict[UavId, Uav]]]:
     uavs = {}
     for uav_airport_code, x in simulation_config.n_uavs_per_flyover_airport.items():
         airport_uav_idx = 0
