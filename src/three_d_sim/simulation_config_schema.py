@@ -261,7 +261,7 @@ class UavsConfig(Model):
 
     @property
     def viz_model(self) -> ModelConfig:
-        return uav_model_lookup[self.viz_model.name]
+        return uav_model_lookup[self.viz_model_name.name]
 
 
 class Timepoint(Model):

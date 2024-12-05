@@ -420,6 +420,7 @@ class Airplane:
 class Airliner(Airplane):
     id: str = "Airliner"
     airplane_spec: Type[AirlinerSpec]
+    flight_path: AirlinerFlightPath | None = None
     docked_uav: AirplaneId | None = None
 
 
@@ -427,6 +428,7 @@ class Airliner(Airplane):
 class Uav(Airplane):
     id: UavId
     airplane_spec: Type[UavSpec]
+    flight_path: UavFlightPath | None = None
     payload_fuel: Fuel
     initial_refueling_energy_level_pc: float
 

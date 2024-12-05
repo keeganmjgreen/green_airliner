@@ -6,20 +6,19 @@ from typing import Literal
 
 from src.airplanes_simulator import AirplanesSimulator
 from src.modeling_objects import AirplanesState
-from src.utils.utils import timedelta_to_minutes
-
-from .airplane_waypoints_generation import delay_uavs
-from .environments.airplanes_visualizer_environment import (
+from src.three_d_sim.airplane_waypoints_generation import delay_uavs
+from src.three_d_sim.environments.airplanes_visualizer_environment import (
     AirplanesVisualizerEnvironment,
     ScreenRecorder,
     View,
 )
-from .make_airplanes import make_airplanes
-from .simulation_config_schema import (
+from src.three_d_sim.make_airplanes import make_airplanes
+from src.three_d_sim.simulation_config_schema import (
     SimulationConfig,
     ViewportSize,
     Zoompoint,
 )
+from src.utils.utils import timedelta_to_minutes
 
 
 def run_scenario(

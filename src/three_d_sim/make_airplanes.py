@@ -25,7 +25,7 @@ def make_airplanes(
         airplane_spec=airliner_config.airplane_spec,
         refueling_rate_kW=airliner_config.refueling_rate_kW,
         initial_energy_level_pc=airliner_config.initial_energy_level_pc,
-        viz_model=airliner_config.viz_model_name,
+        viz_model=airliner_config.viz_model,
     )
     airliner.flight_path = AirlinerFlightPath.from_configs(
         simulation_config.airliner_flight_path_config, airliner_config
@@ -89,7 +89,7 @@ def _make_uav(
         airplane_spec=uavs_config.airplane_spec,
         refueling_rate_kW=uavs_config.refueling_rate_kW,
         initial_energy_level_pc=uavs_config.initial_energy_level_pc,
-        viz_model=uavs_config.viz_model_name,
+        viz_model=uavs_config.viz_model,
         payload_fuel=fuel,
         initial_refueling_energy_level_pc=uavs_config.initial_refueling_energy_level_pc,
     )
