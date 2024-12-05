@@ -469,7 +469,8 @@
             "description": "Configuration of the viewport in which the 3D visualization is rendered.",
             "properties": {
                 "size": {
-                    "$ref": "#/$defs/ViewportSize"
+                    "$ref": "#/$defs/ViewportSize",
+                    "title": "Viewport Size"
                 },
                 "origin": {
                     "$ref": "#/$defs/ScreenPosition",
@@ -478,6 +479,7 @@
                 }
             },
             "required": [
+                "size",
                 "origin"
             ],
             "title": "ViewportConfig",

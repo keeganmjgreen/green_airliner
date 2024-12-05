@@ -34,7 +34,7 @@ AirlinerVizModelName = Enum(
 class AirlinerConfig(Model):
     """Configuration of the airliner."""
 
-    airplane_spec_name: AirlinerSpecName = Field(title="Airplane Spec Name")
+    airplane_spec_name: AirlinerSpecName = Field(title="Airplane Spec Name")  # type: ignore
     """Which airplane spec to use for the airliner. Must be one of those listed below. `specs.py` \
     acts as a registry for these and, if a different airliner is desired, a new spec can be added \
     there.
@@ -49,7 +49,7 @@ class AirlinerConfig(Model):
     starts with before takeoff from its origin airport. Expressed as a percentage (0-100) of the \
     airliner's energy capacity.
     """
-    viz_model_name: AirlinerVizModelName = Field(title="Viz Model Name")
+    viz_model_name: AirlinerVizModelName = Field(title="Viz Model Name")  # type: ignore
     """Which 3D model to use for the airliner, when `viz_enabled` is set to true. Must be one of \
     those listed below. `viz_models.py` acts as a registry for these and, if a different 3D model \
     is desired, a new one can be added there.
@@ -228,7 +228,7 @@ UavVizModelName = Enum("UavVizModelName", {k: k for k in uav_model_lookup.keys()
 class UavsConfig(Model):
     """Configuration of the UAVs (all of which are assumed to be the same)."""
 
-    airplane_spec_name: UavSpecName = Field(title="Airplane Spec Name")
+    airplane_spec_name: UavSpecName = Field(title="Airplane Spec Name")  # type: ignore
     """Which airplane spec to use for every UAV. Must be one of those listed below. `specs.py` \
     acts as a registry for these and, if a different UAV is desired, a new spec can be added there.
     """
@@ -249,7 +249,7 @@ class UavsConfig(Model):
     airliner** that every UAV starts with before takeoff from its airport. Expressed as a \
     percentage (0-100) of the UAV's refueling energy capacity (based on its cargo space).
     """
-    viz_model_name: UavVizModelName = Field(title="Viz Model Name")
+    viz_model_name: UavVizModelName = Field(title="Viz Model Name")  # type: ignore
     """Which 3D model to use for every UAV, when `viz_enabled` is set to true. Must be one of those \
     listed below. `viz_models.py` acts as a registry for these and, if a different 3D model is \
     desired, a new one can be added there.

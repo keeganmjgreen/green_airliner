@@ -12,6 +12,10 @@ from src.feasibility_study.modeling_objects import BaseAirliner as AirlinerSpec
 from src.feasibility_study.modeling_objects import BaseAirplane as AirplaneSpec
 from src.feasibility_study.modeling_objects import Fuel
 from src.feasibility_study.modeling_objects import Uav as UavSpec
+from src.three_d_sim.simulation_config_schema import (
+    AirlinerConfig,
+    AirlinerFlightPathConfig,
+)
 from src.three_d_sim.viz_models import ModelConfig
 from src.utils.utils import (
     M_PER_KM,
@@ -20,10 +24,6 @@ from src.utils.utils import (
     cosd,
     sind,
     timedelta_to_minutes,
-)
-from three_d_sim.simulation_config_schema import (
-    AirlinerConfig,
-    AirlinerFlightPathConfig,
 )
 
 # ==================================================================================================

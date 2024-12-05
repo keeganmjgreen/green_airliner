@@ -41,7 +41,10 @@ The following diagram shows the path of PIT-UAV-0 according to the example ``sim
 
 .. image:: airplane_paths/PIT-UAV-0.svg
 
-The following diagram shows all airplane paths surrounding PIT (airliner, PIT-UAV-0, and PIT-UAV-1). It is to-scale and was generated using ``study_runner.py``'s ``airplane-paths`` subcommand.
+The following diagram shows all airplane paths surrounding PIT (airliner, PIT-UAV-0, and PIT-UAV-1). It is to-scale and was generated using ``viz_airplane_paths.py``::
+
+    python src/three_d_sim/viz_airplane_paths.py --config-dir=configs/jfk_to_lax/
+
 
 .. image:: airplane_paths/PIT.png
 

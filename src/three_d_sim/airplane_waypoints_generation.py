@@ -1,18 +1,14 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from pathlib import Path
 from typing import Any, Literal, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-import plotly.graph_objects as go
 
 from src.modeling_objects import (
     Airliner,
     AirlinerFlightPath,
-    Airplane,
     AirplaneId,
     AirportCode,
     AirportLocation,
@@ -24,8 +20,7 @@ from src.modeling_objects import (
     UavId,
     Waypoint,
 )
-
-from .planar_curve_points_generation import generate_planar_curve_points
+from src.three_d_sim.planar_curve_points_generation import generate_planar_curve_points
 
 
 def _unit_vector(vector: np.ndarray) -> np.ndarray:
@@ -349,12 +344,12 @@ def _gen_horizontal_curve_waypoints(
         Waypoint(Location(*point, altitude_km), **waypoint_kwargs)
         for point in curve_points
     ]
-    curve_waypoints[0].LOCATION.TAG = (
-        f"{airplane_id}_curve_over_{curr_airport.CODE}_start_point"
-    )
-    curve_waypoints[-1].LOCATION.TAG = (
-        f"{airplane_id}_curve_over_{curr_airport.CODE}_end_point"
-    )
+    curve_waypoints[
+        0
+    ].LOCATION.TAG = f"{airplane_id}_curve_over_{curr_airport.CODE}_start_point"
+    curve_waypoints[
+        -1
+    ].LOCATION.TAG = f"{airplane_id}_curve_over_{curr_airport.CODE}_end_point"
     return curve_waypoints
 
 
@@ -398,7 +393,7 @@ def _generate_uav_waypoints(
     F = _intermediate_point_between(B, A, d)
 
     # centerpoint of uav's arc (circular flight path) = O:
-    O = F + orthogonal_xy_vector(_unit_vector(AB)) * r
+    O = F + orthogonal_xy_vector(_unit_vector(AB)) * r  # noqa: E741
 
     # start point of uav's arc (point on its circular flight path) = E:
     E = B - d * np.array(
@@ -420,7 +415,7 @@ def _generate_uav_waypoints(
 
     if plot:
         plt.plot(*np.c_[A, B], ".-")
-        plt.plot(*np.c_[B, C, D, uav_arc_points.T, H, B], ".-")
+        # plt.plot(*np.c_[B, C, D, uav_arc_points.T, H, B], ".-")
         plt.plot(*np.c_[O], ".-")
         ax = plt.gca()
         ax.axis("equal")
@@ -446,19 +441,19 @@ def _generate_uav_waypoints(
     if uav_fp_half == "first-half":
         uav_arc_waypoints[0].LOCATION.TAG = f"{uav_id}_arc_start_point"
         uav_arc_waypoints[-1].LOCATION.TAG = f"{uav_id}_arc_end_point"
-        altitude_transition_waypoints[0].LOCATION.TAG = (
-            f"{uav_id}_descent_to_airliner_point"
-        )
-        altitude_transition_waypoints[-1].LOCATION.TAG = (
-            f"{uav_id}_on_airliner_docking_point"
-        )
+        altitude_transition_waypoints[
+            0
+        ].LOCATION.TAG = f"{uav_id}_descent_to_airliner_point"
+        altitude_transition_waypoints[
+            -1
+        ].LOCATION.TAG = f"{uav_id}_on_airliner_docking_point"
     elif uav_fp_half == "second-half":
-        altitude_transition_waypoints[-1].LOCATION.TAG = (
-            f"{uav_id}_on_airliner_undocking_point"
-        )
-        altitude_transition_waypoints[0].LOCATION.TAG = (
-            f"{uav_id}_ascended_from_airliner_point"
-        )
+        altitude_transition_waypoints[
+            -1
+        ].LOCATION.TAG = f"{uav_id}_on_airliner_undocking_point"
+        altitude_transition_waypoints[
+            0
+        ].LOCATION.TAG = f"{uav_id}_ascended_from_airliner_point"
         uav_arc_waypoints[-1].LOCATION.TAG = f"{uav_id}_arc_start_point"
         uav_arc_waypoints[0].LOCATION.TAG = f"{uav_id}_arc_end_point"
 
@@ -525,12 +520,12 @@ def generate_all_uav_waypoints(
             flight_path=uav_fp,
             wrt_runway=False,
         )
-        altitude_transition_waypoints[0].LOCATION.TAG = (
-            f"{uav_id}_on_airliner_undocking_point"
-        )
-        altitude_transition_waypoints[-1].LOCATION.TAG = (
-            f"{uav_id}_ascended_from_airliner_point"
-        )
+        altitude_transition_waypoints[
+            0
+        ].LOCATION.TAG = f"{uav_id}_on_airliner_undocking_point"
+        altitude_transition_waypoints[
+            -1
+        ].LOCATION.TAG = f"{uav_id}_ascended_from_airliner_point"
         waypoints += altitude_transition_waypoints
 
         # UAV descends below level of airliner's tail and airliner itself:
@@ -609,12 +604,12 @@ def generate_all_uav_waypoints(
             wrt_runway=False,
             inverted=True,
         )
-        altitude_transition_waypoints[0].LOCATION.TAG = (
-            f"{uav_id}_descent_to_airliner_point"
-        )
-        altitude_transition_waypoints[-1].LOCATION.TAG = (
-            f"{uav_id}_on_airliner_docking_point"
-        )
+        altitude_transition_waypoints[
+            0
+        ].LOCATION.TAG = f"{uav_id}_descent_to_airliner_point"
+        altitude_transition_waypoints[
+            -1
+        ].LOCATION.TAG = f"{uav_id}_on_airliner_docking_point"
         waypoints += altitude_transition_waypoints
 
         waypoints += last_waypoints
@@ -845,57 +840,3 @@ def delay_uavs(uavs: dict[AirportCode, dict[UavId, Uav]], airliner: Airliner) ->
                 airliner_travel_duration_to_docking_point
                 - uav_travel_duration_to_docking_point
             )
-
-
-def write_airplane_paths(airplanes: list[Airplane]) -> None:
-    for airplane in airplanes:
-        fpath = Path(f"tmp/airplane_paths/{airplane.id}.csv")
-        fpath.parent.mkdir(parents=True, exist_ok=True)
-        pd.DataFrame(airplane.all_locations).to_csv(
-            fpath,
-            header=False,
-            index=False,
-            float_format="%f",
-        )
-
-
-def write_airplane_tagged_waypoints(airplanes: list[Airplane]) -> None:
-    for airplane in airplanes:
-        fpath = Path(f"tmp/airplane_tagged_waypoints/{airplane.id}.csv")
-        fpath.parent.mkdir(parents=True, exist_ok=True)
-        pd.DataFrame(airplane.all_tagged_waypoints).drop(columns=["TAG"]).to_csv(
-            fpath,
-            header=False,
-            index=False,
-            float_format="%f",
-        )
-
-
-def viz_airplane_paths(airplanes: list[Airplane]) -> None:
-    def _speed_to_color(speed_kmph: float) -> np.array:
-        MIN_SPEED_RGB = np.array([0, 0, 1])
-        MIN_SPEED_KMPH = 0
-        MAX_SPEED_RGB = np.array([1, 0, 0])
-        MAX_SPEED_KMPH = 1000
-        speed_rgb = (speed_kmph - MIN_SPEED_KMPH) / (
-            MAX_SPEED_KMPH - MIN_SPEED_KMPH
-        ) * (MAX_SPEED_RGB - MIN_SPEED_RGB) + MIN_SPEED_RGB
-        return speed_rgb
-
-    fig = go.Figure()
-    for airplane in airplanes:
-        speeds_kmph = [wp.DIRECT_APPROACH_SPEED_KMPH for wp in airplane.waypoints]
-        all_locations = airplane.all_locations
-        pair_segments = list(zip(all_locations[1:], all_locations[:-1]))
-        for pair_segment, speed_kmph in zip(pair_segments, speeds_kmph):
-            x, y, z = np.c_[pair_segment]
-            fig.add_scatter3d(
-                x=x,
-                y=y,
-                z=z,
-                line=dict(color=([_speed_to_color(speed_kmph)] * 2), width=4),
-                mode="lines",
-                showlegend=False,
-            )
-    fig.layout.scene.aspectmode = "data"
-    fig.show()
