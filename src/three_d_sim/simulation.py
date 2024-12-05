@@ -185,7 +185,7 @@ def run_simulation(
         view=view,
         map_texture_fpath=(
             simulation_config.viz_config.map_view_config.map_texture_filename
-            if view == "map-view"
+            if view == View.MAP_VIEW
             else simulation_config.viz_config.map_texture_filename
         ),
         zoompoints=zoompoints,

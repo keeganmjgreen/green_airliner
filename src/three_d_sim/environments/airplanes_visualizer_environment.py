@@ -1,4 +1,5 @@
 import dataclasses
+from enum import Enum
 import os
 from typing import List, Literal, Tuple
 
@@ -22,7 +23,10 @@ from src.three_d_sim.simulation_config_schema import Zoompoint
 from src.three_d_sim.wavefront_obj_to_vp import simple_wavefront_obj_to_vp
 from src.utils.utils import timedelta_to_minutes
 
-View = Literal["side-view", "tail-view", "map-view"]
+class View(Enum):
+    SIDE_VIEW = "side-view"
+    TAIL_VIEW = "tail-view"
+    MAP_VIEW = "map-view"
 
 
 Color = Tuple[int, int, int]
@@ -124,7 +128,7 @@ class AirplanesVisualizerEnvironment(Environment):
         self.airplane_vp_objs = {}
         for airplane in airplanes:
             print(f"Rendering {airplane.id}...")
-            if self.view == "map-view":
+            if self.view == View.MAP_VIEW:
                 shininess = 0.3
                 color = vp.vector(*([0.8] * 3))
             else:
@@ -235,18 +239,18 @@ class AirplanesVisualizerEnvironment(Environment):
             self.airplane_vp_objs[ev.id].pos = vp.vector(
                 *ev.location.xyz_coords
             ) + vp.vec(*ev.viz_model.TRANSLATION_VECTOR)
-            if self.view == "map-view":
+            if self.view == View.MAP_VIEW:
                 self.airplane_vp_objs[ev.id].pos.z *= 10
                 self.airplane_vp_objs[ev.id].pos.z += 200
             self.airplane_vp_objs[ev.id].axis = vp.vector(*ev.heading)
-        if self.view != "map-view":
+        if self.view != View.MAP_VIEW:
             heading = evs_state[self.track_airplane_id].heading
             heading[2] = 0
             heading = heading / np.linalg.norm(heading)
             heading[2] = -0.3
-            if self.view == "tail-view":
+            if self.view == View.TAIL_VIEW:
                 vp.scene.forward = vp.vector(*heading)
-            elif self.view == "side-view":
+            elif self.view == View.SIDE_VIEW:
                 vp.scene.forward = vp.vector(*orthogonal_xy_vector(heading))
         if self.captions:
             vp.scene.caption = "\n" + "\n".join([str(ev) for ev in evs_state.values()])
