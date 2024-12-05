@@ -21,7 +21,7 @@ from src.three_d_sim.simulation_config_schema import (
 from src.utils.utils import timedelta_to_minutes
 
 
-def run_scenario(
+def run_simulation(
     simulation_config: SimulationConfig,
     view: View,
     track_airplane_id: str,
@@ -216,7 +216,7 @@ if __name__ == "__main__":
     simulation_config = SimulationConfig.from_yaml(args.config_dir)
     if simulation_config.viz_enabled:
         subprocess.Popen(["google-chrome", "--guest", "--start-maximized"])
-    run_scenario(
+    run_simulation(
         simulation_config=simulation_config,
         view=args.view,
         track_airplane_id=args.track_airplane_id,

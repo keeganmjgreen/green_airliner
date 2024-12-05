@@ -31,25 +31,25 @@ python src/feasibility_study/feasibility_study.py
 
 ## Running the 3D Simulation
 
-The 3D simulation is run by `src/three_d_sim/study_runner.py` (the program's entry point). The 3D simulation can be run from the command line (after following the instructions in "Setup") using the following command:
+The 3D simulation is run by `src/three_d_sim/simulation.py` (the program's entry point). The 3D simulation can be run from the command line (after following the instructions in "Setup") using the following command:
 
 ```bash
-python src/three_d_sim/study_runner.py --config-dir=... --view=... --track-airplane-id=... --record=...
+python src/three_d_sim/simulation.py --config-dir=... --view=... --track-airplane-id=... --record=...
 ```
 
 For example:
 
 > ```bash
-> python src/three_d_sim/study_runner.py --config-dir=configs/jfk_to_lax/ --view=side-view --track-airplane-id=Airliner
+> python src/three_d_sim/simulation.py --config-dir=configs/jfk_to_lax/ --view=side-view --track-airplane-id=Airliner
 > ```
-> 
+>
 > Specifying `--config-dir=configs/jfk_to_lax/` uses the `simulation_config.yml` file in that directory to configure the simulation with an airliner flying from JFK to LAX via PIT (Pittsburgh) and DEN (Denver) international airports. The schema and documentation for the simulation config file can be found [**here**](https://keeganmjgreen.github.io/green_airliner/7_simulation/7_1_configuration.html). Specifying `--view=side-view` and `--track-airplane-id=Airliner` results in the camera following the airliner from a side view.
 
 The 3D simulation is rendered via VPython in a browser tab. Unless `--view=map-view`, the camera follows the airplane specified by `--track-airplane-id`. The browser view consists also of some text-based readouts for the airplanes, and realtime graphs of the airliner's speed and SoC over time.
 
-The browser tab opens in your system's default browser. With the assumption that this is Google Chrome, the program firstly and automatically opens a new "guest" Chrome window in which this new browser tab will be opened. The program will stop (and the 3D rendering will freeze) after the airplane (specified by `--track-airplane-id`) lands, but it can be stopped early when running from the command line by pressing `Ctrl`+`C` therein. After, the "guest" Chrome window can be closed. 
+The browser tab opens in your system's default browser. With the assumption that this is Google Chrome, the program firstly and automatically opens a new "guest" Chrome window in which this new browser tab will be opened. The program will stop (and the 3D rendering will freeze) after the airplane (specified by `--track-airplane-id`) lands, but it can be stopped early when running from the command line by pressing `Ctrl`+`C` therein. After, the "guest" Chrome window can be closed.
 
-Specifying ` --record=airplanes-viz` records the 3D rendering and saves it to a `.avi` video file with a specific name. Because newer VPython no longer supports opening 3D renderings in standalone windows and the functionality to write the 3D rendering to a video file seems to no longer work, this is done by screen-recording region(s) of the screen whose coordinates are hard-coded in `study_runner.py`. While automatic, a consequence is not being able to use that screen region for other purposes during simulation/recording. An advantage over manual screen-recording, however, is that the recorded frame rate is fixed and synced with the simulation, and thus unaffected by any lags in running the program.
+Specifying ` --record=airplanes-viz` records the 3D rendering and saves it to a `.avi` video file with a specific name. Because newer VPython no longer supports opening 3D renderings in standalone windows and the functionality to write the 3D rendering to a video file seems to no longer work, this is done by screen-recording region(s) of the screen whose coordinates are hard-coded in `simulation.py`. While automatic, a consequence is not being able to use that screen region for other purposes during simulation/recording. An advantage over manual screen-recording, however, is that the recorded frame rate is fixed and synced with the simulation, and thus unaffected by any lags in running the program.
 
 Specifying `--record=graphs` is similar, but records both the airliner's speed graph and SoC graph to separate video files.
 
@@ -66,25 +66,25 @@ Each of the visualizations ("video feeds") in the following screenshot from the 
 Airliner:
 
 ```bash
-python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=Airliner --record=airplanes-viz
+python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=Airliner --record=airplanes-viz
 ```
 
 UAVs from PIT:
   - First UAV (leading up to PIT flyover):
     ```bash
-    python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=PIT_UAV_0 --record=airplanes-viz
+    python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=PIT_UAV_0 --record=airplanes-viz
     ```
   - Second UAV (directly after PIT flyover):
     ```bash
-    python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=PIT-UAV-1 --record=airplanes-viz
+    python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=PIT-UAV-1 --record=airplanes-viz
     ```
 
 UAVs from DEN (only the first two UAVs, leading up to the DEN flyover):
   - ```bash
-    python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=DEN-UAV-0 --record=airplanes-viz
+    python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=DEN-UAV-0 --record=airplanes-viz
     ```
   - ```bash
-    python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=DEN-UAV-1 --record=airplanes-viz
+    python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=DEN-UAV-1 --record=airplanes-viz
     ```
 
 #### "Bird's eye" (map) view of all airplanes
@@ -92,7 +92,7 @@ UAVs from DEN (only the first two UAVs, leading up to the DEN flyover):
 The following command specifies `--view=map-view` to show a "bird's eye" (map) view of all the airplanes (airliner and UAVs). The airplanes' 3D models are scaled up (and their altitudes increased) for illustrative purposes, such that they remain visible.
 
 ```bash
-python src/three_d_sim/study_runner.py --view=map-view --record=airplanes-viz
+python src/three_d_sim/simulation.py --view=map-view --record=airplanes-viz
 ```
 
 #### Airliner speed and SoC graphs
@@ -100,7 +100,7 @@ python src/three_d_sim/study_runner.py --view=map-view --record=airplanes-viz
 The airliner's speed and SoC graphs are already shown in the browser tab. The following command specifies `--record=graphs` to screen-record them.
 
 ```bash
-python src/three_d_sim/study_runner.py --view=side-view --track-airplane-id=Airliner --record=graphs
+python src/three_d_sim/simulation.py --view=side-view --track-airplane-id=Airliner --record=graphs
 ```
 
 ### Making the video presentation
@@ -112,13 +112,13 @@ The video presentation has three parts: (1) an intro, (2) a middle, and (3) a co
 The following are commands for making each part of the video presentation at up to 1080p resolution and 60 FPS. To render faster but with lower quality, replace `1080p60` with `720p30` or `480p15`.
 
 - (1) Making the presentation's intro (`Intro.mp4`):
-  
+
   ```
   cd ${VIDEO_DIR} && manim -qH ${REPO_DIR}/manim_videos/manim_videos.py Intro && vlc ${VIDEO_DIR}/media/videos/manim_videos/1080p60/Intro.mp4
   ```
 
 - (2) Making a composite of the the video feeds (`Video.mp4`):
-  
+
   ```
   cd ${VIDEO_DIR} && manim -qH ${REPO_DIR}/manim_videos/manim_videos.py Video && vlc ${VIDEO_DIR}/media/videos/manim_videos/1080p60/Video.mp4
   ```

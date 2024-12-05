@@ -45,7 +45,7 @@
             "name": "Study Runner - Map View, record-airplanes-viz",
             "type": "debugpy",
             "request": "launch",
-            "program": "src/three_d_sim/study_runner.py",
+            "program": "src/three_d_sim/simulation.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
@@ -61,7 +61,7 @@
             "name": "Study Runner - Airliner Side View",
             "type": "debugpy",
             "request": "launch",
-            "program": "src/three_d_sim/study_runner.py",
+            "program": "src/three_d_sim/simulation.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
@@ -77,7 +77,7 @@
             "name": "Study Runner - Airliner Side View, record-airplanes-viz",
             "type": "debugpy",
             "request": "launch",
-            "program": "src/three_d_sim/study_runner.py",
+            "program": "src/three_d_sim/simulation.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
@@ -94,7 +94,7 @@
             "name": "Study Runner - Airliner Side View, record-graphs",
             "type": "debugpy",
             "request": "launch",
-            "program": "src/three_d_sim/study_runner.py",
+            "program": "src/three_d_sim/simulation.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
@@ -111,7 +111,7 @@
             "name": "Study Runner - Airliner Tail View, record-airplanes-viz",
             "type": "debugpy",
             "request": "launch",
-            "program": "src/three_d_sim/study_runner.py",
+            "program": "src/three_d_sim/simulation.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
@@ -128,7 +128,7 @@
             "name": "Study Runner - DEN UAV 0 Side View, record-airplanes-viz",
             "type": "debugpy",
             "request": "launch",
-            "program": "src/three_d_sim/study_runner.py",
+            "program": "src/three_d_sim/simulation.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
