@@ -1,6 +1,6 @@
 import dataclasses
-from enum import Enum
 import os
+from enum import Enum
 from typing import Annotated, List, Literal, Tuple
 
 import cv2
@@ -22,6 +22,7 @@ from src.three_d_sim.environments.environment import (
 from src.three_d_sim.simulation_config_schema import Zoompoint
 from src.three_d_sim.wavefront_obj_to_vp import simple_wavefront_obj_to_vp
 from src.utils.utils import timedelta_to_minutes
+
 
 class View(Enum):
     """What to show in the viewport in which the 3D visualization is rendered when
@@ -163,28 +164,27 @@ class AirplanesVisualizerEnvironment(Environment):
         self._set_up_graphs()
 
     def _render_ground(self):
-        vp.box(
-            pos=vp.vec(0, 0, -0.5 - 0.1),
-            length=BOUND_KM,
-            width=-1,
-            height=BOUND_KM,
-            texture=dict(
-                file=self.map_texture_fpath,
-                flipx=True,
-            ),
-            shininess=0,
-        )
-        vp.scene.waitfor("textures")
-        # vp.quad(
-        #     vs=[
-        #         vp.vertex(
-        #             pos=vp.vec(*(np.array(xy) * BOUND_KM), -0.1),
-        #             color=_rgb_to_vp_color(self.palette.ground),
-        #             shininess=0,
-        #         )
-        #         for xy in [[1, 1], [-1, 1], [-1, -1], [1, -1]]
-        #     ]
-        # )
+        if self.map_texture_fpath is not None:
+            vp.box(
+                pos=vp.vec(0, 0, -0.5 - 0.1),
+                length=BOUND_KM,
+                width=-1,
+                height=BOUND_KM,
+                texture=dict(file=self.map_texture_fpath, flipx=True),
+                shininess=0,
+            )
+            vp.scene.waitfor("textures")
+        else:
+            vp.quad(
+                vs=[
+                    vp.vertex(
+                        pos=vp.vec(*(np.array(xy) * BOUND_KM), -0.1),
+                        color=_rgb_to_vp_color(self.palette.ground),
+                        shininess=0,
+                    )
+                    for xy in [[1, 1], [-1, 1], [-1, -1], [1, -1]]
+                ]
+            )
 
     def _render_airports(self):
         # x_coords = [loc.X_KM for loc in airports]
