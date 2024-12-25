@@ -2,8 +2,6 @@ import dataclasses
 
 import numpy as np
 
-from src.utils.utils import J_PER_WH
-
 
 @dataclasses.dataclass
 class Fuel:
@@ -77,19 +75,14 @@ class BaseAirliner(BaseAirplane):
         self.energy_quantity_MJ -= (
             self.energy_consumption_rate_MJ_per_km
             * self.cruise_speed_kmph
-            * J_PER_WH
             / self.propulsion.efficiency
         ) * time_delta_h
 
     def calculate_range_km(self, energy_quantity_MJ: float) -> float:
-        range_h = (
-            (energy_quantity_MJ - self.reserve_energy_thres_MJ)
-            / (
-                self.energy_consumption_rate_MJ_per_km
-                * self.cruise_speed_kmph
-                * J_PER_WH
-                / self.propulsion.efficiency
-            )
+        range_h = (energy_quantity_MJ - self.reserve_energy_thres_MJ) / (
+            self.energy_consumption_rate_MJ_per_km
+            * self.cruise_speed_kmph
+            / self.propulsion.efficiency
         )
         range_km = range_h * self.cruise_speed_kmph
         return range_km

@@ -79,7 +79,7 @@ def run_study(
                     )
                     update_ser()
 
-    results_df = ser.to_frame().set_index("index")
+    results_df = ser.reset_index().set_index("index")
 
     print(f"\n{study_label}:")
     print(results_df)

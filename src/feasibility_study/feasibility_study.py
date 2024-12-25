@@ -12,7 +12,6 @@ from src import specs
 from src.feasibility_study.study_runner import run_study
 from src.utils.utils import MJ_PER_GJ
 
-
 if __name__ == "__main__":
     reserve_energy_thres_MJ = 100e3
     for study_label, (airliner_class, n_refuels_by_waypoint) in {
@@ -48,6 +47,5 @@ if __name__ == "__main__":
         label="Reserve Energy Threshold",
     )
     plt.legend()
-    plt.savefig("tmp/feasibility_study.svg")
-    plt.savefig("tmp/feasibility_study.png", dpi=300)
-    plt.show()
+    plt.savefig("docs/5_feasibility_studies/feasibility_study.svg")
+    plt.savefig("docs/5_feasibility_studies/feasibility_study.png", dpi=300)
