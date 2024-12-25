@@ -207,7 +207,27 @@ An LH₂-fueled A320ceo would need to be refueled by 7 UAVs to have the same ran
 
 Assuming that the A320ceo starts with maximum fuel, the following graph illustrates its energy level over time from JFK to LAX, parameterized by different energy storage media and whether or not the A320ceo is refueled the minimum required amount to stay above a 100-GJ reserve level where possible. If refueled, the A320ceo is refueled over PIT and DEN as many times as necessary for it to stay above the reserve level by the time it reaches its next airport.
 
-.. image:: feasibility_study.svg
+.. raw:: html
+
+    <style>
+    .responsive-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 */
+        padding-top: 25px;
+        height: 0;
+    }
+    .responsive-container embed {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    </style>
+    <div class="responsive-container">
+        <embed src="../_static/feasibility_study.html" style="border: 1px solid #dfdfdf"></embed>
+    </div>
+
 
 Selection of hydrogen fuel as the energy storage media
 ------------------------------------------------------

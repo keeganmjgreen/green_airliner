@@ -16,13 +16,13 @@ Video
 .. raw:: html
 
     <style>
-    .responsive-video-container {
+    .responsive-container {
         position: relative;
         padding-bottom: 56.25%; /* 16:9 */
         padding-top: 25px;
         height: 0;
     }
-    .responsive-video-container embed {
+    .responsive-container embed {
         position: absolute;
         top: 0;
         left: 0;
@@ -30,7 +30,7 @@ Video
         height: 100%;
     }
     </style>
-    <div class="responsive-video-container">
+    <div class="responsive-container">
         <embed src="https://www.youtube.com/embed/5WDB9vRs0N4" allowfullscreen></embed>
     </div>
 
