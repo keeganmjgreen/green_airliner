@@ -209,8 +209,6 @@ Assuming that the A320ceo starts with maximum fuel, the following graph illustra
 
 .. image:: feasibility_study.svg
 
-.. TODO fix >100% SoCs
-
 Selection of hydrogen fuel as the energy storage media
 ------------------------------------------------------
 
