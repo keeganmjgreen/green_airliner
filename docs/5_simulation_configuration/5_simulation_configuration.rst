@@ -1,5 +1,7 @@
-Configuration
-=============
+.. _simulation_configuration:
+
+Configuring the Simulation
+==========================
 
 The simulation is configured by a ``simulation_config.yml`` file in the specified ``--config-dir``. This YAML file must follow the following schema.
 

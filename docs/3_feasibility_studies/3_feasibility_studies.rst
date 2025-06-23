@@ -1,3 +1,5 @@
+.. _feasibility_studies:
+
 Feasibility Studies with Different Energy Storage Media
 =======================================================
 
