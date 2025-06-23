@@ -1,0 +1,392 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Selection of the Commercial Airliner and UAV" href="../2_airliner_uav_selection/2_airliner_uav_selection.html" /><link rel="prev" title="Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner" href="../index.html" />
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2024.05.06 -->
+        <title>Mid-Air Refueling System for Commercial Aviation - Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_collapse.css?v=226d88b4" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" /
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">Design and Feasibility Study of Mid-Air Refueling of a Hydrogen-Powered Airliner</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Mid-Air Refueling System for Commercial Aviation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../2_airliner_uav_selection/2_airliner_uav_selection.html">Selection of the Commercial Airliner and UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3_feasibility_studies/3_feasibility_studies.html">Feasibility Studies with Different Energy Storage Media</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4_simulation/4_simulation.html">Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../5_simulation_configuration/5_simulation_configuration.html">Configuring the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../6_optimizing_flyover_airports/6_optimizing_flyover_airports.html">Optimizing the Airliner Flight Plan in Terms of Flyover Airports</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/1_mid_air_refueling_system/1_mid_air_refueling_system.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="mid-air-refueling-system-for-commercial-aviation">
+<span id="mid-air-refueling-system"></span><h1>Mid-Air Refueling System for Commercial Aviation<a class="headerlink" href="#mid-air-refueling-system-for-commercial-aviation" title="Link to this heading">¶</a></h1>
+<p>The airliner would be refueled by one or more UAVs over the course of its flight from origin airport to destination airport.</p>
+<p>To facilitate the operations required to store, maintain, refuel, recharge, launch, and monitor these UAVs, the UAVs would most practically operate out of international airports between the origin and destination. The UAVs would share the same kind of provisions and services used by airliners operating out of these flyover airports (hangars, refueling equipment, runways, and air traffic control), but would most practically be owned by the airport and shared between airlines rather than owned by separate airlines. Such flyover airports and their services would be expanded as necessary to operate the UAVs. Airliners would be charged for their use of UAV operations.</p>
+<p>Whether to alter the airliner’s flight path to meet the UAV(s) over their flyover airports (option A) or to alter each UAV’s flight path to meet the airliner (option B) would require an analysis factoring in the locations of the airports involved and the burn rate of the fuel (or whichever energy storage medium) per distance traveled of the UAV(s) versus that of the airliner. Moreover, determining an optimal compromise between options A and B would require solving an optimization problem for each airliner flight path given its UAV(s).</p>
+<p>However, the most important factor is safety, in whose consideration option A—in which airliners fly in the airspace of flyover airport(s) to be refueled by UAV(s)—is most viable. Although the UAV(s) are uncrewed, if there is a problem surrounding the recharging process, the airliner can safely land at the flyover airport. Thus, Option A is assumed both for this study and for the 3D computer simulation.</p>
+<p>The desire for the aforementioned backup plan in case of an emergency has implications on precisely when, where, and how in the flyover airport’s airspace the airliner would be refueled. For maximum safety, the airliner would likely be refueled in the flyover airport’s airspace while flying towards rather than from the airport to avoid having to circle back to it before landing in case of an emergency during recharging. However, this likelihood and the exact flight path taken by the airliner through the airport’s airspace would depend on the configuration of the airport’s runways and would be computed for each airliner flight path given its UAV(s). For this study, in line with its inherent simplifications, it is assumed that the airliner is refueled to its new SoC instantly upon flying directly over the flyover airport. For the 3D computer simulation, it is assumed that the airliner flies directly over the flyover airport, with the exception of any curve in its flight path as it does so, and the airliner is refueled as it flies towards the airport and possibly as it flies away from it as well.</p>
+<p>Each UAV would be fueled, and its battery charged, by its airport services. Each UAV would autonomously follow each stage of the following flight plan and UAV sequence:</p>
+<ol class="arabic simple">
+<li><p>Taxi, takeoff, and climb.</p></li>
+<li><p>Navigate to and intercept with the airliner’s flight path.</p></li>
+<li><p>Dock with the airliner, charge the airliner, and undock.</p></li>
+<li><p>Clear the airliner and navigate back to its originating airport.</p></li>
+<li><p>Descend, land, and taxi.</p></li>
+</ol>
+<section id="airliner-uav-interaction-and-surrounding-design">
+<h2>Airliner–UAV Interaction and Surrounding Design<a class="headerlink" href="#airliner-uav-interaction-and-surrounding-design" title="Link to this heading">¶</a></h2>
+<p>It may be desirable for the UAV to fly very close to the airliner and that a relative position between the two aircraft be maintained (station-keeping). To make this easier and improve safety, it may furthermore be desirable for the UAV to be attached to and/or land on a surface of the airliner’s fuselage. This would especially be the case if there are reasons why a traditional mid-air refueling system in which the two aircraft fly separately is impractical, or if the UAV’s transfer of energy to the airliner takes the form of exchanging a spent battery for a charged one. Landing the UAV on the airliner’s surface, the first step of the proposed docking sequence between the two, may be accommodated and made possible given the large size of the airliner relative to the small size of the UAV.</p>
+<p>The UAV landing on the airliner is not analogous to landing on a runway. When landing, both the aircraft-to-runway relative velocity and the aircraft-to-air relative velocity (whose magnitude is the aircraft’s airspeed) are relevant. On a runway, these two relative velocities are often the same or similar because both the runway and the air are stationary (or at least the air is often near-stationary with calm winds). On a runway, the landing aircraft must essentially match the runway’s velocity (zero), but after making contact with the runway; the aircraft slows both before and after touchdown and thus the runway must be of a certain minimum length. Whereas for the UAV landing on the airliner’s surface, the UAV must make its own aircraft-to-runway relative velocity (where the <em>runway</em> is actually the commercial airliner) equal to zero by matching its airspeed with that of the commercial airliner. This can be done entirely before the UAV has touched down because it will still have enough airspeed (equal to that of the commercial airliner) to sustain lift. Thus, the UAV does not need a long runway which the airliner is unable to provide. The UAV does not need to be stationary relative to the airliner upon landing; it may need to adjust its position forwards <em>or backwards</em> and can do so using its own propulsion because its airspeed will be much higher than if it were landing on a runway. Note that all of the above assumes the UAV to land on the airliner’s surface in the same direction of travel as the airliner; lift considerations aside, landing in the opposite direction would require the UAV to be able to propel itself in reverse.</p>
+<p>In the intended operation, mid-flight and along its route, as the airliner approaches the airspace of an airport below, a UAV would take off from that airport, climb toward the airliner’s altitude, and approach the airliner in preparation to begin the docking sequence by landing on its top surface. Although it would be more efficient and safer for the UAV to approach the airliner with the two aircraft pointing towards each other, and for the UAV to thus land on the airliner in antiparallel, this arrangement is impossible for a UAV that, like the AT200 cargo UAV, cannot propel itself in reverse. However, it is worth discussing the arrangement’s benefits. The arrangement would be more efficient because the airliner would likely still be facing in the direction of the airport (from which the UAV took off) when the UAV is approaching. The arrangement would arguably be safer because, although under normal operation the UAV would be autonomous and the airliner’s pilot would not need to intervene, the arrangement allows the airliner pilot to see the UAV’s approach. Notably, having at least the landing of the UAV on the airliner and the subsequent start of refueling occur when the airliner has not yet passed the airport is also safer because it allows for the airliner to more easily make an emergency ground landing in the abnormal cases of it being damaged in the UAV’S landing or, due to some other failure, not being left with enough energy to continue its normal route.</p>
+<p>If the UAV is to land on top of the airliner’s fuselage, the UAV’s landing gear, as on a runway, would to some extent cushion its impact with the airliner’s fuselage, and allow the UAV to roll to a complete stop relative to the airliner’s speed. A disadvantage of the UAV landing on top is that it must fly above or around the airliner’s tail stabilizers to evade them. An alternative, the UAV docking beneath the airliner, may require a different approach for making the UAV–airliner attachment. The following assumes the UAV to land on the top of the airliner.</p>
+<p><strong>A summary of the docking and coupling sequence between the airliner and UAV is as follows:</strong></p>
+<ul class="simple">
+<li><p>The UAV lands on the top surface of the airliner. The UAV is guided into position by its wheels entering grooves in the top surface of the airliner’s fuselage.</p></li>
+<li><p>The UAV’s alignment with the airliner is maintained by wedge-shaped blocks which extend into said grooves.</p></li>
+<li><p>A coupling arm rotates out of a compartment in the airliner’s top surface and hooks onto an anchor point in a compartment within the underbelly of the UAV, to hold it in place.</p></li>
+<li><p>Similarly, an energy transfer arm rotates out of the airliner’s top surface and connects to a matching plug or port in the UAV’s underbelly.</p></li>
+</ul>
+<p>After this sequence, the transfer of energy begins. After the energy transfer concludes, the sequence is followed in reverse: the arms disconnect and retract in reverse order, the wedge-shaped blocks retract, and the UAV can proceed to a kind of take-off which is aided by the fact that the UAV will already have significant airspeed.</p>
+<p><strong>The steps of the docking and coupling sequence, and the engineering design to enable them, are described in the following sections.</strong></p>
+<p>The following designs require space within the fuselage above the passenger cabin. Most narrow-body airliners, the A320 included, do not have a lot of space, let alone empty space, between the ceiling of the passenger cabin and the top surface of the fuselage. What distance there is in between is occupied by the reinforced structure of the fuselage, after which aisle headroom for passengers is a priority. However, both aisle headroom for passengers and seating headroom and/or the height of overhead luggage bins can be sacrificed to some degree.</p>
+<section id="design-of-modifications-to-the-commercial-airliner">
+<h3>Design of Modifications to the Commercial Airliner<a class="headerlink" href="#design-of-modifications-to-the-commercial-airliner" title="Link to this heading">¶</a></h3>
+<p><strong>Guiding the UAV into Position</strong></p>
+<p>The UAV should ideally be guided into the correct position along the length of the airliner’s fuselage to compensate for any slight inaccuracies in the UAV’s control, or turbulence. To achieve this, the top surface of the airliner’s fuselage would be modified to have three grooves along its long axis, one groove for each of the UAV’s three landing gear wheels, with the spacing between the three grooves equal to that between the three wheels. The UAV would land in these grooves, which would keep the UAV aligned with the airliner while the UAV is parked. The grooves would also help align the UAV while it lands; each groove would start wide and shallow before becoming almost as deep as each wheel’s radius and almost as narrow as each wheel’s width. Thus, if the UAV is somewhat misaligned with the airliner in the left-to-right or back-to-front directions while landing, the grooves will guide the UAV into the correct position. The side walls and especially the bottom of the grooves would be reinforced to sustain the impact and weight of the UAV.</p>
+<p><strong>Maintaining Alignment with the UAV</strong></p>
+<p>Once the UAV has been guided into position, its alignment with the airliner must be maintained. Wedge-shaped blocks, usually retracted and flush with the bottom of the grooves, would rotate up to keep the UAV, by its wheels, in place. The blocks can be made of machined aluminum. There would be two blocks per groove, one for the front and back of each wheel, to stop each from rolling forwards or backwards. Because the blocks rotate to extend out or retract, they stay flush with the grooves and thus with the surface of the airliner’s fuselage except where they meet the UAV’s wheels. The blocks would be retracted when it is time for the UAV to depart.</p>
+</section>
+<section id="design-of-modifications-to-both-the-commercial-airliner-and-uav">
+<h3>Design of Modifications to both the Commercial Airliner and UAV<a class="headerlink" href="#design-of-modifications-to-both-the-commercial-airliner-and-uav" title="Link to this heading">¶</a></h3>
+<p><strong>Attaching the UAV to Hold it in Place</strong></p>
+<p>Once the UAV is secured in the correct alignment with the airliner, it must be attached to the airliner to hold it in place. This process will be termed <em>coupling</em>, and the reverse process of releasing the UAV from the airliner is termed <em>uncoupling</em>. The landing gear of the AT200 cargo UAV is not suitable to hold the UAV down once landed, nor is it designed to. Instead, modifications to both the UAV and airliner would serve to make the attachment between the two; in particular, a coupling arm.</p>
+<p>To hold the UAV down against the airliner, this machined aluminum arm would rotate out of the airliner’s top surface to become perpendicular to the fuselage and latch onto a designed anchor point on the underside of the UAV. In this first degree of freedom, the arm can be rotated by a stepper motor or hydraulic motor within the airliner’s fuselage. The arm would be of airfoil-like cross section to reduce air resistance. To keep the airliner’s top surface streamlined when the arm is rotated fully outwards or inwards, narrow flaps would enclose and cover the compartment that houses the arm when retracted. This also keeps the compartment free of debris. The flaps can be hinged and spring-loaded, or otherwise flexible, such that they return to their closed position by default, and open outwards or inwards when the arm rotates out of its compartment or back into it, respectively.</p>
+<p>The UAV’s anchor point would be hooked onto by the end of the arm through a compartment in the underside of the UAV, similar to the airliner’s compartment but smaller. The underside of the UAV is kept streamlined and the compartment free of debris by a hinged and spring-loaded, or otherwise flexible, flap which usually covers the compartment. While the end of the arm is rotated into the compartment, it deflects this flap inwards and out of the way.</p>
+<p>The anchor point of the UAV is a steel bar in its underbelly and the end of the arm is shaped to act like a hook to attach to it. In one configuration of the arm, the end of the arm is spring-loaded as its second degree of freedom and the end of the hook shape is tapered from both sides to hook onto and off of the steel bar by the torque of the stepper motor. In another more likely configuration, the arm is hydraulic such that it may effectively increase and decrease in length in its second degree of freedom, pulling the hook shape over the steel bar and lifting it off of the bar for coupling and uncoupling, respectively.</p>
+<p><strong>Connecting to the UAV for Energy Transfer</strong></p>
+<p>Once the coupling between the airliner and UAV is complete, a connection must be made to enable energy transfer therebetween. The coupling could also be used for the energy connection, but the two subsystems will be kept separate for safety/redundancy and simplicity. For example, the second degree of freedom of the coupling arm would make additionally using the arm for the energy connection difficult. A separate energy transfer arm is designed. For energy storage media, this arm, unlike the coupling arm, would likely have to extend in length to make the connection and retract its length to sever it. This applies to an electrical charging connector as well as a connector for liquid or gaseous fuel.</p>
+<p>The external design of the arm is similar regardless of the energy medium used. For example, if the medium is electricity, then a connector like that of the Megawatt Charging System (MCS), which is in development for charging very large electric vehicles at up to 3.75 MW, may be used. The MCS connector is of approximately the same size as the connector of a refueling hose for an airliner.</p>
+<p>The design of the energy transfer arm and its integration in the airliner’s fuselage is similar to that of the coupling arm. The energy transfer arm would also rotate out of the airliner’s top surface. The end of the arm would hydraulically extend or retract to make or sever its connection, respectively, with its stationary counterpart on the bottom of the UAV.</p>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../2_airliner_uav_selection/2_airliner_uav_selection.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Selection of the Commercial Airliner and UAV</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Home</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Keegan Green
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Mid-Air Refueling System for Commercial Aviation</a><ul>
+<li><a class="reference internal" href="#airliner-uav-interaction-and-surrounding-design">Airliner–UAV Interaction and Surrounding Design</a><ul>
+<li><a class="reference internal" href="#design-of-modifications-to-the-commercial-airliner">Design of Modifications to the Commercial Airliner</a></li>
+<li><a class="reference internal" href="#design-of-modifications-to-both-the-commercial-airliner-and-uav">Design of Modifications to both the Commercial Airliner and UAV</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=4e2eecee"></script>
+    </body>
+</html>
