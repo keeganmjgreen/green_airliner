@@ -1,7 +1,7 @@
 .. _mid_air_refueling_system:
 
-Mid-Air Refueling System for Commercial Aviation
-================================================
+Mid-Air Refueling System
+========================
 
 Background
 ----------
@@ -16,21 +16,18 @@ Mid-air refueling allows the receiving aircraft to cover the same distance with 
 
 Because of these fuel savings, even if still using conventional jet fuel, mid-air refueling is a way to reduce the CO₂ emissions (and costs) of flights covering distances of 5--6,000 km or more. Long-haul flights are estimated to need only 60--65% as much fuel, potentially. A fear, however, is that this will result in reduced air fares and increased demand for flights which, if satisfied, would offset the CO₂ reductions from fuel savings.
 
-----
+Mid-Air Refueling System for Commercial Aviation
+------------------------------------------------
 
 .. TODO diagrams
 
-The airliner would be refueled by one or more UAVs over the course of its flight from origin airport to destination airport.
+As part of the mid-air refueling system for commercial aviation, the receiving airliner would be refueled with hydrogen fuel by one or more tanker UAVs over the course of its flight. The UAVs themselves need not be hydrogen-powered; the idea is that any CO₂ emissions from burning avgas in the UAV pale in comparison to those saved by not burning jet A1 in the airliner, but are a lesser evil that is required to make the system work.
 
-To facilitate the operations required to store, maintain, refuel, recharge, launch, and monitor these UAVs, the UAVs would most practically operate out of international airports between the origin and destination. The UAVs would share the same kind of provisions and services used by airliners operating out of these flyover airports (hangars, refueling equipment, runways, and air traffic control), but would most practically be owned by the airport and shared between airlines rather than owned by separate airlines. Such flyover airports and their services would be expanded as necessary to operate the UAVs. Airliners would be charged for their use of UAV operations.
+The UAVs would most practically operate out of international airports near or along the airliner's flight path to share some resources with those of existing airport fleets (hangars, refueling equipment, runways, air traffic control), expanding them as necessary. This facilitates the operations for storing, maintaining, refueling, and monitoring the UAVs. However, UAVs would ideally be owned and operated by the airport rather than by airlines---in the spirit of sharing resources and optimizing their utilization---in which case airlines would be charged for their use of UAV operations.
 
-Whether to alter the airliner's flight path to meet the UAV(s) over their flyover airports (option A) or to alter each UAV's flight path to meet the airliner (option B) would require an analysis factoring in the locations of the airports involved and the burn rate of the fuel (or whichever energy storage medium) per distance traveled of the UAV(s) versus that of the airliner. Moreover, determining an optimal compromise between options A and B would require solving an optimization problem for each airliner flight path given its UAV(s).
+Because UAVs burn less fuel per kilometer traveled than the airliner, it would be more efficient to have the UAVs rendezvous with the airliner over its original flight path, rather than altering the airliner's flight path to rendezvous with UAVs over their respective airports. However, the most important factor is safety, in whose consideration the most viable option is diverting airliners over the UAVs' airports, henceforth to be referred to as flyover airports. This allows the airliner to safely land at the flyover airport if a problem is encountered during refueling.
 
-However, the most important factor is safety, in whose consideration option A---in which airliners fly in the airspace of flyover airport(s) to be refueled by UAV(s)---is most viable. Although the UAV(s) are uncrewed, if there is a problem surrounding the recharging process, the airliner can safely land at the flyover airport. Thus, Option A is assumed both for this study and for the 3D computer simulation.
-
-The desire for the aforementioned backup plan in case of an emergency has implications on precisely when, where, and how in the flyover airport's airspace the airliner would be refueled. For maximum safety, the airliner would likely be refueled in the flyover airport's airspace while flying towards rather than from the airport to avoid having to circle back to it before landing in case of an emergency during recharging. However, this likelihood and the exact flight path taken by the airliner through the airport's airspace would depend on the configuration of the airport's runways and would be computed for each airliner flight path given its UAV(s). For this study, in line with its inherent simplifications, it is assumed that the airliner is refueled to its new SoC instantly upon flying directly over the flyover airport. For the 3D computer simulation, it is assumed that the airliner flies directly over the flyover airport, with the exception of any curve in its flight path as it does so, and the airliner is refueled as it flies towards the airport and possibly as it flies away from it as well.
-
-Each UAV would be fueled, and its battery charged, by its airport services. Each UAV would autonomously follow each stage of the following flight plan and UAV sequence:
+Each UAV would autonomously follow each stage of the following UAV sequence and flight plan:
 
 1. Taxi, takeoff, and climb.
 2. Navigate to and intercept with the airliner's flight path.
