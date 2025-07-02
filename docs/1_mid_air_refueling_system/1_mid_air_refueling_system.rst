@@ -3,6 +3,21 @@
 Mid-Air Refueling System for Commercial Aviation
 ================================================
 
+Background
+----------
+
+Mid-air refueling, also known as aerial refueling, uses a tanker aircraft to refuel a receiving aircraft during flight. This allows the receiving aircraft to stay airborne for longer, without having to land to refuel, thereby extending its effective range. There are two existing systems for mid-air refueling: probe-and-drogue and flying boom.
+
+Probe-and-drogue is easier to retrofit to existing aircraft. TODO
+
+Flying boom TODO
+
+Mid-air refueling allows the receiving aircraft to cover the same distance with less fuel onboard. The fuel that does not have to be carried by the receiving aircraft is instead carried by the tanker aircraft. If the tanker does not have to travel as far as the receiving aircraft, mid-air refueling actually results in overall fuel savings, as the receiving aircraft does not have to burn extra fuel just to carry extra fuel. This accounts for the fuel consumed by the tanker. More fuel is saved if the tanker is more fuel efficient than the receiving aircraft, which is true if the receiving aircraft is a jet fighter in the context of a military operation, but can still be true if the receiving aircraft is a commercial airliner if a larger tanker is used.
+
+Because of these fuel savings, even if still using conventional jet fuel, mid-air refueling is a way to reduce the CO₂ emissions (and costs) of flights covering distances of 5--6,000 km or more. Long-haul flights are estimated to need only 60--65% as much fuel, potentially. A fear, however, is that this will result in reduced air fares and increased demand for flights which, if satisfied, would offset the CO₂ reductions from fuel savings.
+
+----
+
 .. TODO diagrams
 
 The airliner would be refueled by one or more UAVs over the course of its flight from origin airport to destination airport.
